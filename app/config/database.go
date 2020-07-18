@@ -1,38 +1,22 @@
 package config
 
 import (
-	"fmt"
+	"log"
 
 	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-var DB *gorm.DB
+func DBConnection() *gorm.DB {
+	// TODO: use environment variable to access DB
+	db, err := gorm.Open("mysql", "random:random@tcp(db:3306)/go-random")
 
-type DBConfig struct {
-	Host     string
-	Port     int
-	User     string
-	DBName   string
-	Password string
-}
+	// TODO: close db connection
+	//defer db.Close()
 
-func BuildDBConfig() *DBConfig {
-	dbConfig := DBConfig{
-		Host:     `envconfig:"DBHOST"`,
-		Port:     3360,
-		User:     `envconfig:"MYSQL_USER"`,
-		Password: `envconfig:"MYSQL_PASSWORD"`,
+	if err != nil {
+		log.Fatal(err)
 	}
-	return &dbConfig
-}
 
-func DBURL(dbConfig *DBConfig) string {
-	return fmt.Sprintf(
-		"%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
-		dbConfig.User,
-		dbConfig.Password,
-		dbConfig.Host,
-		dbConfig.Port,
-		dbConfig.DBName,
-	)
+	return db
 }
