@@ -3,8 +3,8 @@ package api
 import (
 	"net/http"
 
-	"github.com/ktakenaka/go-random/app/interface/api/handler"
 	"github.com/gin-gonic/gin"
+	"github.com/ktakenaka/go-random/app/interface/api/handler"
 )
 
 func Handler() *gin.Engine {
