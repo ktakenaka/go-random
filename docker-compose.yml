@@ -9,6 +9,8 @@ services:
       - 8080:8080
     volumes:
       - ./:/go/src
+      - /go/src/db-data
+      - /go/src/logs
     environment: 
       MYSQL_USER: random
       MYSQL_PASSWORD: random
