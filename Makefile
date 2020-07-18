@@ -1,3 +1,5 @@
+run:
+	docker-compose exec app go run cmd/srv/main.go
 lint:
 	docker-compose exec app golangci-lint run
 migrate-up:
