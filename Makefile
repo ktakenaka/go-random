@@ -1,2 +1,2 @@
 lint:
-	golangci-lint run
+	docker-compose exec app golangci-lint run
