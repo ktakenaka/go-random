@@ -13,8 +13,8 @@ func Handler() *gin.Engine {
 	router.GET("/", root)
 
 	v1 := router.Group("/api/v1")
-	sample := v1.Group("/sample")
-	handler.AddSampleHanlder(sample)
+	handler.AddSampleHanlder(v1.Group("/samples"))
+
 	return router
 }
 
