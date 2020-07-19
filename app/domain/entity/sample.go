@@ -18,6 +18,7 @@ func (s *Sample) TableName() string {
 	return "samples"
 }
 
+// TODO: consider the place to put, including db.Close()
 var db = mysql.DBConnection()
 
 func CreateSample(title string) error {
