@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"github.com/ktakenaka/go-random/app/config"
+	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
 )
 
 type Sample struct {
@@ -18,7 +18,7 @@ func (s *Sample) TableName() string {
 	return "samples"
 }
 
-var db = config.DBConnection()
+var db = mysql.DBConnection()
 
 func CreateSample(title string) error {
 	now := time.Now()
