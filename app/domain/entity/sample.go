@@ -5,10 +5,10 @@ import (
 )
 
 type Sample struct {
-	ID        int       `gorm:"primary_key" json:"id"`
-	Title     string    `json:"title"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+	ID        int `gorm:"primary_key"`
+	Title     string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (s *Sample) TableName() string {
@@ -28,4 +28,12 @@ func (s *Sample) GetID() int {
 
 func (s *Sample) GetTitle() string {
 	return s.Title
+}
+
+func (s *Sample) GetCreatedAt() time.Time {
+	return s.CreatedAt
+}
+
+func (s *Sample) GetUpdatedAt() time.Time {
+	return s.UpdatedAt
 }
