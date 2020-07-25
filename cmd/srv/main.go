@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/ktakenaka/go-random/app/interface/api"
+	"github.com/ktakenaka/go-random/app/external/framework"
 
 	"log"
 )
 
 func main() {
-	router := api.Handler()
+	router := framework.Handler()
 	err := router.Run(":8080")
 	if err != nil {
 		log.Fatal(err)
