@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/ktakenaka/go-random/app/domain/entity"
+	"github.com/ktakenaka/go-random/app/external/database"
 )
 
 type SampleRepository struct{}
@@ -14,7 +15,7 @@ func NewSampleRepository() *SampleRepository {
 }
 
 func (r *SampleRepository) FindAll() ([]*entity.Sample, error) {
-	db := DBConnection()
+	db := database.MySQLConnection()
 	defer db.Close()
 
 	samples := make([]*entity.Sample, 0)
@@ -23,7 +24,7 @@ func (r *SampleRepository) FindAll() ([]*entity.Sample, error) {
 }
 
 func (r *SampleRepository) FindByTitle(title string) (*entity.Sample, error) {
-	db := DBConnection()
+	db := database.MySQLConnection()
 	defer db.Close()
 
 	var sample entity.Sample
@@ -37,7 +38,7 @@ func (r *SampleRepository) FindByTitle(title string) (*entity.Sample, error) {
 }
 
 func (r *SampleRepository) FindByID(id string) (*entity.Sample, error) {
-	db := DBConnection()
+	db := database.MySQLConnection()
 	defer db.Close()
 
 	var sample entity.Sample
@@ -51,7 +52,7 @@ func (r *SampleRepository) FindByID(id string) (*entity.Sample, error) {
 }
 
 func (r *SampleRepository) Create(title string) error {
-	db := DBConnection()
+	db := database.MySQLConnection()
 	defer db.Close()
 
 	sample := entity.Sample{Title: title}
@@ -64,7 +65,7 @@ func (r *SampleRepository) Create(title string) error {
 }
 
 func (r *SampleRepository) Delete(id string) error {
-	db := DBConnection()
+	db := database.MySQLConnection()
 	defer db.Close()
 
 	var sample entity.Sample
@@ -79,7 +80,7 @@ func (r *SampleRepository) Delete(id string) error {
 }
 
 func (r *SampleRepository) Update(id, title string) error {
-	db := DBConnection()
+	db := database.MySQLConnection()
 	defer db.Close()
 
 	var sample entity.Sample

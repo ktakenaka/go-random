@@ -1,4 +1,4 @@
-package mysql
+package database
 
 import (
 	"log"
@@ -10,7 +10,7 @@ import (
 	"github.com/ktakenaka/go-random/app/config"
 )
 
-func DBConnection() *gorm.DB {
+func MySQLConnection() *gorm.DB {
 	db, err := gorm.Open("mysql", config.DBACCESS)
 
 	if err != nil {
