@@ -5,11 +5,17 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ktakenaka/go-random/app/domain/entity"
+	"github.com/ktakenaka/go-random/app/domain/service"
+	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
+	"github.com/ktakenaka/go-random/app/usecase"
 )
 
 func getSamples(ctx *gin.Context) {
-	samples, err := entity.ListSamples()
+	sampleRepository := mysql.NewSampleRepository()
+	sampleService := service.NewSampleService(sampleRepository)
+	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
+	samples, err := suCase.ListSample()
+
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
@@ -19,8 +25,11 @@ func getSamples(ctx *gin.Context) {
 }
 
 func getSample(ctx *gin.Context) {
-	id := ctx.Params.ByName("id")
-	sample, err := entity.FindSample(id)
+	sampleRepository := mysql.NewSampleRepository()
+	sampleService := service.NewSampleService(sampleRepository)
+	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
+
+	sample, err := suCase.FindSample(ctx.Params.ByName("id"))
 
 	if err != nil {
 		log.Print(err)
@@ -31,8 +40,11 @@ func getSample(ctx *gin.Context) {
 }
 
 func postSample(ctx *gin.Context) {
-	title := ctx.PostForm("title")
-	err := entity.CreateSample(title)
+	sampleRepository := mysql.NewSampleRepository()
+	sampleService := service.NewSampleService(sampleRepository)
+	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
+
+	err := suCase.RegisterSample(ctx.PostForm("title"))
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
@@ -42,15 +54,11 @@ func postSample(ctx *gin.Context) {
 }
 
 func putSample(ctx *gin.Context) {
-	sample, err := entity.FindSample(ctx.Params.ByName("id"))
-	if err != nil {
-		log.Print(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
-	}
+	sampleRepository := mysql.NewSampleRepository()
+	sampleService := service.NewSampleService(sampleRepository)
+	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
-	sample.Title = ctx.PostForm("title")
-	err = sample.Save()
-
+	err := suCase.UpdateSample(ctx.Params.ByName("id"), ctx.PostForm("title"))
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
@@ -60,15 +68,11 @@ func putSample(ctx *gin.Context) {
 }
 
 func deleteSample(ctx *gin.Context) {
-	sample, err := entity.FindSample(ctx.Params.ByName("id"))
-	if err != nil {
-		log.Print(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
-	}
+	sampleRepository := mysql.NewSampleRepository()
+	sampleService := service.NewSampleService(sampleRepository)
+	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
-	err = sample.Delete()
-
-	if err != nil {
+	if err := suCase.DeleteSample(ctx.Params.ByName("id")); err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
 	} else {
