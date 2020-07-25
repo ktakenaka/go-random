@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/copier"
 	"github.com/ktakenaka/go-random/app/domain/service"
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
@@ -24,9 +25,7 @@ func getSamples(ctx *gin.Context) {
 	}
 
 	sampleRes := make([]presenter.SampleResponse, 0)
-	for _, sm := range samples {
-		sampleRes = append(sampleRes, presenter.NewSampleResponse(sm))
-	}
+	copier.Copy(&sampleRes, &samples)
 	ctx.JSON(http.StatusOK, gin.H{"samples": sampleRes})
 }
 
@@ -46,7 +45,9 @@ func getSample(ctx *gin.Context) {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
 	}
-	sampleRes := presenter.NewSampleResponse(sample)
+
+	var sampleRes presenter.SampleResponse
+	copier.Copy(&sampleRes, &sample)
 	ctx.JSON(http.StatusOK, gin.H{"sample": sampleRes})
 }
 

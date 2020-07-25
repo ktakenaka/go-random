@@ -21,19 +21,3 @@ func NewSample(id int, title string) *Sample {
 		Title: title, CreatedAt: now, UpdatedAt: now,
 	}
 }
-
-func (s *Sample) GetID() int {
-	return s.ID
-}
-
-func (s *Sample) GetTitle() string {
-	return s.Title
-}
-
-func (s *Sample) GetCreatedAt() time.Time {
-	return s.CreatedAt
-}
-
-func (s *Sample) GetUpdatedAt() time.Time {
-	return s.UpdatedAt
-}
