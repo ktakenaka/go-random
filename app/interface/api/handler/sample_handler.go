@@ -3,6 +3,7 @@ package handler
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ktakenaka/go-random/app/domain/service"
@@ -34,7 +35,12 @@ func getSample(ctx *gin.Context) {
 	sampleService := service.NewSampleService(sampleRepository)
 	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
-	sample, err := suCase.FindSample(ctx.Params.ByName("id"))
+	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "id must be integer"})
+	}
+
+	sample, err := suCase.FindSample(id)
 
 	if err != nil {
 		log.Print(err)
@@ -49,8 +55,7 @@ func postSample(ctx *gin.Context) {
 	sampleService := service.NewSampleService(sampleRepository)
 	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
-	err := suCase.RegisterSample(ctx.PostForm("title"))
-	if err != nil {
+	if err := suCase.RegisterSample(ctx.PostForm("title")); err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
 	} else {
@@ -63,13 +68,16 @@ func putSample(ctx *gin.Context) {
 	sampleService := service.NewSampleService(sampleRepository)
 	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
-	err := suCase.UpdateSample(ctx.Params.ByName("id"), ctx.PostForm("title"))
+	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "id must be integer"})
+	}
+
+	if err := suCase.UpdateSample(id, ctx.PostForm("title")); err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
-	} else {
-		ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
 func deleteSample(ctx *gin.Context) {
@@ -77,12 +85,16 @@ func deleteSample(ctx *gin.Context) {
 	sampleService := service.NewSampleService(sampleRepository)
 	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
-	if err := suCase.DeleteSample(ctx.Params.ByName("id")); err != nil {
+	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "id must be integer"})
+	}
+
+	if err := suCase.DeleteSample(id); err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
-	} else {
-		ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 	}
+	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
 func AddSampleHanlder(g *gin.RouterGroup) {

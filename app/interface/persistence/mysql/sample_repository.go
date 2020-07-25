@@ -34,7 +34,7 @@ func (r *SampleRepository) FindByTitle(title string) (*entity.Sample, error) {
 	return &sample, nil
 }
 
-func (r *SampleRepository) FindByID(id string) (*entity.Sample, error) {
+func (r *SampleRepository) FindByID(id int64) (*entity.Sample, error) {
 	var sample entity.Sample
 	err := r.DB.First(&sample, id).Error
 
@@ -55,7 +55,7 @@ func (r *SampleRepository) Create(title string) error {
 	return nil
 }
 
-func (r *SampleRepository) Delete(id string) error {
+func (r *SampleRepository) Delete(id int64) error {
 	var sample entity.Sample
 	if err := r.DB.First(&sample, id).Error; err != nil {
 		return err
@@ -67,7 +67,7 @@ func (r *SampleRepository) Delete(id string) error {
 	return nil
 }
 
-func (r *SampleRepository) Update(id, title string) error {
+func (r *SampleRepository) Update(id int64, title string) error {
 	var sample entity.Sample
 	if err := r.DB.First(&sample, id).Error; err != nil {
 		return err

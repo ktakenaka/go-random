@@ -26,8 +26,8 @@ func (s *SampleUsecase) ListSample() ([]*entity.Sample, error) {
 	return samples, nil
 }
 
-func (s *SampleUsecase) FindSample(title string) (*entity.Sample, error) {
-	sample, err := s.repo.FindByID(title)
+func (s *SampleUsecase) FindSample(id int64) (*entity.Sample, error) {
+	sample, err := s.repo.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
@@ -45,7 +45,7 @@ func (s *SampleUsecase) RegisterSample(title string) error {
 	return nil
 }
 
-func (s *SampleUsecase) UpdateSample(id, title string) error {
+func (s *SampleUsecase) UpdateSample(id int64, title string) error {
 	if err := s.srv.Duplicated(title); err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func (s *SampleUsecase) UpdateSample(id, title string) error {
 	return nil
 }
 
-func (s *SampleUsecase) DeleteSample(id string) error {
+func (s *SampleUsecase) DeleteSample(id int64) error {
 	if err := s.repo.Delete(id); err != nil {
 		return err
 	}
