@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/ktakenaka/go-random/app/domain/service"
+	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
 	"github.com/ktakenaka/go-random/app/usecase"
 )
@@ -19,9 +20,13 @@ func getSamples(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
-	} else {
-		ctx.JSON(http.StatusOK, gin.H{"samples": samples})
 	}
+
+	sampleRes := make([]presenter.SampleResponse, 0)
+	for _, sm := range samples {
+		sampleRes = append(sampleRes, presenter.NewSampleResponse(sm))
+	}
+	ctx.JSON(http.StatusOK, gin.H{"samples": sampleRes})
 }
 
 func getSample(ctx *gin.Context) {
@@ -34,9 +39,9 @@ func getSample(ctx *gin.Context) {
 	if err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
-	} else {
-		ctx.JSON(http.StatusOK, gin.H{"sample": sample})
 	}
+	sampleRes := presenter.NewSampleResponse(sample)
+	ctx.JSON(http.StatusOK, gin.H{"sample": sampleRes})
 }
 
 func postSample(ctx *gin.Context) {

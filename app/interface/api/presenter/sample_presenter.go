@@ -4,22 +4,22 @@ import (
 	"time"
 )
 
-type Sample interface {
+type sample interface {
 	GetID() int
 	GetTitle() string
 	GetCreatedAt() time.Time
 	GetUpdatedAt() time.Time
 }
 
-type SamplePresenter struct {
-	ID        int `json:"id"`
+type SampleResponse struct {
+	ID        int    `json:"id"`
 	Title     string `json:"title"`
 	CreatedAt string `json:"created_at"`
 	UpdatedAt string `json:"updated_at"`
 }
 
-func NewSamplePresenter (s Sample) SamplePresenter {
-	return SamplePresenter {
+func NewSampleResponse(s sample) SampleResponse {
+	return SampleResponse{
 		ID:        s.GetID(),
 		Title:     s.GetTitle(),
 		CreatedAt: s.GetCreatedAt().UTC().Format(time.UnixDate),
