@@ -13,6 +13,14 @@ import (
 	"github.com/ktakenaka/go-random/app/usecase"
 )
 
+func AddSampleHanlder(g *gin.RouterGroup) {
+	g.GET("", getSamples)
+	g.GET("/:id", getSample)
+	g.POST("", postSample)
+	g.PUT("/:id", putSample)
+	g.DELETE("/:id", deleteSample)
+}
+
 func getSamples(ctx *gin.Context) {
 	sampleRepository := mysql.NewSampleRepository()
 	sampleService := service.NewSampleService(sampleRepository)
@@ -25,7 +33,9 @@ func getSamples(ctx *gin.Context) {
 	}
 
 	sampleRes := make([]presenter.SampleResponse, 0)
-	copier.Copy(&sampleRes, &samples)
+	if err := copier.Copy(&sampleRes, &samples); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
+	}
 	ctx.JSON(http.StatusOK, gin.H{"samples": sampleRes})
 }
 
@@ -47,7 +57,9 @@ func getSample(ctx *gin.Context) {
 	}
 
 	var sampleRes presenter.SampleResponse
-	copier.Copy(&sampleRes, &sample)
+	if err := copier.Copy(&sampleRes, &sample); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
+	}
 	ctx.JSON(http.StatusOK, gin.H{"sample": sampleRes})
 }
 
@@ -96,12 +108,4 @@ func deleteSample(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
-}
-
-func AddSampleHanlder(g *gin.RouterGroup) {
-	g.GET("", getSamples)
-	g.GET("/:id", getSample)
-	g.POST("", postSample)
-	g.PUT("/:id", putSample)
-	g.DELETE("/:id", deleteSample)
 }
