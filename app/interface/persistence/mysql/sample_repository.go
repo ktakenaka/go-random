@@ -6,15 +6,14 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/ktakenaka/go-random/app/domain/entity"
-	"github.com/ktakenaka/go-random/app/external/database"
 )
 
 type SampleRepository struct {
 	DB *gorm.DB
 }
 
-func NewSampleRepository() *SampleRepository {
-	return &SampleRepository{DB: database.MySQLConnection()}
+func NewSampleRepository(db *gorm.DB) *SampleRepository {
+	return &SampleRepository{DB: db}
 }
 
 func (r *SampleRepository) FindAll() ([]*entity.Sample, error) {

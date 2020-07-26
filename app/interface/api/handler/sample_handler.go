@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"github.com/ktakenaka/go-random/app/domain/service"
+	"github.com/ktakenaka/go-random/app/external/database"
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
 	"github.com/ktakenaka/go-random/app/usecase"
@@ -22,7 +23,8 @@ func AddSampleHanlder(g *gin.RouterGroup) {
 }
 
 func getSamples(ctx *gin.Context) {
-	sampleRepository := mysql.NewSampleRepository()
+	db := database.MySQLConnection()
+	sampleRepository := mysql.NewSampleRepository(db)
 	sampleService := service.NewSampleService(sampleRepository)
 	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 	samples, err := suCase.ListSample()
@@ -40,7 +42,8 @@ func getSamples(ctx *gin.Context) {
 }
 
 func getSample(ctx *gin.Context) {
-	sampleRepository := mysql.NewSampleRepository()
+	db := database.MySQLConnection()
+	sampleRepository := mysql.NewSampleRepository(db)
 	sampleService := service.NewSampleService(sampleRepository)
 	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
@@ -64,7 +67,8 @@ func getSample(ctx *gin.Context) {
 }
 
 func postSample(ctx *gin.Context) {
-	sampleRepository := mysql.NewSampleRepository()
+	db := database.MySQLConnection()
+	sampleRepository := mysql.NewSampleRepository(db)
 	sampleService := service.NewSampleService(sampleRepository)
 	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
@@ -77,7 +81,8 @@ func postSample(ctx *gin.Context) {
 }
 
 func putSample(ctx *gin.Context) {
-	sampleRepository := mysql.NewSampleRepository()
+	db := database.MySQLConnection()
+	sampleRepository := mysql.NewSampleRepository(db)
 	sampleService := service.NewSampleService(sampleRepository)
 	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
@@ -94,7 +99,8 @@ func putSample(ctx *gin.Context) {
 }
 
 func deleteSample(ctx *gin.Context) {
-	sampleRepository := mysql.NewSampleRepository()
+	db := database.MySQLConnection()
+	sampleRepository := mysql.NewSampleRepository(db)
 	sampleService := service.NewSampleService(sampleRepository)
 	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 
