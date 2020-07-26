@@ -7,11 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
-	"github.com/ktakenaka/go-random/app/domain/service"
-	"github.com/ktakenaka/go-random/app/external/database"
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
-	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
-	"github.com/ktakenaka/go-random/app/usecase"
+	"github.com/ktakenaka/go-random/app/registry"
 )
 
 func AddSampleHanlder(g *gin.RouterGroup) {
@@ -23,10 +20,7 @@ func AddSampleHanlder(g *gin.RouterGroup) {
 }
 
 func getSamples(ctx *gin.Context) {
-	db := database.MySQLConnection()
-	sampleRepository := mysql.NewSampleRepository(db)
-	sampleService := service.NewSampleService(sampleRepository)
-	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
+	suCase := registry.InitializeSampleUsecase()
 	samples, err := suCase.ListSample()
 
 	if err != nil {
@@ -42,10 +36,7 @@ func getSamples(ctx *gin.Context) {
 }
 
 func getSample(ctx *gin.Context) {
-	db := database.MySQLConnection()
-	sampleRepository := mysql.NewSampleRepository(db)
-	sampleService := service.NewSampleService(sampleRepository)
-	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
+	suCase := registry.InitializeSampleUsecase()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
@@ -67,10 +58,7 @@ func getSample(ctx *gin.Context) {
 }
 
 func postSample(ctx *gin.Context) {
-	db := database.MySQLConnection()
-	sampleRepository := mysql.NewSampleRepository(db)
-	sampleService := service.NewSampleService(sampleRepository)
-	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
+	suCase := registry.InitializeSampleUsecase()
 
 	if err := suCase.RegisterSample(ctx.PostForm("title")); err != nil {
 		log.Print(err)
@@ -81,10 +69,7 @@ func postSample(ctx *gin.Context) {
 }
 
 func putSample(ctx *gin.Context) {
-	db := database.MySQLConnection()
-	sampleRepository := mysql.NewSampleRepository(db)
-	sampleService := service.NewSampleService(sampleRepository)
-	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
+	suCase := registry.InitializeSampleUsecase()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
@@ -99,10 +84,7 @@ func putSample(ctx *gin.Context) {
 }
 
 func deleteSample(ctx *gin.Context) {
-	db := database.MySQLConnection()
-	sampleRepository := mysql.NewSampleRepository(db)
-	sampleService := service.NewSampleService(sampleRepository)
-	suCase := usecase.NewSampleUsecase(sampleRepository, sampleService)
+	suCase := registry.InitializeSampleUsecase()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
