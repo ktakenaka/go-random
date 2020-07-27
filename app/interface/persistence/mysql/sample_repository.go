@@ -46,6 +46,9 @@ func (r *SampleRepository) FindByID(id int64) (*entity.Sample, error) {
 
 func (r *SampleRepository) Create(title string) error {
 	sample := entity.Sample{Title: title}
+	if err := sample.Validate(); err != nil {
+		return err
+	}
 
 	r.DB.Create(&sample)
 	if r.DB.NewRecord(sample) {
@@ -74,6 +77,10 @@ func (r *SampleRepository) Update(id int64, title string) error {
 
 	sample.Title = title
 	sample.UpdatedAt = time.Now()
+
+	if err := sample.Validate(); err != nil {
+		return err
+	}
 
 	if err := r.DB.Save(&sample).Error; err != nil {
 		return err

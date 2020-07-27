@@ -5,8 +5,8 @@ package registry
 
 import (
 	"github.com/google/wire"
-	"github.com/ktakenaka/go-random/app/domain/service"
 	"github.com/ktakenaka/go-random/app/domain/repository"
+	"github.com/ktakenaka/go-random/app/domain/service"
 	"github.com/ktakenaka/go-random/app/external/database"
 	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
 	"github.com/ktakenaka/go-random/app/usecase"
@@ -30,6 +30,5 @@ var (
 	sampleRepositorySet = wire.NewSet(
 		mysql.NewSampleRepository,
 		wire.Bind(new(repository.SampleRepository), new(*mysql.SampleRepository)),
-
 	)
 )
