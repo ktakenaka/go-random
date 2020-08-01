@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	if err := database.InitMySQLConnection(config.DBACCESS); err != nil {
+	if err := database.InitMySQLConnection(config.GenDBAceessStr()); err != nil {
 		log.Fatal(err)
 	}
 
