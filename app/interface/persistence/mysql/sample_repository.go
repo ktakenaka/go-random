@@ -6,6 +6,7 @@ import (
 
 	"github.com/jinzhu/gorm"
 	"github.com/ktakenaka/go-random/app/domain/entity"
+	"github.com/ktakenaka/go-random/app/domain/repository"
 )
 
 type SampleRepository struct {
@@ -86,4 +87,8 @@ func (r *SampleRepository) Update(id int64, title string) error {
 		return err
 	}
 	return nil
+}
+
+func (r *SampleRepository) AssignTx(txm repository.TransactionManager) {
+	r.DB = txm.GetTx()
 }

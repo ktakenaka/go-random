@@ -73,12 +73,15 @@ func putSample(ctx *gin.Context) {
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
+		log.Print(err)
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": "id must be integer"})
+		return
 	}
 
 	if err := suCase.UpdateSample(id, ctx.PostForm("title")); err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
+		return
 	}
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }

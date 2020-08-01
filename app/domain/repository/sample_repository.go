@@ -11,4 +11,5 @@ type SampleRepository interface {
 	Create(title string) error
 	Update(id int64, title string) error
 	Delete(id int64) error
+	AssignTx(txm TransactionManager)
 }

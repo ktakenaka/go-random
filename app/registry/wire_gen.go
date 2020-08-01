@@ -19,8 +19,9 @@ import (
 func InitializeSampleUsecase() *usecase.SampleUsecase {
 	db := database.MySQLConnection()
 	sampleRepository := mysql.NewSampleRepository(db)
+	transactionManager := mysql.NewTransactionManager(db)
 	sampleService := service.NewSampleService(sampleRepository)
-	sampleUsecase := usecase.NewSampleUsecase(sampleRepository, sampleService)
+	sampleUsecase := usecase.NewSampleUsecase(sampleRepository, transactionManager, sampleService)
 	return sampleUsecase
 }
 
@@ -31,5 +32,5 @@ var (
 )
 
 var (
-	sampleRepositorySet = wire.NewSet(mysql.NewSampleRepository, wire.Bind(new(repository.SampleRepository), new(*mysql.SampleRepository)))
+	sampleRepositorySet = wire.NewSet(mysql.NewSampleRepository, mysql.NewTransactionManager, wire.Bind(new(repository.SampleRepository), new(*mysql.SampleRepository)), wire.Bind(new(repository.TransactionManager), new(*mysql.TransactionManager)))
 )

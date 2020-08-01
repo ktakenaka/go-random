@@ -29,6 +29,8 @@ var (
 var (
 	sampleRepositorySet = wire.NewSet(
 		mysql.NewSampleRepository,
+		mysql.NewTransactionManager,
 		wire.Bind(new(repository.SampleRepository), new(*mysql.SampleRepository)),
+		wire.Bind(new(repository.TransactionManager), new(*mysql.TransactionManager)),
 	)
 )
