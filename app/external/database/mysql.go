@@ -1,21 +1,29 @@
 package database
 
 import (
-	"log"
+	"sync"
 
 	"github.com/jinzhu/gorm"
 	// http://gorm.io/docs/connecting_to_the_database.html
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-
-	"github.com/ktakenaka/go-random/app/config"
 )
 
-func MySQLConnection() *gorm.DB {
-	db, err := gorm.Open("mysql", config.DBACCESS)
+var (
+	once sync.Once
+	db   *gorm.DB
+)
 
+// pass config.DBACCESS to this function in main()
+func InitMySQLConnection(confStr string) (err error) {
+	once.Do(func() {
+		db, err = gorm.Open("mysql", confStr)
+	})
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil
+}
 
+func MySQLConnection() *gorm.DB {
 	return db
 }
