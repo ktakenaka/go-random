@@ -1,15 +1,20 @@
 package main
 
 import (
-	"github.com/ktakenaka/go-random/app/external/framework"
-
 	"log"
+
+	"github.com/ktakenaka/go-random/app/config"
+	"github.com/ktakenaka/go-random/app/external/database"
+	"github.com/ktakenaka/go-random/app/external/framework"
 )
 
 func main() {
+	if err := database.InitMySQLConnection(config.DBACCESS); err != nil {
+		log.Fatal(err)
+	}
+
 	router := framework.Handler()
-	err := router.Run(":8080")
-	if err != nil {
+	if err := router.Run(":8080"); err != nil {
 		log.Fatal(err)
 	}
 }
