@@ -15,26 +15,28 @@ func main() {
 	app := &cli.App{
 		Name:  "go-random",
 		Usage: "try everything",
-		Flags: []cli.Flag {
+		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name: "mysqluser",
+				Name:    "mysqluser",
 				EnvVars: []string{"MYSQL_USER"},
 			},
-			&cli.StringFlag {
-				Name: "mysqlpassword",
+			&cli.StringFlag{
+				Name:    "mysqlpassword",
 				EnvVars: []string{"MYSQL_PASSWORD"},
 			},
-			&cli.StringFlag {
-				Name: "dbhost",
+			&cli.StringFlag{
+				Name:    "dbhost",
 				EnvVars: []string{"DBHOST"},
-			},
-			&cli.StringFlag {
-				Name: "dbport",
-				EnvVars: []string{"DBPORT"},
 			},
 		},
 		Action: func(c *cli.Context) error {
-			if err := database.InitMySQLConnection(config.GenDBAceessStr()); err != nil {
+			conn := config.GenDBAceessStr(
+				c.String("mysqluser"),
+				c.String("mysqlpassword"),
+				c.String("dbhost"),
+			)
+
+			if err := database.InitMySQLConnection(conn); err != nil {
 				return err
 			}
 
