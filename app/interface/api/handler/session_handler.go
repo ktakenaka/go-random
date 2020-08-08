@@ -5,10 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/ktakenaka/go-random/app/config"
-	"github.com/ktakenaka/go-random/app/interface/adaptor/restclient"
-	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
-	"github.com/ktakenaka/go-random/app/usecase"
+	"github.com/ktakenaka/go-random/app/registry"
 )
 
 func AddSessionHandler(g *gin.RouterGroup) {
@@ -16,10 +13,7 @@ func AddSessionHandler(g *gin.RouterGroup) {
 }
 
 func createSessionWithGoogle(ctx *gin.Context) {
-	cnf := config.GetGoogleOauthConfig()
-	gRepo := restclient.NewGoogleRepository(cnf)
-	uRepo := mysql.NewUserRepository()
-	uc := usecase.NewSignInUsecase(gRepo, uRepo)
+	uc := registry.InitializeSignInUsecase()
 	user, err := uc.Execute(ctx.PostForm("code"))
 
 	if err != nil {
