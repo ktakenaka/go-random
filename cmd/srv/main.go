@@ -28,6 +28,19 @@ func main() {
 				Name:    "dbhost",
 				EnvVars: []string{"DBHOST"},
 			},
+			&cli.StringFlag{
+				Name:    "google_client_id",
+				EnvVars: []string{"GOOGLE_CLIENT_ID"},
+			},
+			&cli.StringFlag{
+				Name:    "google_client_secret",
+				EnvVars: []string{"GOOGLE_CLIENT_SECRET"},
+			},
+			&cli.StringFlag{
+				Name:    "google_redirect_url",
+				EnvVars: []string{"GOOGLE_REDIRECT_URL"},
+				Value:   "http://localhost:3000/auth/google/callback",
+			},
 		},
 		Action: func(c *cli.Context) error {
 			conn := config.GenDBAceessStr(
@@ -39,6 +52,12 @@ func main() {
 			if err := database.InitMySQLConnection(conn); err != nil {
 				return err
 			}
+
+			config.InitGoogleOIDCCnf(
+				c.String("google_redirect_url"),
+				c.String("google_client_id"),
+				c.String("google_client_secret"),
+			)
 
 			router := framework.Handler()
 			if err := router.Run(":8080"); err != nil {

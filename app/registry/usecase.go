@@ -5,16 +5,24 @@ package registry
 
 import (
 	"github.com/google/wire"
+
+	"github.com/ktakenaka/go-random/app/config"
 	"github.com/ktakenaka/go-random/app/domain/repository"
 	"github.com/ktakenaka/go-random/app/domain/service"
 	"github.com/ktakenaka/go-random/app/external/database"
 	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
+	"github.com/ktakenaka/go-random/app/interface/adaptor/restclient"
 	"github.com/ktakenaka/go-random/app/usecase"
 )
 
 func InitializeSampleUsecase() *usecase.SampleUsecase {
 	wire.Build(SampleUsecaseSet)
 	return &usecase.SampleUsecase{}
+}
+
+func InitializeSignInUsecase() *usecase.SignInUsecase {
+	wire.Build(SignInUsecaseSet)
+	return &usecase.SignInUsecase{}
 }
 
 var (
@@ -24,13 +32,28 @@ var (
 		service.NewSampleService,
 		usecase.NewSampleUsecase,
 	)
-)
 
-var (
 	sampleRepositorySet = wire.NewSet(
 		mysql.NewSampleRepository,
 		mysql.NewTransactionManager,
 		wire.Bind(new(repository.SampleRepository), new(*mysql.SampleRepository)),
 		wire.Bind(new(repository.TransactionManager), new(*mysql.TransactionManager)),
+	)
+
+	SignInUsecaseSet = wire.NewSet(
+		googleRepositorySet,
+		userRepositorySet,
+		usecase.NewSignInUsecase,
+	)
+
+	googleRepositorySet = wire.NewSet(
+		config.GetGoogleOauthConfig,
+		restclient.NewGoogleRepository,
+		wire.Bind(new(repository.GoogleRepository), new(*restclient.GoogleRepository)),
+	)
+
+	userRepositorySet = wire.NewSet(
+		mysql.NewUserRepository,
+		wire.Bind(new(repository.UserRepository), new(*mysql.UserRepository)),
 	)
 )
