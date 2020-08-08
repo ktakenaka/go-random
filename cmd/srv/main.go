@@ -37,9 +37,9 @@ func main() {
 				EnvVars: []string{"GOOGLE_CLIENT_SECRET"},
 			},
 			&cli.StringFlag{
-				Name: "google_redirect_url",
+				Name:    "google_redirect_url",
 				EnvVars: []string{"GOOGLE_REDIRECT_URL"},
-				Value: "http://localhost:8000/auth/google/callback",
+				Value:   "http://localhost:3000/auth/google/callback",
 			},
 		},
 		Action: func(c *cli.Context) error {
@@ -53,7 +53,7 @@ func main() {
 				return err
 			}
 
-			config.InitGoogleOauthConfig(
+			config.InitGoogleOIDCCnf(
 				c.String("google_redirect_url"),
 				c.String("google_client_id"),
 				c.String("google_client_secret"),
