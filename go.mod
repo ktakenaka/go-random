@@ -10,4 +10,5 @@ require (
 	github.com/jinzhu/gorm v1.9.14
 	github.com/stretchr/testify v1.4.0
 	github.com/urfave/cli/v2 v2.2.0
+	golang.org/x/oauth2 v0.0.0-20200107190931-bf48bf16ab8d
 )

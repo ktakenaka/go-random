@@ -14,6 +14,7 @@ func Handler() *gin.Engine {
 
 	v1 := router.Group("/api/v1")
 	handler.AddSampleHanlder(v1.Group("/samples"))
+	handler.AddSessionHandler(v1.Group("/sessions"))
 
 	return router
 }
