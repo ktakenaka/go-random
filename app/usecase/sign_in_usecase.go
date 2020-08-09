@@ -24,10 +24,10 @@ func (uc *SignInUsecase) Execute(code string) (interface{}, error) {
 		return nil, err
 	}
 
-	user, err := uc.googleRepo.GetUserInfo(token)
+	body, err := uc.googleRepo.GetUserInfo(token)
 	if err != nil {
 		return nil, err
 	}
 
-	return user, nil
+	return body, nil
 }

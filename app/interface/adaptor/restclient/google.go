@@ -5,8 +5,6 @@ import (
 
 	"github.com/coreos/go-oidc"
 	"golang.org/x/oauth2"
-
-	"github.com/ktakenaka/go-random/app/domain/entity"
 )
 
 type GoogleRepository struct {
@@ -30,7 +28,7 @@ func (r *GoogleRepository) GetToken(code string) (*oauth2.Token, error) {
 	return oauth2Tkn, nil
 }
 
-func (r *GoogleRepository) GetUserInfo(token *oauth2.Token) (*entity.User, error) {
+func (r *GoogleRepository) GetUserInfo(token *oauth2.Token) (map[string]interface{}, error) {
 	provider, err := oidc.NewProvider(context.Background(), "https://accounts.google.com")
 	if err != nil {
 		return nil, err
@@ -47,10 +45,5 @@ func (r *GoogleRepository) GetUserInfo(token *oauth2.Token) (*entity.User, error
 		return nil, err
 	}
 
-	user := entity.User{
-		GoogleSub: body["sub"].(string),
-		Email:     body["email"].(string),
-	}
-
-	return &user, nil
+	return body, nil
 }
