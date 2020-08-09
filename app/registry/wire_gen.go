@@ -30,7 +30,8 @@ func InitializeSampleUsecase() *usecase.SampleUsecase {
 func InitializeSignInUsecase() *usecase.SignInUsecase {
 	oauth2Config := config.GetGoogleOauthConfig()
 	googleRepository := restclient.NewGoogleRepository(oauth2Config)
-	userRepository := mysql.NewUserRepository()
+	db := database.MySQLConnection()
+	userRepository := mysql.NewUserRepository(db)
 	signInUsecase := usecase.NewSignInUsecase(googleRepository, userRepository)
 	return signInUsecase
 }
@@ -42,8 +43,7 @@ var (
 
 	sampleRepositorySet = wire.NewSet(mysql.NewSampleRepository, mysql.NewTransactionManager, wire.Bind(new(repository.SampleRepository), new(*mysql.SampleRepository)), wire.Bind(new(repository.TransactionManager), new(*mysql.TransactionManager)))
 
-	SignInUsecaseSet = wire.NewSet(
-		googleRepositorySet,
+	SignInUsecaseSet = wire.NewSet(database.MySQLConnection, googleRepositorySet,
 		userRepositorySet, usecase.NewSignInUsecase,
 	)
 

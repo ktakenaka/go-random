@@ -15,7 +15,6 @@ func AddSessionHandler(g *gin.RouterGroup) {
 func createSessionWithGoogle(ctx *gin.Context) {
 	uc := registry.InitializeSignInUsecase()
 	user, err := uc.Execute(ctx.PostForm("code"))
-
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
 		return

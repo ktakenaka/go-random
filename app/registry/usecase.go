@@ -10,8 +10,8 @@ import (
 	"github.com/ktakenaka/go-random/app/domain/repository"
 	"github.com/ktakenaka/go-random/app/domain/service"
 	"github.com/ktakenaka/go-random/app/external/database"
-	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
 	"github.com/ktakenaka/go-random/app/interface/adaptor/restclient"
+	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
 	"github.com/ktakenaka/go-random/app/usecase"
 )
 
@@ -41,6 +41,7 @@ var (
 	)
 
 	SignInUsecaseSet = wire.NewSet(
+		database.MySQLConnection,
 		googleRepositorySet,
 		userRepositorySet,
 		usecase.NewSignInUsecase,
