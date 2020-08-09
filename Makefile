@@ -21,4 +21,4 @@ bash:
 	@docker-compose exec app bash
 
 mysql:
-	docker-compose exec db mysql -urandom -prandom
+	docker-compose exec db mysql -urandom -prandom go-random

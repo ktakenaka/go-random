@@ -41,6 +41,11 @@ func main() {
 				EnvVars: []string{"GOOGLE_REDIRECT_URL"},
 				Value:   "http://localhost:3000/auth/google/callback",
 			},
+			&cli.StringFlag{
+				Name:    "jwt_secret",
+				EnvVars: []string{"JWT_SECRET"},
+				Value:   "jwt_secret_for_development",
+			},
 		},
 		Action: func(c *cli.Context) error {
 			conn := config.GenDBAceessStr(
@@ -48,7 +53,6 @@ func main() {
 				c.String("mysqlpassword"),
 				c.String("dbhost"),
 			)
-
 			if err := database.InitMySQLConnection(conn); err != nil {
 				return err
 			}
@@ -57,6 +61,9 @@ func main() {
 				c.String("google_redirect_url"),
 				c.String("google_client_id"),
 				c.String("google_client_secret"),
+			)
+			config.InitJWTSecret(
+				c.String("jwt_secret"),
 			)
 
 			router := framework.Handler()
