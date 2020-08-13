@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -21,8 +22,16 @@ func createSessionWithGoogle(ctx *gin.Context) {
 		return
 	}
 
+	csrfTkn, err := jwtutil.GenerateCSRFToken()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"errors": err.Error()})
+		return
+	}
+
 	claims := jwtutil.AuthClaims{
-		UserID: user.ID, //TODO: make user_id hash
+		UserID:    user.ID, //TODO: make user_id hash
+		IssueTime: time.Now(),
+		CSRFToken: csrfTkn,
 	}
 
 	aTkn, rTkn, csrfTkn, err := jwtutil.GenerateToken(&claims)
