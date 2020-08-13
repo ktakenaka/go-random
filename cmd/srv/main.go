@@ -7,6 +7,7 @@ import (
 	"github.com/ktakenaka/go-random/app/config"
 	"github.com/ktakenaka/go-random/app/external/database"
 	"github.com/ktakenaka/go-random/app/external/framework"
+	"github.com/ktakenaka/go-random/helper/jwtutil"
 
 	"github.com/urfave/cli/v2"
 )
@@ -62,7 +63,7 @@ func main() {
 				c.String("google_client_id"),
 				c.String("google_client_secret"),
 			)
-			config.InitJWTSecret(
+			jwtutil.InitJWTSecret(
 				c.String("jwt_secret"),
 			)
 
