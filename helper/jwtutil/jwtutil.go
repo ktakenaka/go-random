@@ -74,7 +74,8 @@ func VerifyJWT(tokenStr string) (AuthClaims, error) {
 	}
 
 	authClaims := AuthClaims{
-		UserID: uint64(claims["user_id"].(float64)),
+		UserID:    uint64(claims["user_id"].(float64)),
+		CSRFToken: claims["csrf_token"].(string),
 	}
 	return authClaims, nil
 }

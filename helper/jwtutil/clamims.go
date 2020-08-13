@@ -1,8 +1,9 @@
 package jwtutil
 
 import (
-	"github.com/dgrijalva/jwt-go"
 	"time"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 // AuthClaims the claim for authentication
