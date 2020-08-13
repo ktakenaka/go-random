@@ -1,7 +1,6 @@
 package jwtutil
 
 import (
-	"crypto/rand"
 	"fmt"
 	"sync"
 	"time"
@@ -20,9 +19,8 @@ var (
 )
 
 const (
-	csrfTokenLength = 32
-	aExpDuration    = time.Hour * 12
-	rExpDuration    = time.Hour * 24
+	aExpDuration = time.Hour * 12
+	rExpDuration = time.Hour * 24
 )
 
 // InitJWTSecret set jwtSecret
@@ -34,13 +32,6 @@ func InitJWTSecret(secret string) {
 
 // GenerateToken generates JWT for authentication
 func GenerateToken(claims *AuthClaims) (aTokenStr, rTokenStr, csrfToken string, err error) {
-	csrfToken, err = generateCSRFToken(csrfTokenLength)
-	if err != nil {
-		return "", "", "", err
-	}
-
-	claims.CSRFToken = csrfToken
-
 	aTokenStr, err = generateJWT(claims, aExpDuration)
 	if err != nil {
 		return "", "", "", err
@@ -53,25 +44,15 @@ func GenerateToken(claims *AuthClaims) (aTokenStr, rTokenStr, csrfToken string, 
 
 // TODO: consider using Redis to revoke token per user
 func generateJWT(claims *AuthClaims, expDur time.Duration) (tokenStr string, err error) {
-	issuedAt := time.Now()
 	claims.StandardClaims = jwt.StandardClaims{
-		IssuedAt:  issuedAt.Unix(),
-		ExpiresAt: issuedAt.Add(expDur).Unix(),
+		IssuedAt:  claims.IssueTime.Unix(),
+		ExpiresAt: claims.IssueTime.Add(expDur).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenStr, err = token.SignedString(jwtSecret)
 
 	return tokenStr, err
-}
-
-func generateCSRFToken(length int) (string, error) {
-	b := make([]byte, length)
-	if _, err := rand.Read(b); err != nil {
-		return "", err
-	}
-
-	return fmt.Sprintf("%x", b), nil
 }
 
 // VerifyJWT validates JWT and extract userId and officeID
