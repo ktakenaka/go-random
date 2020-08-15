@@ -16,7 +16,7 @@ type JWTPayload struct {
 }
 
 const (
-	secret      = "secret-for-dev"
+	secret      = "zczVF9MSs92Rh9eHT8KHSSE2hYYRfadv"
 	identityKey = "user_id"
 )
 
@@ -25,7 +25,7 @@ func NewGinJWTMiddleware() *jwt.GinJWTMiddleware {
 		Realm:       "go-random",
 		Key:         []byte(secret),
 		Timeout:     time.Hour,
-		MaxRefresh:  time.Hour * 24, // TODO: check exp
+		MaxRefresh:  time.Hour * 24,
 		IdentityKey: identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {
 			if v, ok := data.(JWTPayload); ok {

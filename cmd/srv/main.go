@@ -45,7 +45,7 @@ func main() {
 			&cli.StringFlag{
 				Name:    "jwt_secret",
 				EnvVars: []string{"JWT_SECRET"},
-				Value:   "jwt_secret_for_development",
+				Value:   "N74Yq7tIfzO9muKLUhJuWXBZNhd9HXD7",
 			},
 		},
 		Action: func(c *cli.Context) error {
