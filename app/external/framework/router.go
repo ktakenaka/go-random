@@ -25,6 +25,14 @@ func Handler() *gin.Engine {
 	auth.Use(authMiddleware.MiddlewareFunc())
 	auth.GET("/hello", middleware.HelloHandler)
 
+	csrfTrial := router.Group("/csrf")
+	csrfTrial.Use(middleware.NewCSRFStore())
+	csrfTrial.Use(middleware.NewGinCSRFMiddleware())
+	csrfTrial.GET("/protected", middleware.GetCSRFToken)
+	csrfTrial.POST("/protected", func(ctx *gin.Context) {
+		ctx.String(http.StatusOK, "ok")
+	})
+
 	return router
 }
 
