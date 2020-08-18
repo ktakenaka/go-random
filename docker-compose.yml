@@ -11,6 +11,7 @@ services:
       - ./:/go/src
       - /go/src/db-data
       - /go/src/logs
+      - /go/src/web
     environment: 
       MYSQL_USER: random
       MYSQL_PASSWORD: random
@@ -30,5 +31,15 @@ services:
       MYSQL_USER: random
       MYSQL_PASSWORD: random
       BIND-ADDRESS: 0.0.0.0
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile-fe
+    volumes:
+     - ./web:/usr/src/app
+    command: sh -c "yarn start"
+    ports:
+      - "3000:3000"
+    tty: true
 volumes: 
   db-data:
