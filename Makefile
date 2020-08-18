@@ -22,3 +22,9 @@ bash:
 
 mysql:
 	docker-compose exec db mysql -urandom -prandom go-random
+
+yarn-install:
+	docker-compose exec web yarn install
+
+yarn-add:
+	docker-compose exec web yarn add ${PKG}
