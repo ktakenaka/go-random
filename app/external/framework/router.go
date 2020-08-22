@@ -2,6 +2,7 @@ package framework
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/ktakenaka/go-random/app/interface/api/handler"
@@ -17,21 +18,24 @@ func Handler() *gin.Engine {
 	handler.AddSampleHanlder(v1.Group("/samples"))
 	handler.AddSessionHandler(v1.Group("/sessions"))
 
-	authMiddleware := middleware.NewGinJWTMiddleware()
-	router.POST("/login", authMiddleware.LoginHandler)
+	// These are trial purpose, not for use
+	if os.Getenv("ENV") == "development" {
+		authMiddleware := middleware.NewGinJWTMiddleware()
+		router.POST("/login", authMiddleware.LoginHandler)
 
-	auth := router.Group("/auth")
-	auth.GET("/refresh_token", authMiddleware.RefreshHandler)
-	auth.Use(authMiddleware.MiddlewareFunc())
-	auth.GET("/hello", middleware.HelloHandler)
+		auth := router.Group("/auth")
+		auth.GET("/refresh_token", authMiddleware.RefreshHandler)
+		auth.Use(authMiddleware.MiddlewareFunc())
+		auth.GET("/hello", middleware.HelloHandler)
 
-	csrfTrial := router.Group("/csrf")
-	csrfTrial.Use(middleware.NewCSRFStore())
-	csrfTrial.Use(middleware.NewGinCSRFMiddleware())
-	csrfTrial.GET("/protected", middleware.GetCSRFToken)
-	csrfTrial.POST("/protected", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "ok")
-	})
+		csrfTrial := router.Group("/csrf")
+		csrfTrial.Use(middleware.NewCSRFStore())
+		csrfTrial.Use(middleware.NewGinCSRFMiddleware())
+		csrfTrial.GET("/protected", middleware.GetCSRFToken)
+		csrfTrial.POST("/protected", func(ctx *gin.Context) {
+			ctx.String(http.StatusOK, "ok")
+		})
+	}
 
 	return router
 }

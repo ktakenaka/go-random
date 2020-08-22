@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/ktakenaka/go-random/app/interface/api/middleware"
 	"github.com/ktakenaka/go-random/app/registry"
 	"github.com/ktakenaka/go-random/helper/jwtutil"
 )
@@ -40,8 +41,8 @@ func createSessionWithGoogle(ctx *gin.Context) {
 		return
 	}
 
-	ctx.SetCookie("aa_jwt_access", aTkn, 86400, "/api", "", false, true)
-	ctx.SetCookie("aa_jwt_refresh", rTkn, 86400, "/api", "", false, true)
+	middleware.SetAccessCookie(ctx, aTkn)
+	middleware.SetRefreshCookie(ctx, rTkn)
 
 	ctx.JSON(http.StatusOK, gin.H{"data": csrfTkn})
 }

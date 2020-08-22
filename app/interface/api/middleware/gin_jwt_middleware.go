@@ -16,14 +16,13 @@ type JWTPayload struct {
 }
 
 const (
-	secret      = "zczVF9MSs92Rh9eHT8KHSSE2hYYRfadv"
 	identityKey = "user_id"
 )
 
 func NewGinJWTMiddleware() *jwt.GinJWTMiddleware {
 	googleAuthMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "go-random",
-		Key:         []byte(secret),
+		Key:         []byte("zczVF9MSs92Rh9eHT8KHSSE2hYYRfadv"),
 		Timeout:     time.Hour,
 		MaxRefresh:  time.Hour * 24,
 		IdentityKey: identityKey,
