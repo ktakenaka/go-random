@@ -48,6 +48,6 @@ func (uc *SignInUsecase) Execute(code string) (aTkn, rTkn, csrfTkn string, err e
 		CSRFToken: csrfTkn,
 	}
 
-	aTkn, rTkn, csrfTkn, err = jwtutil.GenerateToken(&claims)
+	aTkn, rTkn, err = jwtutil.GenerateToken(&claims)
 	return aTkn, rTkn, csrfTkn, err
 }

@@ -31,15 +31,15 @@ func InitJWTSecret(secret string) {
 }
 
 // GenerateToken generates JWT for authentication
-func GenerateToken(claims *AuthClaims) (aTokenStr, rTokenStr, csrfToken string, err error) {
+func GenerateToken(claims *AuthClaims) (aTokenStr, rTokenStr string, err error) {
 	aTokenStr, err = generateJWT(claims, aExpDuration)
 	if err != nil {
-		return "", "", "", err
+		return "", "", err
 	}
 
 	rTokenStr, err = generateJWT(claims, rExpDuration)
 
-	return aTokenStr, rTokenStr, csrfToken, err
+	return aTokenStr, rTokenStr, err
 }
 
 // TODO: consider using Redis to revoke token per user
