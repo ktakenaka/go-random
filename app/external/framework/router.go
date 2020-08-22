@@ -15,6 +15,8 @@ func Handler() *gin.Engine {
 	router.GET("/", root)
 
 	v1 := router.Group("/api/v1")
+	cookeAuth := middleware.NewCookieAuthenticator()
+	v1.Use(cookeAuth.AuthenticateAccess)
 	handler.AddSampleHanlder(v1.Group("/samples"))
 	handler.AddSessionHandler(v1.Group("/sessions"))
 

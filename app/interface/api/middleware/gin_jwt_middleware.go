@@ -7,8 +7,6 @@ import (
 
 	jwt "github.com/appleboy/gin-jwt/v2"
 	"github.com/gin-gonic/gin"
-
-	"github.com/ktakenaka/go-random/app/registry"
 )
 
 type JWTPayload struct {
@@ -41,12 +39,13 @@ func NewGinJWTMiddleware() *jwt.GinJWTMiddleware {
 			}
 		},
 		Authenticator: func(ctx *gin.Context) (interface{}, error) {
-			uc := registry.InitializeSignInUsecase()
-			user, err := uc.Execute(ctx.PostForm("code"))
-			if err != nil {
-				return JWTPayload{}, err
-			}
-			return JWTPayload{UserID: user.ID}, nil
+			// For example use as follows
+			// uc := registry.InitializeSignInUsecase()
+			// user, err := uc.Execute(ctx.PostForm("code"))
+			// if err != nil {
+			// 	return JWTPayload{}, err
+			// }
+			return JWTPayload{}, nil
 		},
 		Authorizator: func(data interface{}, ctx *gin.Context) bool {
 			return true
