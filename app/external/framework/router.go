@@ -14,11 +14,13 @@ func Handler() *gin.Engine {
 
 	router.GET("/", root)
 
-	v1 := router.Group("/api/v1")
+	v1NoAuth := router.Group("/api/v1")
+	handler.AddSessionHandler(v1NoAuth.Group("/sessions"))
+
+	v1Auth := router.Group("/api/v1")
 	cookeAuth := middleware.NewCookieAuthenticator()
-	v1.Use(cookeAuth.AuthenticateAccess)
-	handler.AddSampleHanlder(v1.Group("/samples"))
-	handler.AddSessionHandler(v1.Group("/sessions"))
+	v1Auth.Use(cookeAuth.AuthenticateAccess)
+	handler.AddSampleHanlder(v1Auth.Group("/samples"))
 
 	// These are trial purpose, not for use
 	if os.Getenv("ENV") == "development" {
