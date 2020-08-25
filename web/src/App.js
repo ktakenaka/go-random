@@ -4,9 +4,7 @@ import history from './browserHistory';
 
 import './App.css';
 
-import {
-  HomePage,
-} from './components';
+import HomePage from './components/pages/HomePage/index';
 
 function App() {
   return (

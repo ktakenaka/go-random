@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
-// import { MainTemplate } from 'components';
+import MainTemplate from '../../templates/Main/index';
 
 const HomePage = () => {
   return (
-    <div>
-      Hello!
-    </div>
+    <MainTemplate>
+      <div>
+        <h2>HOME</h2>
+      </div>
+    </MainTemplate>
   );
 }
 
