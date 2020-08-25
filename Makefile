@@ -17,8 +17,11 @@ mod:
 	docker-compose exec app go mod tidy
 	docker-compose exec app go mod vendor
 
-bash:
+be-bash:
 	@docker-compose exec app bash
+
+fe-sh:
+	@docker-compose exec web sh
 
 mysql:
 	docker-compose exec db mysql -urandom -prandom go-random
