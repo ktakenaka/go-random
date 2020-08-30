@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
 import { Router, Route, Switch } from 'react-router-dom';
-import history from './browserHistory';
+import history from '../browserHistory';
 
-import './App.css';
+import './index.css';
 
-import HomePage from './components/pages/HomePage/index';
+import HomePage from '../pages/HomePage/index';
 
 function App() {
   return (

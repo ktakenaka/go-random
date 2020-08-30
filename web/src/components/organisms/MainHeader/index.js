@@ -1,13 +1,13 @@
 import React from 'react';
-import { Wrapper, LeftContent, RightContent, Devide, Item } from './styles';
+import { Wrapper, LeftContent, RightContent, Divide, Item } from './styles';
 
 const MainHeader = () => {
   return (
     <Wrapper>
       <LeftContent>
-        <Devide />
         <Item>Left</Item>
       </LeftContent>
+      <Divide/>
       <RightContent>
         <Item>Right</Item>
       </RightContent>

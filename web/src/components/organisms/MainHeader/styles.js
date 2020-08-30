@@ -14,7 +14,7 @@ export const Wrapper = styled.div`
   }
 `;
 
-export const Devide = styled.div`
+export const Divide = styled.div`
   height: 18px;
   border-left: 1px solid #d8d8d8;
   margin: 0 11px 0 18px;
