@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import MainTemplate from '../../templates/Main/index';
+import MainTemplate from '../../components/templates/Main';
 
 const HomePage = () => {
   return (
