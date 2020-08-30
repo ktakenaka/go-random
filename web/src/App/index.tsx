@@ -4,7 +4,7 @@ import history from '../browserHistory';
 
 import './index.css';
 
-import HomePage from '../pages/HomePage/index';
+import { HomePage } from '../pages';
 
 function App() {
   return (
