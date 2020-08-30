@@ -8,7 +8,7 @@ interface Props {
   children: React.ReactNode,
 }
 
-const MainTemplate = ({ header, children }:Props) => {
+const MainTemplate = ({ header=<MainHeader/>, children }:Props) => {
   return (
     <Wrapper>
       <Header>
@@ -19,10 +19,6 @@ const MainTemplate = ({ header, children }:Props) => {
       </Body>
     </Wrapper>
   )
-}
-
-MainTemplate.defaultProps = {
-  header: <MainHeader/>,
 }
 
 export default MainTemplate
