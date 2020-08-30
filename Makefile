@@ -1,3 +1,6 @@
+up:
+	docker-compose up -d
+
 run:
 	docker-compose exec app go run cmd/srv/main.go
 
