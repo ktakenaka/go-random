@@ -1,8 +1,11 @@
 up:
 	docker-compose up -d
 
-run:
+be-run:
 	docker-compose exec app go run cmd/srv/main.go
+
+restart:
+	docker-compose restart
 
 lint:
 	docker-compose exec app golangci-lint run
