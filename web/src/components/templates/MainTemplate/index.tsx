@@ -1,24 +1,22 @@
-import React from 'react';
+import React from "react";
 
-import { Wrapper, Header, Body, Content } from './styles';
-import { MainHeader } from '../../index'
+import { Wrapper, Header, Body, Content } from "./styles";
+import { MainHeader } from "../../index";
 
 type Props = {
-  header?: JSX.Element,
-  children: React.ReactNode,
-}
+  header?: JSX.Element;
+  children: React.ReactNode;
+};
 
-const MainTemplate = ({ header=<MainHeader/>, children }:Props) => {
+const MainTemplate = ({ header = <MainHeader />, children }: Props) => {
   return (
     <Wrapper>
-      <Header>
-        {header}
-      </Header>
+      <Header>{header}</Header>
       <Body>
-        <Content>{children }</Content>
+        <Content>{children}</Content>
       </Body>
     </Wrapper>
-  )
-}
+  );
+};
 
-export default MainTemplate
+export default MainTemplate;

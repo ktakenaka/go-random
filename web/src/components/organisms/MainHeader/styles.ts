@@ -1,16 +1,16 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
   display: flex;
   flex-flow: row nowrap;
   padding: 8px 0px 12px 20px;
-  color: #3A3A3A;
+  color: #3a3a3a;
   justify-content: space-between;
   height: 40px;
-  border-bottom: 1px solid #D4D8DD;
-  background-color: #FFFFFF;
+  border-bottom: 1px solid #d4d8dd;
+  background-color: #ffffff;
   svg {
-    color: #7C8291;
+    color: #7c8291;
   }
 `;
 
