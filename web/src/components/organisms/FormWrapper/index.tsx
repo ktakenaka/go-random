@@ -1,5 +1,6 @@
 import React from 'react';
 import FormInput from '../../atoms/FormInput';
+import Button from '../../atoms/Button';
 import Form from '../../molecules/Form';
 
 type Props = {
@@ -11,7 +12,13 @@ const FormWrapper = ({onSubmit, onChange}:Props) => {
   return (
     <Form onSubmit={onSubmit}>
       <FormInput onChange={onChange} />
-      <input type='submit' value='submit' />
+      <Button
+        type='submit'
+        size='medium'
+        color='blue'
+        disabled={false}
+        value='submit'
+      />
     </Form>
   );
 };

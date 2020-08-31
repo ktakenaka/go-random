@@ -1,27 +1,22 @@
 import React from 'react';
-import { Button as ButtonAnt } from 'antd';
 import { ButtonWrapper } from './style'
 
 type Props = {
   size: 'shorter' | 'short' | 'medium' | 'big',
   color: 'blue' | 'grey',
-  children: React.ReactNode,
   disabled: boolean,
-  type: 'button' | 'submit',
-  onClick:((...params: any[]) => any)
+  type: 'submit' | 'button',
+  value: string
 };
 
-const Button = ({ type, size, color, children, disabled, onClick }:Props) => {
+const Button = ({ type, size, color, disabled, value }:Props) => {
   return (
     <ButtonWrapper
-      className={`color-${color} size=${size}`}
-      onClick={onClick}
+      className={`color-${color} size-${size}`}
       type={type}
       disabled={disabled}
     >
-      <ButtonAnt>
-        {children}
-      </ButtonAnt>
+      {value}
     </ButtonWrapper>
   )
 };

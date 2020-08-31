@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const InputWrapper = styled.div`
+export const FormInputWrapper = styled.div`
   display: contents;
   input {
     border: 1px solid #D4D8DD;

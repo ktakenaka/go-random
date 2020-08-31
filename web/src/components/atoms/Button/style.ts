@@ -11,10 +11,6 @@ export const ButtonWrapper = styled.button`
   &:disabled {
     opacity: 0.5;
   }
-  &.ant-btn-loading {
-    padding-left: 10px;
-    padding-right: 10px;
-  }
   &.size-shorter {
     min-width: 90px;
     height: 32px;
