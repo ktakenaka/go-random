@@ -1,5 +1,5 @@
-import React from 'react';
-import { Wrapper, LeftContent, RightContent, Divide, Item } from './styles';
+import React from "react";
+import { Wrapper, LeftContent, RightContent, Divide, Item } from "./styles";
 
 const MainHeader = () => {
   return (
@@ -7,12 +7,12 @@ const MainHeader = () => {
       <LeftContent>
         <Item>Left</Item>
       </LeftContent>
-      <Divide/>
+      <Divide />
       <RightContent>
         <Item>Right</Item>
       </RightContent>
     </Wrapper>
-  )
-}
+  );
+};
 
 export default MainHeader;

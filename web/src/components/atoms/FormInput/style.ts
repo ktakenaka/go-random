@@ -1,9 +1,9 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const FormInputWrapper = styled.div`
   display: contents;
   input {
-    border: 1px solid #D4D8DD;
+    border: 1px solid #d4d8dd;
     box-sizing: border-box;
     border-radius: 4px;
     height: 28px;
@@ -12,14 +12,14 @@ export const FormInputWrapper = styled.div`
     font-size: 13px;
     &.error {
       border-color: #dc3545;
-      background-color: #FFEEEB;
+      background-color: #ffeeeb;
     }
     &:focus {
       color: #495057;
       background-color: #fff;
       border-color: #80bdff;
       outline: 0;
-      box-shadow: 0 0 0 0.1rem rgba(0,123,255,.25);
+      box-shadow: 0 0 0 0.1rem rgba(0, 123, 255, 0.25);
     }
   }
 `;

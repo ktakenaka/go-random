@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from "@emotion/styled";
 
 export const ButtonWrapper = styled.button`
   font-size: 14px;
@@ -28,19 +28,19 @@ export const ButtonWrapper = styled.button`
     height: 44px;
   }
   &.color-blue {
-    background: linear-gradient(180deg, #3B7DE9 0%, #0054AC 100%) !important;
-    border: 1px solid #3B7DE9 !important;
-    color: #FFFFFF !important;
+    background: linear-gradient(180deg, #3b7de9 0%, #0054ac 100%) !important;
+    border: 1px solid #3b7de9 !important;
+    color: #ffffff !important;
     &:hover {
-      background: linear-gradient(90deg, #3B7DE9 0%, #0054AC 100%) !important;
+      background: linear-gradient(90deg, #3b7de9 0%, #0054ac 100%) !important;
     }
   }
   &.color-grey {
-    background: linear-gradient(180deg, #FFFFFF 0%, #EFF1F4 100%);
-    border: 1px solid #D4D8DD;
-    color: #3B7DE9;
+    background: linear-gradient(180deg, #ffffff 0%, #eff1f4 100%);
+    border: 1px solid #d4d8dd;
+    color: #3b7de9;
     &:hover {
-      background: linear-gradient(90deg, #FFFFFF 0%, #EFF1F4 100%);
+      background: linear-gradient(90deg, #ffffff 0%, #eff1f4 100%);
     }
   }
 `;
