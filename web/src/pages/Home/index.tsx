@@ -12,10 +12,11 @@ import {
   SAMPLE_DECREMENT,
   SAMPLE_INCREMENT,
   SAMPLE_INCREMENT_ASYNC,
+  submitSample,
 } from "../../store/actions";
 
-const HomePage = ({ count, actionCreate }: Props) => {
-  const [samples, setSamples] = useState<string[]>([
+const HomePage = ({ count, samples, actionCreate, submitSample }: Props) => {
+  const [samplers, setSamples] = useState<string[]>([
     "sample1",
     "sample2",
     "sample3",
@@ -29,7 +30,8 @@ const HomePage = ({ count, actionCreate }: Props) => {
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setSamples([...samples.concat(value)]);
+    submitSample(value);
+    setSamples([...samplers.concat(value)]);
   };
 
   return (
@@ -37,7 +39,7 @@ const HomePage = ({ count, actionCreate }: Props) => {
       <h2>HOME</h2>
 
       <Fragment>
-        <SampleList samples={samples} />
+        <SampleList samples={samplers} />
         <FormWrapper onChange={onChange} onSubmit={onSubmit} />
       </Fragment>
 
@@ -51,21 +53,28 @@ const HomePage = ({ count, actionCreate }: Props) => {
   );
 };
 
-type Props = {
-  count: number;
+interface Props extends State {
   actionCreate: (type: string) => void;
+  submitSample: (title: string) => void;
 };
+
+interface Sample {
+  title: string;
+}
 
 interface State {
   count: number;
+  samples: Array<Sample>;
 }
 
 const mapStateToProps = (state: Readonly<State>) => ({
   count: state.count,
+  samples: state.samples,
 });
 
 const mapDispatchToProps = {
   actionCreate: actionCreate,
+  submitSample: submitSample,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
