@@ -9,6 +9,7 @@ export { default as Form } from "./molecules/Form";
 export { default as MainHeader } from "./organisms/MainHeader";
 export { default as SampleList } from "./organisms/SampleList";
 export { default as FormWrapper } from "./organisms/FormWrapper";
+export { default as Counter } from "./organisms/Counter";
 
 // Templates
 export { default as MainTemplate } from "./templates/MainTemplate";
