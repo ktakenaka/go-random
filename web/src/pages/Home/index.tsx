@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from "react";
+import React, { Fragment } from "react";
 import { connect } from "react-redux";
 
 import {
@@ -7,29 +7,29 @@ import {
   FormWrapper,
   Counter,
 } from "../../components";
+import { submitSample } from "../../store/actionCreators/sample";
 import {
-  actionCreate,
-  SAMPLE_DECREMENT,
-  SAMPLE_INCREMENT,
-  SAMPLE_INCREMENT_ASYNC,
-  submitSample,
-} from "../../store/actions";
+  countIncrement,
+  countDecrement,
+  countIncrementAsync,
+} from "../../store/actionCreators/tutorial";
 
 const HomePage = ({
   count,
-  sample,
+  title,
   samples,
-  actionCreate,
+  countIncrement,
+  countDecrement,
+  countIncrementAsync,
   submitSample,
 }: Props) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    const title = e.target.value;
-    sample.title = title;
+    title = e.target.value;
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    submitSample(sample.title);
+    submitSample(title);
   };
 
   return (
@@ -43,16 +43,21 @@ const HomePage = ({
 
       <Counter
         value={count}
-        onIncrement={() => actionCreate(SAMPLE_INCREMENT)}
-        onDecrement={() => actionCreate(SAMPLE_DECREMENT)}
-        onIncrementAsync={() => actionCreate(SAMPLE_INCREMENT_ASYNC)}
+        onIncrement={() => countIncrement()}
+        onDecrement={() => countDecrement()}
+        onIncrementAsync={() => countIncrementAsync()}
       />
     </MainTemplate>
   );
 };
 
-interface Props extends State {
-  actionCreate: (type: string) => void;
+interface Props {
+  count: number;
+  title: string;
+  samples: Array<Sample>;
+  countIncrement: () => void;
+  countDecrement: () => void;
+  countIncrementAsync: () => void;
   submitSample: (title: string) => void;
 }
 
@@ -60,20 +65,16 @@ type Sample = {
   title: string;
 };
 
-type State = {
-  count: number;
-  sample: Sample;
-  samples: Array<Sample>;
-};
-
-const mapStateToProps = (state: Readonly<State>) => ({
-  count: state.count,
-  sample: state.sample,
-  samples: state.samples,
+const mapStateToProps = (state: Readonly<any>) => ({
+  count: state.get("tutorial").count,
+  title: state.get("sample").title,
+  samples: state.get("sample").list,
 });
 
 const mapDispatchToProps = {
-  actionCreate: actionCreate,
+  countIncrement: countIncrement,
+  countDecrement: countDecrement,
+  countIncrementAsync: countIncrementAsync,
   submitSample: submitSample,
 };
 
