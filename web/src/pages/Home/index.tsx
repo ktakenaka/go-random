@@ -12,24 +12,24 @@ import {
   SAMPLE_DECREMENT,
   SAMPLE_INCREMENT,
   SAMPLE_INCREMENT_ASYNC,
+  submitSample,
 } from "../../store/actions";
 
-const HomePage = ({ count, actionCreate }: Props) => {
-  const [samples, setSamples] = useState<string[]>([
-    "sample1",
-    "sample2",
-    "sample3",
-  ]);
-  const [value, setvalue] = useState<string>("");
-
+const HomePage = ({
+  count,
+  sample,
+  samples,
+  actionCreate,
+  submitSample,
+}: Props) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const title = e.target.value;
-    setvalue(title);
+    sample.title = title;
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    setSamples([...samples.concat(value)]);
+    submitSample(sample.title);
   };
 
   return (
@@ -51,21 +51,30 @@ const HomePage = ({ count, actionCreate }: Props) => {
   );
 };
 
-type Props = {
-  count: number;
+interface Props extends State {
   actionCreate: (type: string) => void;
+  submitSample: (title: string) => void;
+}
+
+type Sample = {
+  title: string;
 };
 
-interface State {
+type State = {
   count: number;
-}
+  sample: Sample;
+  samples: Array<Sample>;
+};
 
 const mapStateToProps = (state: Readonly<State>) => ({
   count: state.count,
+  sample: state.sample,
+  samples: state.samples,
 });
 
 const mapDispatchToProps = {
   actionCreate: actionCreate,
+  submitSample: submitSample,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);
