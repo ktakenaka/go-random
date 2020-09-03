@@ -4,7 +4,7 @@ import Button from "../../atoms/Button";
 import Form from "../../molecules/Form";
 
 type Props = {
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  onSubmit: any;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 

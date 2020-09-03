@@ -6,17 +6,19 @@ import {
 
 const initialState = {
   count: 0,
+  sample: { title: null },
   samples: [],
 };
 
-interface State {
+type State = {
   count: number;
+  sample: Sample;
   samples: Array<Sample>;
-}
+};
 
-interface Sample {
-  title: string;
-}
+type Sample = {
+  title: string | null;
+};
 
 export default (
   state: State = initialState,
@@ -28,8 +30,10 @@ export default (
     case SAMPLE_DECREMENT:
       return { ...state, count: state.count - 1 };
     case SUBMIT_SAMPLE_REQUEST:
-      state.samples.push({ title: action.payload });
-      return state;
+      return {
+        ...state,
+        samples: state.samples.concat([{ title: action.payload }]),
+      };
     default:
       return state;
   }

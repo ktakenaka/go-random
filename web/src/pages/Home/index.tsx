@@ -15,23 +15,21 @@ import {
   submitSample,
 } from "../../store/actions";
 
-const HomePage = ({ count, samples, actionCreate, submitSample }: Props) => {
-  const [samplers, setSamples] = useState<string[]>([
-    "sample1",
-    "sample2",
-    "sample3",
-  ]);
-  const [value, setvalue] = useState<string>("");
-
+const HomePage = ({
+  count,
+  sample,
+  samples,
+  actionCreate,
+  submitSample,
+}: Props) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const title = e.target.value;
-    setvalue(title);
+    sample.title = title;
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    submitSample(value);
-    setSamples([...samplers.concat(value)]);
+    submitSample(sample.title);
   };
 
   return (
@@ -39,7 +37,7 @@ const HomePage = ({ count, samples, actionCreate, submitSample }: Props) => {
       <h2>HOME</h2>
 
       <Fragment>
-        <SampleList samples={samplers} />
+        <SampleList samples={samples} />
         <FormWrapper onChange={onChange} onSubmit={onSubmit} />
       </Fragment>
 
@@ -56,19 +54,21 @@ const HomePage = ({ count, samples, actionCreate, submitSample }: Props) => {
 interface Props extends State {
   actionCreate: (type: string) => void;
   submitSample: (title: string) => void;
+}
+
+type Sample = {
+  title: string;
 };
 
-interface Sample {
-  title: string;
-}
-
-interface State {
+type State = {
   count: number;
+  sample: Sample;
   samples: Array<Sample>;
-}
+};
 
 const mapStateToProps = (state: Readonly<State>) => ({
   count: state.count,
+  sample: state.sample,
   samples: state.samples,
 });
 

@@ -13,10 +13,14 @@ import reducer from "./store/reducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
-const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const composeEnhancers =
+  (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 // re-consider naming when refactoring, combine reducer?
-export const store = createStore(reducer, composeEnhancers(applyMiddleware(sagaMiddleware)));
+export const store = createStore(
+  reducer,
+  composeEnhancers(applyMiddleware(sagaMiddleware))
+);
 
 sagaMiddleware.run(rootSaga);
 
