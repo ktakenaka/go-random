@@ -8,7 +8,7 @@ type State = {
   count: number;
 };
 
-export default (state: State = initialState, action: { type: string }) => {
+export default (state: State = initialState, action: { type: string }):State => {
   switch (action.type) {
     case SAMPLE_INCREMENT:
       return { ...state, count: state.count + 1 };

@@ -16,8 +16,8 @@ type Sample = {
 
 export default (
   state: State = initialState,
-  action: { type: string; payload: any }
-) => {
+  action: { type: string; payload: string }
+):State => {
   switch (action.type) {
     case SUBMIT_SAMPLE_REQUEST:
       return {
