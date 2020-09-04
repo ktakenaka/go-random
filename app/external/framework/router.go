@@ -12,15 +12,23 @@ import (
 func Handler() *gin.Engine {
 	router := gin.Default()
 
+	// TODO: refactor the condition.
+	// It's not ideal to use `os.Getenv("ENV")` in several places
+	if os.Getenv("ENV") == "" {
+		router.Use(middleware.CorsMiddleware())
+	}
+
 	router.GET("/", root)
 
 	v1NoAuth := router.Group("/api/v1")
 	handler.AddSessionHandler(v1NoAuth.Group("/sessions"))
+	handler.AddSampleHanlder(v1NoAuth.Group("/samples"))
 
 	v1Auth := router.Group("/api/v1")
-	cookeAuth := middleware.NewCookieAuthenticator()
-	v1Auth.Use(cookeAuth.AuthenticateAccess)
-	handler.AddSampleHanlder(v1Auth.Group("/samples"))
+	cookieAuth := middleware.NewCookieAuthenticator()
+	v1Auth.Use(cookieAuth.AuthenticateAccess)
+	// When we want to test Auth, remove comment out
+	// handler.AddSampleHanlder(v1Auth.Group("/samples"))
 
 	// These are trial purpose, not for use
 	if os.Getenv("ENV") == "development" {
