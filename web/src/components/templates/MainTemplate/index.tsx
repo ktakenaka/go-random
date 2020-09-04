@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Wrapper, Header, Body, Content } from "./styles";
-import { MainHeader } from "../../index";
+import { MainHeader } from "components";
 
 type Props = {
   header?: JSX.Element;

@@ -1,7 +1,7 @@
 import React from "react";
-import FormInput from "../../atoms/FormInput";
-import Button from "../../atoms/Button";
-import Form from "../../molecules/Form";
+import FormInput from "components/atoms/FormInput";
+import Button from "components/atoms/Button";
+import Form from "components/molecules/Form";
 
 type Props = {
   onSubmit: any;
