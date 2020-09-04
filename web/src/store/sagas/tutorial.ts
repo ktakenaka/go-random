@@ -1,4 +1,4 @@
-import { SAMPLE_INCREMENT_ASYNC, SAMPLE_INCREMENT } from "../actionTypes";
+import { SAMPLE_INCREMENT_ASYNC, SAMPLE_INCREMENT } from "store/actionTypes";
 
 import { put, takeEvery } from "redux-saga/effects";
 

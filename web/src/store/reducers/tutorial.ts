@@ -1,4 +1,4 @@
-import { SAMPLE_INCREMENT, SAMPLE_DECREMENT } from "../actionTypes";
+import { SAMPLE_INCREMENT, SAMPLE_DECREMENT } from "store/actionTypes";
 
 const initialState = {
   count: 0,

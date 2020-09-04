@@ -2,7 +2,7 @@ import {
   SAMPLE_INCREMENT,
   SAMPLE_DECREMENT,
   SAMPLE_INCREMENT_ASYNC,
-} from "../actionTypes";
+} from "store/actionTypes";
 
 type Action = {
   type:string

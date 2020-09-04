@@ -6,13 +6,13 @@ import {
   SampleList,
   FormWrapper,
   Counter,
-} from "../../components";
-import { submitSample } from "../../store/actionCreators/sample";
+} from "components";
+import { submitSample } from "store/actionCreators/sample";
 import {
   countIncrement,
   countDecrement,
   countIncrementAsync,
-} from "../../store/actionCreators/tutorial";
+} from "store/actionCreators/tutorial";
 
 const HomePage = ({
   count,

@@ -1,4 +1,4 @@
-import { SUBMIT_SAMPLE_REQUEST } from "../actionTypes";
+import { SUBMIT_SAMPLE_REQUEST } from "store/actionTypes";
 
 type Action = {
   type: string,
