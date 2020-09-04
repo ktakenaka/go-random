@@ -1,5 +1,10 @@
 import { SUBMIT_SAMPLE_REQUEST } from "../actionTypes";
 
-export const submitSample = (title: string) => {
+type Action = {
+  type: string,
+  payload: string
+}
+
+export const submitSample = (title: string):Action => {
   return { type: SUBMIT_SAMPLE_REQUEST, payload: title };
 };

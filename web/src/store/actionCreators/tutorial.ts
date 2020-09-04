@@ -4,14 +4,18 @@ import {
   SAMPLE_INCREMENT_ASYNC,
 } from "../actionTypes";
 
-export const countIncrement = () => {
+type Action = {
+  type:string
+}
+
+export const countIncrement = ():Action => {
   return { type: SAMPLE_INCREMENT };
 };
 
-export const countDecrement = () => {
+export const countDecrement = ():Action => {
   return { type: SAMPLE_DECREMENT };
 };
 
-export const countIncrementAsync = () => {
+export const countIncrementAsync = ():Action => {
   return { type: SAMPLE_INCREMENT_ASYNC };
 };
