@@ -7,8 +7,11 @@ be-run:
 restart:
 	docker-compose restart
 
-lint:
+go-lint:
 	docker-compose exec app golangci-lint run
+
+go-lint-fmt:
+	docker-compose exec app gofmt -w app
 
 migrate-up:
 	docker-compose exec app migrate -database mysql://random:random@tcp\(db:3306\)/go-random?multiStatements=true -path db/migrations up
