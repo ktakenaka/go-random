@@ -9,6 +9,6 @@ function* incrementAsync() {
   yield put({ type: SAMPLE_INCREMENT });
 }
 
-export default function* actionWatcher():Generator {
+export default function* actionWatcher(): Generator {
   yield takeEvery(SAMPLE_INCREMENT_ASYNC, incrementAsync);
 }
