@@ -1,13 +1,24 @@
-import { SUBMIT_SAMPLE_REQUEST } from "store/actionTypes";
+import {
+  SUBMIT_SAMPLE_REQUEST,
+  SUBMIT_SAMPLE_SUCCESS,
+  SUBMIT_SAMPLE_FAILURE,
+  GET_SAMPLES_REQUEST,
+  GET_SAMPLES_SUCCESS,
+  GET_SAMPLES_FAILURE,
+} from "store/actionTypes";
 
 const initialState = {
   title: null,
+  postLoading: false,
   list: [],
+  listLoading: false,
 };
 
 type State = {
   title: string | null;
+  postLoading: boolean;
   list: Array<Sample>;
+  listLoading: boolean;
 };
 
 type Sample = {
@@ -16,13 +27,39 @@ type Sample = {
 
 export default (
   state: State = initialState,
-  action: { type: string; payload: string }
-):State => {
+  action: { type: string; payload: any }
+): State => {
   switch (action.type) {
     case SUBMIT_SAMPLE_REQUEST:
       return {
         ...state,
-        list: state.list.concat([{ title: action.payload }]),
+        postLoading: true,
+      };
+    case SUBMIT_SAMPLE_SUCCESS:
+      return {
+        ...state,
+        postLoading: false,
+      };
+    case SUBMIT_SAMPLE_FAILURE:
+      return {
+        ...state,
+        postLoading: false,
+      };
+    case GET_SAMPLES_REQUEST:
+      return {
+        ...state,
+        listLoading: true,
+      };
+    case GET_SAMPLES_SUCCESS:
+      return {
+        ...state,
+        listLoading: false,
+        list: action.payload,
+      };
+    case GET_SAMPLES_FAILURE:
+      return {
+        ...state,
+        listLoading: false,
       };
     default:
       return state;

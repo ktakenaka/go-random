@@ -1,13 +1,11 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect } from "react";
 import { connect } from "react-redux";
 
+import { MainTemplate, SampleList, FormWrapper, Counter } from "components";
 import {
-  MainTemplate,
-  SampleList,
-  FormWrapper,
-  Counter,
-} from "components";
-import { submitSample } from "store/actionCreators/sample";
+  submitSampleRequest,
+  getSamplesRequest,
+} from "store/actionCreators/sample";
 import {
   countIncrement,
   countDecrement,
@@ -21,15 +19,20 @@ const HomePage = ({
   countIncrement,
   countDecrement,
   countIncrementAsync,
-  submitSample,
+  getSamplesRequest,
+  submitSampleRequest,
 }: Props) => {
+  useEffect(() => {
+    getSamplesRequest();
+  }, []);
+
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     title = e.target.value;
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    submitSample(title);
+    submitSampleRequest(title);
   };
 
   return (
@@ -58,7 +61,8 @@ interface Props {
   countIncrement: () => void;
   countDecrement: () => void;
   countIncrementAsync: () => void;
-  submitSample: (title: string) => void;
+  getSamplesRequest: () => void;
+  submitSampleRequest: (title: string) => void;
 }
 
 type Sample = {
@@ -75,7 +79,8 @@ const mapDispatchToProps = {
   countIncrement: countIncrement,
   countDecrement: countDecrement,
   countIncrementAsync: countIncrementAsync,
-  submitSample: submitSample,
+  getSamplesRequest: getSamplesRequest,
+  submitSampleRequest: submitSampleRequest,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

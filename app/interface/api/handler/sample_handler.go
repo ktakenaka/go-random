@@ -32,7 +32,7 @@ func getSamples(ctx *gin.Context) {
 	if err := copier.Copy(&sampleRes, &samples); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
 	}
-	ctx.JSON(http.StatusOK, gin.H{"samples": sampleRes})
+	ctx.JSON(http.StatusOK, gin.H{"data": sampleRes})
 }
 
 func getSample(ctx *gin.Context) {
@@ -40,27 +40,32 @@ func getSample(ctx *gin.Context) {
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "id must be integer"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"errors": "id must be integer"})
 	}
 
 	sample, err := suCase.FindSample(id)
 
 	if err != nil {
 		log.Print(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"errors": "NG"})
 	}
 
 	var sampleRes presenter.SampleResponse
 	if err := copier.Copy(&sampleRes, &sample); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"errors": "NG"})
 	}
-	ctx.JSON(http.StatusOK, gin.H{"sample": sampleRes})
+	ctx.JSON(http.StatusOK, gin.H{"data": sampleRes})
 }
 
 func postSample(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
-	if err := suCase.RegisterSample(ctx.PostForm("title")); err != nil {
+	var req presenter.SampleRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "param is invalid"})
+	}
+
+	if err := suCase.RegisterSample(req.Title); err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
 	} else {
@@ -71,6 +76,11 @@ func postSample(ctx *gin.Context) {
 func putSample(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
+	var req presenter.SampleRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "param is invalid"})
+	}
+
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
 		log.Print(err)
@@ -78,7 +88,7 @@ func putSample(ctx *gin.Context) {
 		return
 	}
 
-	if err := suCase.UpdateSample(id, ctx.PostForm("title")); err != nil {
+	if err := suCase.UpdateSample(id, req.Title); err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
 		return

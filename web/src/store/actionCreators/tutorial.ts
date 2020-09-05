@@ -5,17 +5,17 @@ import {
 } from "store/actionTypes";
 
 type Action = {
-  type:string
-}
+  type: string;
+};
 
-export const countIncrement = ():Action => {
+export const countIncrement = (): Action => {
   return { type: SAMPLE_INCREMENT };
 };
 
-export const countDecrement = ():Action => {
+export const countDecrement = (): Action => {
   return { type: SAMPLE_DECREMENT };
 };
 
-export const countIncrementAsync = ():Action => {
+export const countIncrementAsync = (): Action => {
   return { type: SAMPLE_INCREMENT_ASYNC };
 };
