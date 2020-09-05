@@ -35,5 +35,13 @@ mysql:
 yarn-install:
 	docker-compose exec web yarn install
 
+yarn-prettier-write:
+	docker-compose exec web yarn prettier --write src
 yarn-add:
 	docker-compose exec web yarn add ${PKG}
+
+yarn-lint:
+	docker-compose exec web yarn lint
+
+yarn-fmt:
+	docker-compose exec web yarn lint-fmt
