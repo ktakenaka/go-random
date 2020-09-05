@@ -60,7 +60,12 @@ func getSample(ctx *gin.Context) {
 func postSample(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
-	if err := suCase.RegisterSample(ctx.PostForm("title")); err != nil {
+	var req presenter.SampleRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "param is invalid"})
+	}
+
+	if err := suCase.RegisterSample(req.Title); err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
 	} else {
@@ -71,6 +76,11 @@ func postSample(ctx *gin.Context) {
 func putSample(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
+	var req presenter.SampleRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"message": "param is invalid"})
+	}
+
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
 		log.Print(err)
@@ -78,7 +88,7 @@ func putSample(ctx *gin.Context) {
 		return
 	}
 
-	if err := suCase.UpdateSample(id, ctx.PostForm("title")); err != nil {
+	if err := suCase.UpdateSample(id, req.Title); err != nil {
 		log.Print(err)
 		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
 		return
