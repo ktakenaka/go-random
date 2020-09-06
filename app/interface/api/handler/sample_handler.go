@@ -7,35 +7,61 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
+	"github.com/ktakenaka/go-random/app/interface/api/middleware"
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/app/registry"
 )
 
-func AddSampleHanlder(g *gin.RouterGroup) {
-	g.GET("", getSamples)
-	g.GET("/:id", getSample)
-	g.POST("", postSample)
-	g.PUT("/:id", putSample)
-	g.DELETE("/:id", deleteSample)
+type SampleHanlder struct{}
+
+func NewSampleHanlder() *SampleHanlder {
+	return &SampleHanlder{}
 }
 
-func getSamples(ctx *gin.Context) {
+func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 	samples, err := suCase.ListSample()
 
 	if err != nil {
 		log.Print(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
+		// TODO: fix error response
+		meta := presenter.ResponseMeta{
+			Code:    400,
+			Message: "failure",
+		}
+		middleware.SetMetaResponse(ctx, meta)
+
+		err := presenter.ResponseError{
+			Detail: err.Error(),
+		}
+		middleware.SetErrorResponse(ctx, err)
+		return
 	}
 
 	sampleRes := make([]presenter.SampleResponse, 0)
 	if err := copier.Copy(&sampleRes, &samples); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
+		meta := presenter.ResponseMeta{
+			Code:    400,
+			Message: "failure",
+		}
+		middleware.SetMetaResponse(ctx, meta)
+
+		err := presenter.ResponseError{
+			Detail: err.Error(),
+		}
+		middleware.SetErrorResponse(ctx, err)
+		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"data": sampleRes})
+
+	meta := presenter.ResponseMeta{
+		Code:    200,
+		Message: "success",
+	}
+	middleware.SetMetaResponse(ctx, meta)
+	middleware.SetDataResponse(ctx, samples)
 }
 
-func getSample(ctx *gin.Context) {
+func (hdl *SampleHanlder) Show(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
@@ -57,7 +83,7 @@ func getSample(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": sampleRes})
 }
 
-func postSample(ctx *gin.Context) {
+func (hdl *SampleHanlder) Create(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var req presenter.SampleRequest
@@ -73,7 +99,7 @@ func postSample(ctx *gin.Context) {
 	}
 }
 
-func putSample(ctx *gin.Context) {
+func (hdl *SampleHanlder) Update(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var req presenter.SampleRequest
@@ -96,7 +122,7 @@ func putSample(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
-func deleteSample(ctx *gin.Context) {
+func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)

@@ -14,6 +14,18 @@ const (
 	secretKey    = "mysecret"
 )
 
+// NewCSRFStore is the trial implementation.
+// The usage is as below
+/*
+csrfTrial := router.Group("/csrf")
+csrfTrial.Use(middleware.NewCSRFStore())
+csrfTrial.Use(middleware.NewGinCSRFMiddleware())
+csrfTrial.GET("/protected", middleware.GetCSRFToken)
+csrfTrial.POST("/protected", func(ctx *gin.Context) {
+	ctx.String(http.StatusOK, "ok")
+})
+*/
+
 func NewCSRFStore() gin.HandlerFunc {
 	store := cookie.NewStore([]byte("secret"))
 	return sessions.Sessions(sessionStore, store)

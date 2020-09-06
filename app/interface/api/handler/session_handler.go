@@ -10,11 +10,13 @@ import (
 	"github.com/ktakenaka/go-random/app/registry"
 )
 
-func AddSessionHandler(g *gin.RouterGroup) {
-	g.POST("/google", createSessionWithGoogle)
+type SessionHandler struct{}
+
+func NewSessionHandler() *SessionHandler {
+	return &SessionHandler{}
 }
 
-func createSessionWithGoogle(ctx *gin.Context) {
+func (hdl *SessionHandler) CreateWithGoogle(ctx *gin.Context) {
 	uc := registry.InitializeSignInUsecase()
 
 	var req presenter.GoogleSessionRequest

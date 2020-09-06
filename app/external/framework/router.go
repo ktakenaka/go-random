@@ -18,36 +18,27 @@ func Handler() *gin.Engine {
 		router.Use(middleware.CorsMiddleware())
 	}
 
-	router.GET("/", root)
+	responseFmt := middleware.NewResponseFormatter()
 
+	router.GET("/", root)
 	v1NoAuth := router.Group("/api/v1")
-	handler.AddSessionHandler(v1NoAuth.Group("/sessions"))
-	handler.AddSampleHanlder(v1NoAuth.Group("/samples"))
+
+	sampleHdl := handler.NewSampleHanlder()
+	sample := v1NoAuth.Group("samples")
+	sample.Use(responseFmt.Format)
+	sample.GET("", sampleHdl.Index)
+	sample.GET("/:id", sampleHdl.Show)
+	sample.POST("", sampleHdl.Create)
+	sample.PUT("/:id", sampleHdl.Update)
+	sample.DELETE("/:id", sampleHdl.Delete)
+
+	sessionHdl := handler.NewSessionHandler()
+	session := v1NoAuth.Group("/sessions")
+	session.POST("/google", sessionHdl.CreateWithGoogle)
 
 	v1Auth := router.Group("/api/v1")
 	cookieAuth := middleware.NewCookieAuthenticator()
 	v1Auth.Use(cookieAuth.AuthenticateAccess)
-	// When we want to test Auth, remove comment out
-	// handler.AddSampleHanlder(v1Auth.Group("/samples"))
-
-	// These are trial purpose, not for use
-	if os.Getenv("ENV") == "development" {
-		authMiddleware := middleware.NewGinJWTMiddleware()
-		router.POST("/login", authMiddleware.LoginHandler)
-
-		auth := router.Group("/auth")
-		auth.GET("/refresh_token", authMiddleware.RefreshHandler)
-		auth.Use(authMiddleware.MiddlewareFunc())
-		auth.GET("/hello", middleware.HelloHandler)
-
-		csrfTrial := router.Group("/csrf")
-		csrfTrial.Use(middleware.NewCSRFStore())
-		csrfTrial.Use(middleware.NewGinCSRFMiddleware())
-		csrfTrial.GET("/protected", middleware.GetCSRFToken)
-		csrfTrial.POST("/protected", func(ctx *gin.Context) {
-			ctx.String(http.StatusOK, "ok")
-		})
-	}
 
 	return router
 }
