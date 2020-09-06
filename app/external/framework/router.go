@@ -18,11 +18,14 @@ func Handler() *gin.Engine {
 		router.Use(middleware.CorsMiddleware())
 	}
 
+	responseFmt := middleware.NewResponseFormatter()
+
 	router.GET("/", root)
 	v1NoAuth := router.Group("/api/v1")
 
 	sampleHdl := handler.NewSampleHanlder()
 	sample := v1NoAuth.Group("samples")
+	sample.Use(responseFmt.Format)
 	sample.GET("", sampleHdl.Index)
 	sample.GET("/:id", sampleHdl.Show)
 	sample.POST("", sampleHdl.Create)
