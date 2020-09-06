@@ -11,15 +11,13 @@ import (
 	"github.com/ktakenaka/go-random/app/registry"
 )
 
-func AddSampleHanlder(g *gin.RouterGroup) {
-	g.GET("", getSamples)
-	g.GET("/:id", getSample)
-	g.POST("", postSample)
-	g.PUT("/:id", putSample)
-	g.DELETE("/:id", deleteSample)
+type SampleHanlder struct{}
+
+func NewSampleHanlder() *SampleHanlder {
+	return &SampleHanlder{}
 }
 
-func getSamples(ctx *gin.Context) {
+func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 	samples, err := suCase.ListSample()
 
@@ -35,7 +33,7 @@ func getSamples(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": sampleRes})
 }
 
-func getSample(ctx *gin.Context) {
+func (hdl *SampleHanlder) Show(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
@@ -57,7 +55,7 @@ func getSample(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"data": sampleRes})
 }
 
-func postSample(ctx *gin.Context) {
+func (hdl *SampleHanlder) Create(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var req presenter.SampleRequest
@@ -73,7 +71,7 @@ func postSample(ctx *gin.Context) {
 	}
 }
 
-func putSample(ctx *gin.Context) {
+func (hdl *SampleHanlder) Update(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var req presenter.SampleRequest
@@ -96,7 +94,7 @@ func putSample(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
 }
 
-func deleteSample(ctx *gin.Context) {
+func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)

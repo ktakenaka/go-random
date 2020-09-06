@@ -19,16 +19,23 @@ func Handler() *gin.Engine {
 	}
 
 	router.GET("/", root)
-
 	v1NoAuth := router.Group("/api/v1")
-	handler.AddSessionHandler(v1NoAuth.Group("/sessions"))
-	handler.AddSampleHanlder(v1NoAuth.Group("/samples"))
+
+	sampleHdl := handler.NewSampleHanlder()
+	sample := v1NoAuth.Group("samples")
+	sample.GET("", sampleHdl.Index)
+	sample.GET("/:id", sampleHdl.Show)
+	sample.POST("", sampleHdl.Create)
+	sample.PUT("/:id", sampleHdl.Update)
+	sample.DELETE("/:id", sampleHdl.Delete)
+
+	sessionHdl := handler.NewSessionHandler()
+	session := v1NoAuth.Group("/sessions")
+	session.POST("/google", sessionHdl.CreateWithGoogle)
 
 	v1Auth := router.Group("/api/v1")
 	cookieAuth := middleware.NewCookieAuthenticator()
 	v1Auth.Use(cookieAuth.AuthenticateAccess)
-	// When we want to test Auth, remove comment out
-	// handler.AddSampleHanlder(v1Auth.Group("/samples"))
 
 	return router
 }
