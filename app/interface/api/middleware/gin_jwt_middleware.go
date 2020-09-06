@@ -17,6 +17,17 @@ const (
 	identityKey = "user_id"
 )
 
+// NewGinJWTMiddleware is the trial implementation.
+// The usage is as below
+/*
+authMiddleware := middleware.NewGinJWTMiddleware()
+router.POST("/login", authMiddleware.LoginHandler)
+
+auth := router.Group("/auth")
+auth.GET("/refresh_token", authMiddleware.RefreshHandler)
+auth.Use(authMiddleware.MiddlewareFunc())
+auth.GET("/hello", middleware.HelloHandler)
+*/
 func NewGinJWTMiddleware() *jwt.GinJWTMiddleware {
 	googleAuthMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
 		Realm:       "go-random",

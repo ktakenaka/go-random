@@ -30,25 +30,6 @@ func Handler() *gin.Engine {
 	// When we want to test Auth, remove comment out
 	// handler.AddSampleHanlder(v1Auth.Group("/samples"))
 
-	// These are trial purpose, not for use
-	if os.Getenv("ENV") == "development" {
-		authMiddleware := middleware.NewGinJWTMiddleware()
-		router.POST("/login", authMiddleware.LoginHandler)
-
-		auth := router.Group("/auth")
-		auth.GET("/refresh_token", authMiddleware.RefreshHandler)
-		auth.Use(authMiddleware.MiddlewareFunc())
-		auth.GET("/hello", middleware.HelloHandler)
-
-		csrfTrial := router.Group("/csrf")
-		csrfTrial.Use(middleware.NewCSRFStore())
-		csrfTrial.Use(middleware.NewGinCSRFMiddleware())
-		csrfTrial.GET("/protected", middleware.GetCSRFToken)
-		csrfTrial.POST("/protected", func(ctx *gin.Context) {
-			ctx.String(http.StatusOK, "ok")
-		})
-	}
-
 	return router
 }
 
