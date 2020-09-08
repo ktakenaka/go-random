@@ -2,7 +2,6 @@ package handler
 
 import (
 	"log"
-	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -20,36 +19,21 @@ func NewSampleHanlder() *SampleHanlder {
 
 func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
+
+	var err error
+	defer func() {
+		middleware.SetError(ctx, err)
+	}()
+
 	samples, err := suCase.ListSample()
 
 	if err != nil {
-		log.Print(err)
-		// TODO: fix error response
-		meta := presenter.ResponseMeta{
-			Code:    400,
-			Message: "failure",
-		}
-		middleware.SetMetaResponse(ctx, meta)
-
-		err := presenter.ResponseError{
-			Detail: err.Error(),
-		}
-		middleware.SetErrorResponse(ctx, err)
+		log.Println("hoge")
 		return
 	}
 
 	sampleRes := make([]presenter.SampleResponse, 0)
-	if err := copier.Copy(&sampleRes, &samples); err != nil {
-		meta := presenter.ResponseMeta{
-			Code:    400,
-			Message: "failure",
-		}
-		middleware.SetMetaResponse(ctx, meta)
-
-		err := presenter.ResponseError{
-			Detail: err.Error(),
-		}
-		middleware.SetErrorResponse(ctx, err)
+	if err = copier.Copy(&sampleRes, &samples); err != nil {
 		return
 	}
 
@@ -64,75 +48,110 @@ func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 func (hdl *SampleHanlder) Show(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
+	var err error
+	defer func() {
+		middleware.SetError(ctx, err)
+	}()
+
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"errors": "id must be integer"})
+		return
 	}
 
 	sample, err := suCase.FindSample(id)
-
 	if err != nil {
-		log.Print(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"errors": "NG"})
+		return
 	}
 
 	var sampleRes presenter.SampleResponse
-	if err := copier.Copy(&sampleRes, &sample); err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"errors": "NG"})
+	if err = copier.Copy(&sampleRes, &sample); err != nil {
+		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"data": sampleRes})
+
+	meta := presenter.ResponseMeta{
+		Code:    200,
+		Message: "success",
+	}
+	middleware.SetMetaResponse(ctx, meta)
+	middleware.SetDataResponse(ctx, sampleRes)
 }
 
 func (hdl *SampleHanlder) Create(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
+	var err error
+	defer func() {
+		middleware.SetError(ctx, err)
+	}()
+
 	var req presenter.SampleRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "param is invalid"})
+		return
 	}
 
-	if err := suCase.RegisterSample(req.Title); err != nil {
-		log.Print(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
-	} else {
-		ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+	if err = suCase.RegisterSample(req.Title); err != nil {
+		return
 	}
+
+	meta := presenter.ResponseMeta{
+		Code:    200,
+		Message: "success",
+	}
+	middleware.SetMetaResponse(ctx, meta)
+	middleware.SetDataResponse(ctx, "OK")
 }
 
 func (hdl *SampleHanlder) Update(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
+	var err error
+	defer func() {
+		middleware.SetError(ctx, err)
+	}()
+
 	var req presenter.SampleRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "param is invalid"})
+	if err = ctx.ShouldBindJSON(&req); err != nil {
+		return
 	}
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
-		log.Print(err)
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "id must be integer"})
 		return
 	}
 
-	if err := suCase.UpdateSample(id, req.Title); err != nil {
-		log.Print(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
+	if err = suCase.UpdateSample(id, req.Title); err != nil {
 		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+
+	meta := presenter.ResponseMeta{
+		Code:    200,
+		Message: "success",
+	}
+	middleware.SetMetaResponse(ctx, meta)
+	middleware.SetDataResponse(ctx, "ok")
 }
 
 func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
+	var err error
+	defer func() {
+		middleware.SetError(ctx, err)
+	}()
+
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "id must be integer"})
+		return
 	}
 
-	if err := suCase.DeleteSample(id); err != nil {
-		log.Print(err)
-		ctx.JSON(http.StatusInternalServerError, gin.H{"message": "NG"})
+	if err = suCase.DeleteSample(id); err != nil {
+		return
 	}
-	ctx.JSON(http.StatusOK, gin.H{"message": "OK"})
+
+	meta := presenter.ResponseMeta{
+		Code:    200,
+		Message: "success",
+	}
+	middleware.SetMetaResponse(ctx, meta)
+	middleware.SetDataResponse(ctx, "ok")
 }

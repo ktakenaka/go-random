@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"github.com/go-playground/validator/v10"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -30,6 +32,14 @@ const (
   }
 }
 */
+// meta := presenter.ResponseMeta{
+// 	Code:    400,
+// 	Message: "failure",
+// }
+
+// err := presenter.ResponseError{
+// 	Detail: err.Error(),
+// }
 
 type ResponseFormatter struct{}
 
@@ -60,7 +70,6 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 		Data: data,
 	}
 
-	// TODO: change status from context
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -72,18 +81,32 @@ func SetDataResponse(ctx *gin.Context, data interface{}) {
 	ctx.Set(dataKey, data)
 }
 
-func SetErrorResponse(ctx *gin.Context, err presenter.ResponseError) {
-	errors, ok := ctx.Get(errorKey)
-	var errs []presenter.ResponseError
-
-	if !ok {
-		errs = make([]presenter.ResponseError, 1)
-		errs[0] = err
-	} else {
-		errs = append(errors.([]presenter.ResponseError), err)
+func SetError(ctx *gin.Context, err error) {
+	if err == nil {
+		return
 	}
 
-	ctx.Set(errorKey, errs)
+	if ve, ok := err.(validator.ValidationErrors); ok {
+		log.Println(ve)
+		for k, v := range ve {
+			log.Println("===")
+			log.Println(k)
+			log.Println(v)
+			log.Println("===")
+		}
+	}
+
+	errPrs := presenter.ResponseError{
+		Detail: err.Error(),
+	}
+
+	meta := presenter.ResponseMeta{
+		Code:    500,
+		Message: "failure!",
+	}
+
+	ctx.Set(metaKey, meta)
+	ctx.Set(errorKey, []presenter.ResponseError{errPrs})
 }
 
 func getMetaResponse(ctx *gin.Context) presenter.ResponseMeta {
@@ -105,16 +128,15 @@ func getDataResponse(ctx *gin.Context) interface{} {
 }
 
 func getErrorResponse(ctx *gin.Context) []presenter.ResponseError {
-	var errors []presenter.ResponseError
-
 	errCtx, ok := ctx.Get(errorKey)
 	if !ok {
-		return errors
+		return []presenter.ResponseError{}
 	}
 
-	for _, err := range errCtx.([]interface{}) {
-		errors = append(errors, err.(presenter.ResponseError))
+	errs, ok := errCtx.([]presenter.ResponseError)
+	if !ok {
+		return []presenter.ResponseError{}
 	}
 
-	return errors
+	return errs
 }
