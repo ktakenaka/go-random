@@ -88,7 +88,6 @@ func (s *SampleUsecase) endTx(err error) error {
 		s.txm.Rollback()
 		panic(p)
 	} else if err != nil {
-		log.Print("found error and rollback: ", err)
 		s.txm.Rollback()
 	} else {
 		err = s.txm.Commit()

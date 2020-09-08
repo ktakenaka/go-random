@@ -1,9 +1,11 @@
 package middleware
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 )
@@ -13,23 +15,6 @@ const (
 	errorKey = "error"
 	dataKey  = "data"
 )
-
-// the method to set Error
-// the method to set Meta
-// the method to set data
-
-/*
-{
-  "meta": {
-    "code": 20001,
-    "message": "success"
-  },
-  "data": {
-    "id": 1,
-    "title": "sample"
-  }
-}
-*/
 
 type ResponseFormatter struct{}
 
@@ -41,10 +26,11 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	ctx.Next()
 
 	var res presenter.Response
+	var meta presenter.ResponseMeta
 
-	meta := getMetaResponse(ctx)
 	errors := getErrorResponse(ctx)
 	if len(errors) > 0 {
+		meta = getMetaResponse(ctx)
 		res = presenter.Response{
 			Meta:   meta,
 			Errors: errors,
@@ -55,12 +41,15 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	}
 
 	data := getDataResponse(ctx)
+	meta = presenter.ResponseMeta{
+		Code:    200,
+		Message: "success",
+	}
 	res = presenter.Response{
 		Meta: meta,
 		Data: data,
 	}
 
-	// TODO: change status from context
 	ctx.JSON(http.StatusOK, res)
 }
 
@@ -72,18 +61,46 @@ func SetDataResponse(ctx *gin.Context, data interface{}) {
 	ctx.Set(dataKey, data)
 }
 
-func SetErrorResponse(ctx *gin.Context, err presenter.ResponseError) {
-	errors, ok := ctx.Get(errorKey)
-	var errs []presenter.ResponseError
-
-	if !ok {
-		errs = make([]presenter.ResponseError, 1)
-		errs[0] = err
-	} else {
-		errs = append(errors.([]presenter.ResponseError), err)
+func SetError(ctx *gin.Context, err error) {
+	if err == nil {
+		return
 	}
 
-	ctx.Set(errorKey, errs)
+	// TODO: Wrap errors at the place to happen => logging => easy to find the place
+	log.Println(err)
+
+	if ve, ok := err.(validator.ValidationErrors); ok {
+		errs := make([]presenter.ResponseError, len(ve))
+
+		for i, v := range ve {
+			source := presenter.ResponseErrorSource{
+				Pointer: v.Field(),
+			}
+			errs[i] = presenter.ResponseError{
+				Source: source,
+				Detail: v.Tag(),
+			}
+		}
+
+		meta := presenter.ResponseMeta{
+			Code:    422,
+			Message: "validation failure",
+		}
+		ctx.Set(metaKey, meta)
+		ctx.Set(errorKey, errs)
+	} else {
+		errPrs := presenter.ResponseError{
+			Detail: err.Error(),
+		}
+
+		meta := presenter.ResponseMeta{
+			Code:    500,
+			Message: "failure",
+		}
+
+		ctx.Set(metaKey, meta)
+		ctx.Set(errorKey, []presenter.ResponseError{errPrs})
+	}
 }
 
 func getMetaResponse(ctx *gin.Context) presenter.ResponseMeta {
@@ -105,16 +122,15 @@ func getDataResponse(ctx *gin.Context) interface{} {
 }
 
 func getErrorResponse(ctx *gin.Context) []presenter.ResponseError {
-	var errors []presenter.ResponseError
-
 	errCtx, ok := ctx.Get(errorKey)
 	if !ok {
-		return errors
+		return []presenter.ResponseError{}
 	}
 
-	for _, err := range errCtx.([]interface{}) {
-		errors = append(errors, err.(presenter.ResponseError))
+	errs, ok := errCtx.([]presenter.ResponseError)
+	if !ok {
+		return []presenter.ResponseError{}
 	}
 
-	return errors
+	return errs
 }
