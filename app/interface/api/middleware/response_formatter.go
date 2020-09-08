@@ -1,11 +1,11 @@
 package middleware
 
 import (
-	"github.com/go-playground/validator/v10"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 )
@@ -15,31 +15,6 @@ const (
 	errorKey = "error"
 	dataKey  = "data"
 )
-
-// the method to set Error
-// the method to set Meta
-// the method to set data
-
-/*
-{
-  "meta": {
-    "code": 20001,
-    "message": "success"
-  },
-  "data": {
-    "id": 1,
-    "title": "sample"
-  }
-}
-*/
-// meta := presenter.ResponseMeta{
-// 	Code:    400,
-// 	Message: "failure",
-// }
-
-// err := presenter.ResponseError{
-// 	Detail: err.Error(),
-// }
 
 type ResponseFormatter struct{}
 
@@ -92,27 +67,40 @@ func SetError(ctx *gin.Context, err error) {
 	}
 
 	// TODO: Wrap errors at the place to happen => logging => easy to find the place
+	log.Println(err)
+
 	if ve, ok := err.(validator.ValidationErrors); ok {
-		log.Println(ve)
-		for k, v := range ve {
-			log.Println("===")
-			log.Println(k)
-			log.Println(v)
-			log.Println("===")
+		errs := make([]presenter.ResponseError, len(ve))
+
+		for i, v := range ve {
+			source := presenter.ResponseErrorSource{
+				Pointer: v.Field(),
+			}
+			errs[i] = presenter.ResponseError{
+				Source: source,
+				Detail: v.Tag(),
+			}
 		}
-	}
 
-	errPrs := presenter.ResponseError{
-		Detail: err.Error(),
-	}
+		meta := presenter.ResponseMeta{
+			Code:    422,
+			Message: "validation failure",
+		}
+		ctx.Set(metaKey, meta)
+		ctx.Set(errorKey, errs)
+	} else {
+		errPrs := presenter.ResponseError{
+			Detail: err.Error(),
+		}
 
-	meta := presenter.ResponseMeta{
-		Code:    500,
-		Message: "failure!",
-	}
+		meta := presenter.ResponseMeta{
+			Code:    500,
+			Message: "failure",
+		}
 
-	ctx.Set(metaKey, meta)
-	ctx.Set(errorKey, []presenter.ResponseError{errPrs})
+		ctx.Set(metaKey, meta)
+		ctx.Set(errorKey, []presenter.ResponseError{errPrs})
+	}
 }
 
 func getMetaResponse(ctx *gin.Context) presenter.ResponseMeta {
