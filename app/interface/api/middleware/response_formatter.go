@@ -51,10 +51,11 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	ctx.Next()
 
 	var res presenter.Response
+	var meta presenter.ResponseMeta
 
-	meta := getMetaResponse(ctx)
 	errors := getErrorResponse(ctx)
 	if len(errors) > 0 {
+		meta = getMetaResponse(ctx)
 		res = presenter.Response{
 			Meta:   meta,
 			Errors: errors,
@@ -65,6 +66,10 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	}
 
 	data := getDataResponse(ctx)
+	meta = presenter.ResponseMeta{
+		Code:    200,
+		Message: "success",
+	}
 	res = presenter.Response{
 		Meta: meta,
 		Data: data,
@@ -86,6 +91,7 @@ func SetError(ctx *gin.Context, err error) {
 		return
 	}
 
+	// TODO: Wrap errors at the place to happen => logging => easy to find the place
 	if ve, ok := err.(validator.ValidationErrors); ok {
 		log.Println(ve)
 		for k, v := range ve {

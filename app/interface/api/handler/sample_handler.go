@@ -37,11 +37,6 @@ func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 		return
 	}
 
-	meta := presenter.ResponseMeta{
-		Code:    200,
-		Message: "success",
-	}
-	middleware.SetMetaResponse(ctx, meta)
 	middleware.SetDataResponse(ctx, samples)
 }
 
@@ -68,11 +63,6 @@ func (hdl *SampleHanlder) Show(ctx *gin.Context) {
 		return
 	}
 
-	meta := presenter.ResponseMeta{
-		Code:    200,
-		Message: "success",
-	}
-	middleware.SetMetaResponse(ctx, meta)
 	middleware.SetDataResponse(ctx, sampleRes)
 }
 
@@ -93,11 +83,6 @@ func (hdl *SampleHanlder) Create(ctx *gin.Context) {
 		return
 	}
 
-	meta := presenter.ResponseMeta{
-		Code:    200,
-		Message: "success",
-	}
-	middleware.SetMetaResponse(ctx, meta)
 	middleware.SetDataResponse(ctx, "OK")
 }
 
@@ -123,11 +108,6 @@ func (hdl *SampleHanlder) Update(ctx *gin.Context) {
 		return
 	}
 
-	meta := presenter.ResponseMeta{
-		Code:    200,
-		Message: "success",
-	}
-	middleware.SetMetaResponse(ctx, meta)
 	middleware.SetDataResponse(ctx, "ok")
 }
 
@@ -148,10 +128,5 @@ func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
 		return
 	}
 
-	meta := presenter.ResponseMeta{
-		Code:    200,
-		Message: "success",
-	}
-	middleware.SetMetaResponse(ctx, meta)
 	middleware.SetDataResponse(ctx, "ok")
 }
