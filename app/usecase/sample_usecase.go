@@ -1,8 +1,6 @@
 package usecase
 
 import (
-	"log"
-
 	"github.com/ktakenaka/go-random/app/domain/entity"
 	"github.com/ktakenaka/go-random/app/domain/repository"
 	"github.com/ktakenaka/go-random/app/domain/service"
@@ -84,7 +82,6 @@ func (s *SampleUsecase) beginTx() {
 
 func (s *SampleUsecase) endTx(err error) error {
 	if p := recover(); p != nil {
-		log.Print("found p and rollback: ", p)
 		s.txm.Rollback()
 		panic(p)
 	} else if err != nil {

@@ -10,7 +10,8 @@ import (
 )
 
 func Handler() *gin.Engine {
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Logger())
 
 	// TODO: refactor the condition.
 	// It's not ideal to use `os.Getenv("ENV")` in several places
@@ -19,8 +20,11 @@ func Handler() *gin.Engine {
 	}
 
 	responseFmt := middleware.NewResponseFormatter()
+	// TODO: use CustomRecovery after it bacomes available
+	router.Use(responseFmt.Recovery)
 
 	router.GET("/", root)
+
 	v1NoAuth := router.Group("/api/v1")
 
 	sampleHdl := handler.NewSampleHanlder()
