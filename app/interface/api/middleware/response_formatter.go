@@ -22,6 +22,25 @@ func NewResponseFormatter() ResponseFormatter {
 	return ResponseFormatter{}
 }
 
+func (m *ResponseFormatter) Recovery(ctx *gin.Context) {
+	defer func() {
+		if p := recover(); p != nil {
+			log.Print(p)
+			meta := presenter.ResponseMeta{
+				Code:    500,
+				Message: "panic",
+			}
+
+			res := presenter.Response{
+				Meta:   meta,
+			}
+			ctx.JSON(http.StatusInternalServerError, res)
+		}
+	}()
+
+	ctx.Next()
+}
+
 func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	ctx.Next()
 
