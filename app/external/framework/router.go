@@ -22,6 +22,7 @@ func Handler() *gin.Engine {
 	responseFmt := middleware.NewResponseFormatter()
 	// TODO: use CustomRecovery after it bacomes available
 	router.Use(responseFmt.PanicRecovery)
+	router.Use(responseFmt.Format)
 
 	router.GET("/", root)
 
@@ -29,7 +30,6 @@ func Handler() *gin.Engine {
 
 	sampleHdl := handler.NewSampleHanlder()
 	sample := v1NoAuth.Group("samples")
-	sample.Use(responseFmt.Format)
 	sample.GET("", sampleHdl.Index)
 	sample.GET("/:id", sampleHdl.Show)
 	sample.POST("", sampleHdl.Create)
