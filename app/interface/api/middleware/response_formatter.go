@@ -47,12 +47,12 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	var res presenter.Response
 	var meta presenter.ResponseMeta
 
-	errors := getErrorResponse(ctx)
-	if len(errors) > 0 {
+	errs := getErrorResponse(ctx)
+	if len(errs) > 0 {
 		meta = getMetaResponse(ctx)
 		res = presenter.Response{
 			Meta:   meta,
-			Errors: errors,
+			Errors: errs,
 		}
 		// TODO: change status from context
 		ctx.JSON(http.StatusBadRequest, res)
