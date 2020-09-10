@@ -8,10 +8,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./:/go/src
-      - /go/src/db-data
-      - /go/src/logs
-      - /go/src/web
+      - ./backend:/go/src
     environment: 
       MYSQL_USER: random
       MYSQL_PASSWORD: random
@@ -36,7 +33,7 @@ services:
       context: .
       dockerfile: Dockerfile-fe
     volumes:
-     - ./web:/usr/src/app
+     - ./frontend:/usr/src/app
     command: sh -c "yarn start"
     ports:
       - "3000:3000"
