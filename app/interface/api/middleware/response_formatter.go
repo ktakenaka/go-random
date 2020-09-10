@@ -22,7 +22,7 @@ func NewResponseFormatter() ResponseFormatter {
 	return ResponseFormatter{}
 }
 
-func (m *ResponseFormatter) Recovery(ctx *gin.Context) {
+func (m *ResponseFormatter) PanicRecovery(ctx *gin.Context) {
 	defer func() {
 		if p := recover(); p != nil {
 			log.Print(p)
@@ -32,7 +32,7 @@ func (m *ResponseFormatter) Recovery(ctx *gin.Context) {
 			}
 
 			res := presenter.Response{
-				Meta:   meta,
+				Meta: meta,
 			}
 			ctx.JSON(http.StatusInternalServerError, res)
 		}

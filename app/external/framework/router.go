@@ -21,7 +21,7 @@ func Handler() *gin.Engine {
 
 	responseFmt := middleware.NewResponseFormatter()
 	// TODO: use CustomRecovery after it bacomes available
-	router.Use(responseFmt.Recovery)
+	router.Use(responseFmt.PanicRecovery)
 
 	router.GET("/", root)
 
