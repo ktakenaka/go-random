@@ -1,7 +1,7 @@
 package mysql
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 )
 
 type TransactionManager struct {

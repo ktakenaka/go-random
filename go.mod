@@ -15,7 +15,6 @@ require (
 	github.com/google/wire v0.4.0
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
-	github.com/jinzhu/gorm v1.9.16
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/pquerna/cachecontrol v0.0.0-20200819021114-67c6ae64274f // indirect
 	github.com/stretchr/testify v1.6.1
@@ -27,4 +26,6 @@ require (
 	golang.org/x/sys v0.0.0-20200909081042-eff7692f9009 // indirect
 	gopkg.in/square/go-jose.v2 v2.5.1 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
+	gorm.io/driver/mysql v1.0.1
+	gorm.io/gorm v1.20.0
 )
