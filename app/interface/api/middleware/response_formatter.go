@@ -3,6 +3,7 @@ package middleware
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -49,18 +50,17 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 			Meta:   meta,
 			Errors: errs,
 		}
-		// TODO: change status from context
-		ctx.JSON(http.StatusBadRequest, res)
-		return
+	} else {
+		data := getDataResponse(ctx)
+		res = presenter.Response{
+			Meta: meta,
+			Data: data,
+		}
 	}
 
-	data := getDataResponse(ctx)
-	res = presenter.Response{
-		Meta: meta,
-		Data: data,
-	}
-
-	ctx.JSON(http.StatusOK, res)
+	code := int(meta.Code)
+	httpStatus, _ := strconv.ParseInt(strconv.Itoa(code)[:3], 10, 64)
+	ctx.JSON(int(httpStatus), res)
 }
 
 func SetMetaResponse(ctx *gin.Context, code presenter.MetaCode) {
