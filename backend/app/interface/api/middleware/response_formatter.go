@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -107,7 +108,7 @@ func SetErrorResponse(ctx *gin.Context, err error) {
 		}
 
 		source := presenter.ResponseErrorSource{
-			Param: params,
+			Param: strings.Join(params, ", "),
 		}
 		SetMetaResponse(ctx, presenter.CodeNotFound)
 		errs := []presenter.ResponseError{
