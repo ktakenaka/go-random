@@ -1,12 +1,15 @@
 package middleware
 
 import (
+	"errors"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"gorm.io/gorm"
 
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 )
@@ -97,12 +100,29 @@ func SetErrorResponse(ctx *gin.Context, err error) {
 		}
 		SetMetaResponse(ctx, presenter.CodeUnprocessableEntity)
 		ctx.Set(errorKey, errs)
+	} else if errors.Is(err, gorm.ErrRecordNotFound) {
+		params := make([]string, len(ctx.Params))
+		for i, p := range ctx.Params {
+			params[i] = fmt.Sprintf("%v: %v", p.Key, p.Value)
+		}
+
+		source := presenter.ResponseErrorSource{
+			Param: params,
+		}
+		SetMetaResponse(ctx, presenter.CodeNotFound)
+		errs := []presenter.ResponseError{
+			{
+				Source: source,
+				Detail: err.Error(),
+			},
+		}
+		ctx.Set(errorKey, errs)
 	} else {
-		errPrs := presenter.ResponseError{
+		errs := presenter.ResponseError{
 			Detail: err.Error(),
 		}
 		SetMetaResponse(ctx, presenter.CodeInternalServerError)
-		ctx.Set(errorKey, []presenter.ResponseError{errPrs})
+		ctx.Set(errorKey, []presenter.ResponseError{errs})
 	}
 }
 
