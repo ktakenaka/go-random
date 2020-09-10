@@ -26,11 +26,7 @@ func (m *ResponseFormatter) PanicRecovery(ctx *gin.Context) {
 	defer func() {
 		if p := recover(); p != nil {
 			log.Print(p)
-			meta := presenter.ResponseMeta{
-				Code:    500,
-				Message: "panic",
-			}
-
+			meta := presenter.MetaCodePair[presenter.CodePanic]
 			res := presenter.Response{
 				Meta: meta,
 			}
@@ -45,11 +41,10 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	ctx.Next()
 
 	var res presenter.Response
-	var meta presenter.ResponseMeta
+	meta := getMetaResponse(ctx)
 
 	errs := getErrorResponse(ctx)
 	if len(errs) > 0 {
-		meta = getMetaResponse(ctx)
 		res = presenter.Response{
 			Meta:   meta,
 			Errors: errs,
@@ -60,10 +55,6 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	}
 
 	data := getDataResponse(ctx)
-	meta = presenter.ResponseMeta{
-		Code:    200,
-		Message: "success",
-	}
 	res = presenter.Response{
 		Meta: meta,
 		Data: data,
@@ -72,7 +63,8 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, res)
 }
 
-func SetMetaResponse(ctx *gin.Context, meta presenter.ResponseMeta) {
+func SetMetaResponse(ctx *gin.Context, code presenter.MetaCode) {
+	meta := presenter.MetaCodePair[code]
 	ctx.Set(metaKey, meta)
 }
 
@@ -80,7 +72,7 @@ func SetDataResponse(ctx *gin.Context, data interface{}) {
 	ctx.Set(dataKey, data)
 }
 
-func SetError(ctx *gin.Context, err error) {
+func SetErrorResponse(ctx *gin.Context, err error) {
 	if err == nil {
 		return
 	}
@@ -100,24 +92,13 @@ func SetError(ctx *gin.Context, err error) {
 				Detail: v.Tag(),
 			}
 		}
-
-		meta := presenter.ResponseMeta{
-			Code:    422,
-			Message: "validation failure",
-		}
-		ctx.Set(metaKey, meta)
+		SetMetaResponse(ctx, presenter.CodeUnprocessableEntity)
 		ctx.Set(errorKey, errs)
 	} else {
 		errPrs := presenter.ResponseError{
 			Detail: err.Error(),
 		}
-
-		meta := presenter.ResponseMeta{
-			Code:    500,
-			Message: "failure",
-		}
-
-		ctx.Set(metaKey, meta)
+		SetMetaResponse(ctx, presenter.CodeInternalServerError)
 		ctx.Set(errorKey, []presenter.ResponseError{errPrs})
 	}
 }

@@ -21,7 +21,7 @@ func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 
 	var err error
 	defer func() {
-		middleware.SetError(ctx, err)
+		middleware.SetErrorResponse(ctx, err)
 	}()
 
 	samples, err := suCase.ListSample()
@@ -36,6 +36,7 @@ func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 	}
 
 	middleware.SetDataResponse(ctx, sampleRes)
+	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
 }
 
 func (hdl *SampleHanlder) Show(ctx *gin.Context) {
@@ -43,7 +44,7 @@ func (hdl *SampleHanlder) Show(ctx *gin.Context) {
 
 	var err error
 	defer func() {
-		middleware.SetError(ctx, err)
+		middleware.SetErrorResponse(ctx, err)
 	}()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
@@ -62,6 +63,7 @@ func (hdl *SampleHanlder) Show(ctx *gin.Context) {
 	}
 
 	middleware.SetDataResponse(ctx, sampleRes)
+	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
 }
 
 func (hdl *SampleHanlder) Create(ctx *gin.Context) {
@@ -69,7 +71,7 @@ func (hdl *SampleHanlder) Create(ctx *gin.Context) {
 
 	var err error
 	defer func() {
-		middleware.SetError(ctx, err)
+		middleware.SetErrorResponse(ctx, err)
 	}()
 
 	var req presenter.SampleRequest
@@ -82,6 +84,7 @@ func (hdl *SampleHanlder) Create(ctx *gin.Context) {
 	}
 
 	middleware.SetDataResponse(ctx, "OK")
+	middleware.SetMetaResponse(ctx, presenter.CodeCreated)
 }
 
 func (hdl *SampleHanlder) Update(ctx *gin.Context) {
@@ -89,7 +92,7 @@ func (hdl *SampleHanlder) Update(ctx *gin.Context) {
 
 	var err error
 	defer func() {
-		middleware.SetError(ctx, err)
+		middleware.SetErrorResponse(ctx, err)
 	}()
 
 	var req presenter.SampleRequest
@@ -107,6 +110,7 @@ func (hdl *SampleHanlder) Update(ctx *gin.Context) {
 	}
 
 	middleware.SetDataResponse(ctx, "ok")
+	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
 }
 
 func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
@@ -114,7 +118,7 @@ func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
 
 	var err error
 	defer func() {
-		middleware.SetError(ctx, err)
+		middleware.SetErrorResponse(ctx, err)
 	}()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
@@ -127,4 +131,5 @@ func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
 	}
 
 	middleware.SetDataResponse(ctx, "ok")
+	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
 }
