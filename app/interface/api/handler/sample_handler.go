@@ -37,7 +37,7 @@ func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, samples)
+	middleware.SetDataResponse(ctx, sampleRes)
 }
 
 func (hdl *SampleHanlder) Show(ctx *gin.Context) {
