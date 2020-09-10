@@ -17,8 +17,8 @@ type ResponseError struct {
 // ResponseErrorSource is an object containing references to the source of the error,
 // optionally including any of the following members:
 type ResponseErrorSource struct {
-	Pointer string      `json:"pointer,omitempty"`
-	Param   interface{} `json:"param,omitempty"`
+	Pointer string `json:"pointer,omitempty"`
+	Param   string `json:"param,omitempty"`
 }
 
 // Response is the Response format of JSON API
