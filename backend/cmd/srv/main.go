@@ -7,9 +7,10 @@ import (
 	"github.com/ktakenaka/go-random/app/config"
 	"github.com/ktakenaka/go-random/app/external/database"
 	"github.com/ktakenaka/go-random/app/external/framework"
+	"github.com/ktakenaka/go-random/app/interface/api/middleware"
 	"github.com/ktakenaka/go-random/helper/jwtutil"
 
-	"github.com/urfave/cli/v2"
+	cli "github.com/urfave/cli/v2"
 )
 
 func main() {
@@ -17,6 +18,11 @@ func main() {
 		Name:  "go-random",
 		Usage: "try everything",
 		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "env",
+				EnvVars: []string{"ENV"},
+				Value:   "development",
+			},
 			&cli.StringFlag{
 				Name:    "mysqluser",
 				EnvVars: []string{"MYSQL_USER"},
@@ -66,6 +72,7 @@ func main() {
 			jwtutil.InitJWTSecret(
 				c.String("jwt_secret"),
 			)
+			middleware.InitJWTCookieOpt(c.String("env"))
 
 			router := framework.Handler()
 			if err := router.Run(":8080"); err != nil {
