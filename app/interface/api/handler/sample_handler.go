@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"log"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +27,6 @@ func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 	samples, err := suCase.ListSample()
 
 	if err != nil {
-		log.Println("hoge")
 		return
 	}
 
