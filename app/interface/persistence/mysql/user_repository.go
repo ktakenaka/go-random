@@ -1,7 +1,7 @@
 package mysql
 
 import (
-	"github.com/jinzhu/gorm"
+	"gorm.io/gorm"
 
 	"github.com/ktakenaka/go-random/app/domain/entity"
 )

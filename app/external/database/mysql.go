@@ -3,9 +3,8 @@ package database
 import (
 	"sync"
 
-	"github.com/jinzhu/gorm"
-	// http://gorm.io/docs/connecting_to_the_database.html
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 var (
@@ -16,7 +15,7 @@ var (
 // pass config.DBACCESS to this function in main()
 func InitMySQLConnection(confStr string) (err error) {
 	once.Do(func() {
-		db, err = gorm.Open("mysql", confStr)
+		db, err = gorm.Open(mysql.Open(confStr), &gorm.Config{})
 	})
 	if err != nil {
 		return err

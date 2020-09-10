@@ -1,12 +1,11 @@
 package mysql
 
 import (
-	"fmt"
 	"time"
 
-	"github.com/jinzhu/gorm"
 	"github.com/ktakenaka/go-random/app/domain/entity"
 	"github.com/ktakenaka/go-random/app/domain/repository"
+	"gorm.io/gorm"
 )
 
 type SampleRepository struct {
@@ -51,9 +50,8 @@ func (r *SampleRepository) Create(title string) error {
 		return err
 	}
 
-	r.DB.Create(&sample)
-	if r.DB.NewRecord(sample) {
-		return fmt.Errorf("failed")
+	if err := r.DB.Create(&sample).Error; err != nil {
+		return err
 	}
 	return nil
 }
