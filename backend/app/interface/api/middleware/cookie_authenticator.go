@@ -3,17 +3,17 @@ package middleware
 import (
 	stdErrors "errors"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/helper/jwtutil"
 )
 
 const (
 	accessKey      = "aa_jwt_access"
 	refreshKey     = "aa_jwt_refresh"
-	userIDKey      = "userID"
+	jwtClaimsKey   = "jwtClaims"
 	csrfHeader     = "X-CSRF-TOKEN"
 	cookieMaxAge   = 86400
 	cookiePath     = "/api"
@@ -21,25 +21,20 @@ const (
 )
 
 var (
-	ignoreMethods  = []string{"GET", "HEAD", "OPTIONS"}
-	cookieSameSite = judgeSameSiteMode(os.Getenv("ENV"))
-	cookieSecure   = judegeSecure(os.Getenv("ENV"))
+	ignoreMethods  []string      = []string{"GET", "HEAD", "OPTIONS"}
+	cookieSameSite http.SameSite = http.SameSiteLaxMode
+	cookieSecure   bool          = true
 )
 
-func judgeSameSiteMode(env string) http.SameSite {
+// InitJWTCookieOpt initializes Cookie option for JWT
+func InitJWTCookieOpt(env string) {
 	if env == "heroku" {
-		// This configuration is for heroku review app
-		// Cookie is not sent with cross domain unless setting None
-		return http.SameSiteNoneMode
+		cookieSameSite = http.SameSiteNoneMode
 	}
-	return http.SameSiteLaxMode
-}
 
-func judegeSecure(env string) bool {
-	if env == "development" || env == "" {
-		return false
+	if env == "development" {
+		cookieSecure = false
 	}
-	return true
 }
 
 // CookieAuthenticator is for User Authentication and CSRF protection
@@ -64,18 +59,20 @@ func (m *CookieAuthenticator) authenticate(ctx *gin.Context, jwtKey string) {
 	var err error
 	defer func() {
 		if err != nil {
-			// TODO: set error context
+			SetErrorResponse(ctx, err)
 			ctx.Abort()
 		}
 	}()
 
 	token, err := ctx.Cookie(jwtKey)
 	if err != nil {
+		SetMetaResponse(ctx, presenter.CodeUnauthorized)
 		return
 	}
 
 	claims, err := jwtutil.VerifyJWT(token)
 	if err != nil {
+		SetMetaResponse(ctx, presenter.CodeUnauthorized)
 		return
 	}
 
@@ -83,11 +80,15 @@ func (m *CookieAuthenticator) authenticate(ctx *gin.Context, jwtKey string) {
 		csrfToken := ctx.Request.Header.Get(csrfHeader)
 		if claims.CSRFToken != csrfToken {
 			err = stdErrors.New("csrf detected")
+			SetMetaResponse(ctx, presenter.CodeForbidden)
 			return
 		}
 	}
 
-	ctx.Set(userIDKey, claims.UserID)
+	jwtClaims := JWTClaims{
+		UserID: claims.UserID,
+	}
+	ctx.Set(jwtClaimsKey, jwtClaims)
 	ctx.Next()
 }
 
@@ -126,4 +127,21 @@ func SetRefreshCookie(ctx *gin.Context, token string) {
 		cookieSecure,
 		cookieHTTPOnly,
 	)
+}
+
+// ExtractClaims extracts AuthClaims from context
+func ExtractClaims(ctx *gin.Context) (JWTClaims, error) {
+	claims, ok := ctx.Get(jwtClaimsKey)
+	if !ok {
+		// We will never have this error because AuthenticateAccess raises error before accessing here.
+		// It means jwtClaims always exists that AuthenticateAccess doesn't raise error.
+		return JWTClaims{}, stdErrors.New("failed to extract jwtClaims")
+	}
+
+	return claims.(JWTClaims), nil
+}
+
+// JWTClaims is a data transfer object
+type JWTClaims struct {
+	UserID uint64
 }
