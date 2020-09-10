@@ -80,6 +80,9 @@ func SetErrorResponse(ctx *gin.Context, err error) {
 	// TODO: Wrap errors at the place to happen => logging => easy to find the place
 	log.Println(err)
 
+	// It's difficult to set meta in handler because it's not clear until we accept errors.
+	// Especially the errors from packages.
+	// That's the reason to judge error type and set meta here
 	if ve, ok := err.(validator.ValidationErrors); ok {
 		errs := make([]presenter.ResponseError, len(ve))
 
