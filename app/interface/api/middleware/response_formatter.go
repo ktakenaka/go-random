@@ -3,6 +3,7 @@ package middleware
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -22,17 +23,13 @@ func NewResponseFormatter() ResponseFormatter {
 	return ResponseFormatter{}
 }
 
-func (m *ResponseFormatter) Recovery(ctx *gin.Context) {
+func (m *ResponseFormatter) PanicRecovery(ctx *gin.Context) {
 	defer func() {
 		if p := recover(); p != nil {
 			log.Print(p)
-			meta := presenter.ResponseMeta{
-				Code:    500,
-				Message: "panic",
-			}
-
+			meta := presenter.MetaCodePair[presenter.CodePanic]
 			res := presenter.Response{
-				Meta:   meta,
+				Meta: meta,
 			}
 			ctx.JSON(http.StatusInternalServerError, res)
 		}
@@ -45,34 +42,29 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	ctx.Next()
 
 	var res presenter.Response
-	var meta presenter.ResponseMeta
+	meta := getMetaResponse(ctx)
 
-	errors := getErrorResponse(ctx)
-	if len(errors) > 0 {
-		meta = getMetaResponse(ctx)
+	errs := getErrorResponse(ctx)
+	if len(errs) > 0 {
 		res = presenter.Response{
 			Meta:   meta,
-			Errors: errors,
+			Errors: errs,
 		}
-		// TODO: change status from context
-		ctx.JSON(http.StatusBadRequest, res)
-		return
+	} else {
+		data := getDataResponse(ctx)
+		res = presenter.Response{
+			Meta: meta,
+			Data: data,
+		}
 	}
 
-	data := getDataResponse(ctx)
-	meta = presenter.ResponseMeta{
-		Code:    200,
-		Message: "success",
-	}
-	res = presenter.Response{
-		Meta: meta,
-		Data: data,
-	}
-
-	ctx.JSON(http.StatusOK, res)
+	code := int(meta.Code)
+	httpStatus, _ := strconv.ParseInt(strconv.Itoa(code)[:3], 10, 64)
+	ctx.JSON(int(httpStatus), res)
 }
 
-func SetMetaResponse(ctx *gin.Context, meta presenter.ResponseMeta) {
+func SetMetaResponse(ctx *gin.Context, code presenter.MetaCode) {
+	meta := presenter.MetaCodePair[code]
 	ctx.Set(metaKey, meta)
 }
 
@@ -80,7 +72,7 @@ func SetDataResponse(ctx *gin.Context, data interface{}) {
 	ctx.Set(dataKey, data)
 }
 
-func SetError(ctx *gin.Context, err error) {
+func SetErrorResponse(ctx *gin.Context, err error) {
 	if err == nil {
 		return
 	}
@@ -88,6 +80,9 @@ func SetError(ctx *gin.Context, err error) {
 	// TODO: Wrap errors at the place to happen => logging => easy to find the place
 	log.Println(err)
 
+	// It's difficult to set meta in handler because it's not clear until we accept errors.
+	// Especially the errors from packages.
+	// That's the reason to judge error type and set meta here
 	if ve, ok := err.(validator.ValidationErrors); ok {
 		errs := make([]presenter.ResponseError, len(ve))
 
@@ -100,24 +95,13 @@ func SetError(ctx *gin.Context, err error) {
 				Detail: v.Tag(),
 			}
 		}
-
-		meta := presenter.ResponseMeta{
-			Code:    422,
-			Message: "validation failure",
-		}
-		ctx.Set(metaKey, meta)
+		SetMetaResponse(ctx, presenter.CodeUnprocessableEntity)
 		ctx.Set(errorKey, errs)
 	} else {
 		errPrs := presenter.ResponseError{
 			Detail: err.Error(),
 		}
-
-		meta := presenter.ResponseMeta{
-			Code:    500,
-			Message: "failure",
-		}
-
-		ctx.Set(metaKey, meta)
+		SetMetaResponse(ctx, presenter.CodeInternalServerError)
 		ctx.Set(errorKey, []presenter.ResponseError{errPrs})
 	}
 }
