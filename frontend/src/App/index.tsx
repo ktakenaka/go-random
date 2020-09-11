@@ -4,7 +4,7 @@ import history from "../browserHistory";
 
 import "./index.css";
 
-import { HomePage } from "../pages";
+import { HomePage, SignInPage } from "../pages";
 
 function App() {
   return (
@@ -12,6 +12,7 @@ function App() {
       <Router history={history}>
         <Switch>
           <Route path="/" exact component={HomePage} />
+          <Route path="/google/sign-in" component={SignInPage} />
         </Switch>
       </Router>
     </Fragment>
