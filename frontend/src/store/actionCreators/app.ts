@@ -1,14 +1,22 @@
-import { CHANGE_LOCATION, SET_MESSAGE } from "store/actionTypes";
+import {
+  CHANGE_LOCATION,
+  SET_MESSAGE,
+  UNSET_MESSAAGE,
+} from "store/actionTypes";
 
 type Action = {
   type: string;
-  payload: string;
+  payload?: any;
 };
 
-export const changeLocastion = (location: string): Action => {
+export const changeLocation = (location: string): Action => {
   return { type: CHANGE_LOCATION, payload: location };
 };
 
-export const setMessage = (message: any): Action => {
-  return { type: SET_MESSAGE, payload: message };
+export const setMessage = (message: string, success = true): Action => {
+  return { type: SET_MESSAGE, payload: { message: message, success: success } };
+};
+
+export const unsetMessage = (): Action => {
+  return { type: UNSET_MESSAAGE };
 };

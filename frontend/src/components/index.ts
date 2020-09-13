@@ -10,6 +10,7 @@ export { default as MainHeader } from "./organisms/MainHeader";
 export { default as SampleList } from "./organisms/SampleList";
 export { default as FormWrapper } from "./organisms/FormWrapper";
 export { default as Counter } from "./organisms/Counter";
+export { default as ActionMessage } from "./organisms/ActionMessage";
 
 // Templates
 export { default as MainTemplate } from "./templates/MainTemplate";

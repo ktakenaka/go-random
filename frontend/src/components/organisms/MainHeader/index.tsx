@@ -1,11 +1,21 @@
 import React from "react";
-import { Wrapper, LeftContent, RightContent, Divide, Item } from "./styles";
+import { connect } from "react-redux";
 
-const MainHeader = () => {
+import { Wrapper, LeftContent, RightContent, Divide, Item } from "./styles";
+import { changeLocation } from "store/actionCreators/app";
+
+const MainHeader = ({
+  changeLocation,
+}: {
+  changeLocation: (location: string) => void;
+}) => {
   return (
     <Wrapper>
       <LeftContent>
         <Item>Left</Item>
+        <button onClick={() => changeLocation("/")}>Home</button>
+
+        <button onClick={() => changeLocation("/samples")}>sample</button>
       </LeftContent>
       <Divide />
       <RightContent>
@@ -15,4 +25,8 @@ const MainHeader = () => {
   );
 };
 
-export default MainHeader;
+const mapDispatchToProps = {
+  changeLocation: changeLocation,
+};
+
+export default connect(null, mapDispatchToProps)(MainHeader);
