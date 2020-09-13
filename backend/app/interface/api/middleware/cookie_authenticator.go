@@ -11,8 +11,8 @@ import (
 )
 
 const (
-	accessKey      = "aa_jwt_access"
-	refreshKey     = "aa_jwt_refresh"
+	accessKey      = "jwt_access"
+	refreshKey     = "jwt_refresh"
 	jwtClaimsKey   = "jwtClaims"
 	csrfHeader     = "X-CSRF-TOKEN"
 	cookieMaxAge   = 86400
