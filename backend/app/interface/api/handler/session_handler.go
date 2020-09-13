@@ -23,10 +23,10 @@ func (hdl *SessionHandler) CreateWithGoogle(ctx *gin.Context) {
 	}()
 
 	var req presenter.GoogleSessionRequest
-	if err = ctx.ShouldBindJSON(&req); err != nil {
+	if err = ctx.ShouldBind(&req); err != nil {
 		return
 	}
-	aTkn, rTkn, csrfTkn, err := uc.Execute(req.Code)
+	aTkn, rTkn, csrfTkn, err := uc.Execute(req.Code, req.Nonce)
 	if err != nil {
 		return
 	}

@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"time"
 
 	"github.com/ktakenaka/go-random/app/domain/repository"
@@ -21,17 +22,20 @@ func NewSignInUsecase(
 	}
 }
 
-func (uc *SignInUsecase) Execute(code string) (aTkn, rTkn, csrfTkn string, err error) {
-	token, err := uc.googleRepo.GetToken(code)
+func (uc *SignInUsecase) Execute(code, nonce string) (aTkn, rTkn, csrfTkn string, err error) {
+	ctx := context.Background()
+
+	token, err := uc.googleRepo.GetToken(ctx, code, nonce)
 	if err != nil {
 		return "", "", "", err
 	}
 
-	body, err := uc.googleRepo.GetUserInfo(token)
+	body, err := uc.googleRepo.GetUserInfo(ctx, token)
 	if err != nil {
 		return "", "", "", err
 	}
 
+	// TODO: put User entity
 	user, err := uc.userRepo.UpdateOrCreate(body)
 	if err != nil {
 		return "", "", "", err
