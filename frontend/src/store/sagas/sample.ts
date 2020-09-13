@@ -3,6 +3,7 @@ import { put, call, takeLatest } from "redux-saga/effects";
 import { getSamplesAPI, postSampleAPI } from "api/app/sample";
 import { SUBMIT_SAMPLE_REQUEST, GET_SAMPLES_REQUEST } from "store/actionTypes";
 import * as sampleAction from "store/actionCreators/sample";
+import * as appAction from "store/actionCreators/app";
 
 function* createSample(action: any) {
   try {
@@ -10,6 +11,7 @@ function* createSample(action: any) {
     yield put(sampleAction.submitSampleSuccess());
     yield put(sampleAction.getSamplesRequest());
   } catch (err) {
+    yield put(appAction.setMessage("failed to get submit sample", false));
     yield console.log(err);
     yield put(sampleAction.submitSampleFailure());
   }
@@ -20,6 +22,7 @@ function* getSamples() {
     const res = yield call(getSamplesAPI);
     yield put(sampleAction.getSamplesSuccess(res.data.data));
   } catch (err) {
+    yield put(appAction.setMessage("falied to get samples", false));
     yield console.log(err);
     yield put(sampleAction.getSamplesFailure());
   }
