@@ -4,7 +4,7 @@ import history from "../browserHistory";
 
 import "./index.css";
 
-import { HomePage, SignInPage } from "../pages";
+import { HomePage, SignInPage, CallbackPage } from "../pages";
 
 function App() {
   return (
@@ -13,6 +13,7 @@ function App() {
         <Switch>
           <Route path="/" exact component={HomePage} />
           <Route path="/google/sign-in" component={SignInPage} />
+          <Route path="/google/callback" component={CallbackPage} />
         </Switch>
       </Router>
     </Fragment>
