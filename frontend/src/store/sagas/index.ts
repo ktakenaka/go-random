@@ -1,7 +1,9 @@
 import { all } from "redux-saga/effects";
-import tutorialSaga from "./tutorial";
-import sampleSaga from "./sample";
+import tutorial from "./tutorial";
+import app from "./app";
+import sample from "./sample";
+import session from "./session";
 
 export default function* rootSaga(): Generator {
-  yield all([tutorialSaga(), sampleSaga()]);
+  yield all([tutorial(), app(), sample(), session()]);
 }

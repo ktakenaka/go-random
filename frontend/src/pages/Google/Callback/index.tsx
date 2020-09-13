@@ -1,8 +1,14 @@
 import React, { Fragment, useEffect } from "react";
-import { GOOGLE_STATE_KEY, GOOGLE_NONCE_KEY } from "constants/auth";
-//import "url-search-params-polyfill";
+import { connect } from "react-redux";
 
-const CallbackPage = () => {
+import { GOOGLE_STATE_KEY, GOOGLE_NONCE_KEY } from "constants/auth";
+import { createSessionRequest } from "store/actionCreators/session";
+
+type Props = {
+  createSessionRequest: (code: string, nonce: string) => void;
+};
+
+const CallbackPage = ({ createSessionRequest }: Props) => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
 
@@ -12,18 +18,33 @@ const CallbackPage = () => {
     const nonce = sessionStorage.getItem(GOOGLE_NONCE_KEY);
     sessionStorage.removeItem(GOOGLE_NONCE_KEY);
 
+    const code = params.get("code");
+
     if (params.get("state") !== state) {
       // TODO: error handling
-      alert("failed to sign in");
+      console.log("csrf detected");
+    } else if (!code || !nonce) {
+      // TOOD: error handling
+      console.log("invalid callback phase");
     } else {
-      const code = params.get("code");
-      // TODO: call BE url to create session
-      console.log(code);
-      console.log(nonce);
+      createSessionRequest(code, nonce);
     }
   });
 
-  return <Fragment>Signing In...</Fragment>;
+  return (
+    <Fragment>
+      <div>Signing In...</div>
+    </Fragment>
+  );
 };
 
-export default CallbackPage;
+// When loading is needed, please use here
+// const mapStateToProps = (state: Readonly<any>) => ({
+//   loading: state.get("session").loading,
+// });
+
+const mapDispatchToProps = {
+  createSessionRequest: createSessionRequest,
+};
+
+export default connect(null, mapDispatchToProps)(CallbackPage);
