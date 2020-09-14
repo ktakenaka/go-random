@@ -36,7 +36,7 @@ func Handler() *gin.Engine {
 	cookieAuth := middleware.NewCookieAuthenticator()
 	v1Auth.Use(cookieAuth.AuthenticateAccess)
 
-	sampleHdl := handler.NewSampleHanlder()
+	sampleHdl := handler.NewSampleHandler()
 	sample := v1Auth.Group("samples")
 	sample.GET("", sampleHdl.Index)
 	sample.GET("/:id", sampleHdl.Show)

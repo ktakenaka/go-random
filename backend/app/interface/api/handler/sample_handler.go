@@ -5,23 +5,25 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
-	"github.com/ktakenaka/go-random/app/interface/api/middleware"
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/app/registry"
 )
 
-type SampleHanlder struct{}
-
-func NewSampleHanlder() *SampleHanlder {
-	return &SampleHanlder{}
+// SampleHandler is the sample
+type SampleHandler struct {
+	BaseHandler
 }
 
-func (hdl *SampleHanlder) Index(ctx *gin.Context) {
+func NewSampleHandler() *SampleHandler {
+	return &SampleHandler{}
+}
+
+func (hdl *SampleHandler) Index(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var err error
 	defer func() {
-		middleware.SetErrorResponse(ctx, err)
+		hdl.SetError(ctx, err)
 	}()
 
 	samples, err := suCase.ListSample()
@@ -35,16 +37,16 @@ func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, sampleRes)
-	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
+	hdl.SetData(ctx, sampleRes)
+	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
-func (hdl *SampleHanlder) Show(ctx *gin.Context) {
+func (hdl *SampleHandler) Show(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var err error
 	defer func() {
-		middleware.SetErrorResponse(ctx, err)
+		hdl.SetError(ctx, err)
 	}()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
@@ -62,16 +64,16 @@ func (hdl *SampleHanlder) Show(ctx *gin.Context) {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, sampleRes)
-	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
+	hdl.SetData(ctx, sampleRes)
+	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
-func (hdl *SampleHanlder) Create(ctx *gin.Context) {
+func (hdl *SampleHandler) Create(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var err error
 	defer func() {
-		middleware.SetErrorResponse(ctx, err)
+		hdl.SetError(ctx, err)
 	}()
 
 	var req presenter.SampleRequest
@@ -83,16 +85,16 @@ func (hdl *SampleHanlder) Create(ctx *gin.Context) {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, "OK")
-	middleware.SetMetaResponse(ctx, presenter.CodeCreated)
+	hdl.SetData(ctx, "OK")
+	hdl.SetMeta(ctx, presenter.CodeCreated)
 }
 
-func (hdl *SampleHanlder) Update(ctx *gin.Context) {
+func (hdl *SampleHandler) Update(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var err error
 	defer func() {
-		middleware.SetErrorResponse(ctx, err)
+		hdl.SetError(ctx, err)
 	}()
 
 	var req presenter.SampleRequest
@@ -109,16 +111,16 @@ func (hdl *SampleHanlder) Update(ctx *gin.Context) {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, "ok")
-	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
+	hdl.SetData(ctx, "ok")
+	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
-func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
+func (hdl *SampleHandler) Delete(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var err error
 	defer func() {
-		middleware.SetErrorResponse(ctx, err)
+		hdl.SetError(ctx, err)
 	}()
 
 	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
@@ -130,6 +132,6 @@ func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, "ok")
-	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
+	hdl.SetData(ctx, "ok")
+	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
