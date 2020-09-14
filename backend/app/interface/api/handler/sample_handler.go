@@ -14,10 +14,12 @@ type SampleHandler struct {
 	BaseHandler
 }
 
+// NewSampleHandler is a constructor for Samplehandler
 func NewSampleHandler() *SampleHandler {
 	return &SampleHandler{}
 }
 
+// Index returns the list of samples
 func (hdl *SampleHandler) Index(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
@@ -41,6 +43,7 @@ func (hdl *SampleHandler) Index(ctx *gin.Context) {
 	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
+// Show returns a sample
 func (hdl *SampleHandler) Show(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
@@ -68,6 +71,8 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
+
+// Create creates a sample
 func (hdl *SampleHandler) Create(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
@@ -89,6 +94,7 @@ func (hdl *SampleHandler) Create(ctx *gin.Context) {
 	hdl.SetMeta(ctx, presenter.CodeCreated)
 }
 
+// Update updates a sample
 func (hdl *SampleHandler) Update(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
@@ -115,6 +121,7 @@ func (hdl *SampleHandler) Update(ctx *gin.Context) {
 	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
+// Delete deletes a sample
 func (hdl *SampleHandler) Delete(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
