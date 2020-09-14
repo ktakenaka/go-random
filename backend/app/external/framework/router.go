@@ -28,14 +28,6 @@ func Handler() *gin.Engine {
 
 	v1NoAuth := router.Group("/api/v1")
 
-	sampleHdl := handler.NewSampleHanlder()
-	sample := v1NoAuth.Group("samples")
-	sample.GET("", sampleHdl.Index)
-	sample.GET("/:id", sampleHdl.Show)
-	sample.POST("", sampleHdl.Create)
-	sample.PUT("/:id", sampleHdl.Update)
-	sample.DELETE("/:id", sampleHdl.Delete)
-
 	sessionHdl := handler.NewSessionHandler()
 	session := v1NoAuth.Group("/sessions")
 	session.POST("/google", sessionHdl.CreateWithGoogle)
@@ -43,6 +35,14 @@ func Handler() *gin.Engine {
 	v1Auth := router.Group("/api/v1")
 	cookieAuth := middleware.NewCookieAuthenticator()
 	v1Auth.Use(cookieAuth.AuthenticateAccess)
+
+	sampleHdl := handler.NewSampleHanlder()
+	sample := v1Auth.Group("samples")
+	sample.GET("", sampleHdl.Index)
+	sample.GET("/:id", sampleHdl.Show)
+	sample.POST("", sampleHdl.Create)
+	sample.PUT("/:id", sampleHdl.Update)
+	sample.DELETE("/:id", sampleHdl.Delete)
 
 	return router
 }
