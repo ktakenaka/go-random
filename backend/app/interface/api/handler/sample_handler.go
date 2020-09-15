@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/app/registry"
+	"github.com/ktakenaka/go-random/app/usecase/dto"
 )
 
 // SampleHandler is the sample
@@ -28,7 +29,9 @@ func (hdl *SampleHandler) Index(ctx *gin.Context) {
 		hdl.SetError(ctx, err)
 	}()
 
-	samples, err := suCase.ListSample()
+	claims := hdl.JWTClaims(ctx)
+
+	samples, err := suCase.ListSample(claims.UserID)
 
 	if err != nil {
 		return
@@ -52,12 +55,14 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 		hdl.SetError(ctx, err)
 	}()
 
-	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
+	id, err := strconv.ParseUint(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
 		return
 	}
 
-	sample, err := suCase.FindSample(id)
+	claims := hdl.JWTClaims(ctx)
+
+	sample, err := suCase.FindSample(claims.UserID, id)
 	if err != nil {
 		return
 	}
@@ -71,22 +76,30 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
-
 // Create creates a sample
 func (hdl *SampleHandler) Create(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
-	var err error
+	var (
+		err    error
+		req    presenter.SampleRequest
+		dtoReq dto.CreateSample
+	)
 	defer func() {
 		hdl.SetError(ctx, err)
 	}()
 
-	var req presenter.SampleRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
+	if err = ctx.ShouldBindJSON(&req); err != nil {
+		return
+	}
+	if err = copier.Copy(&dtoReq, &req); err != nil {
 		return
 	}
 
-	if err = suCase.RegisterSample(req.Title); err != nil {
+	claims := hdl.JWTClaims(ctx)
+	dtoReq.UserID = claims.UserID
+
+	if err = suCase.RegisterSample(dtoReq); err != nil {
 		return
 	}
 
@@ -98,22 +111,32 @@ func (hdl *SampleHandler) Create(ctx *gin.Context) {
 func (hdl *SampleHandler) Update(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
-	var err error
+	var (
+		err    error
+		req    presenter.SampleRequest
+		dtoReq dto.UpdateSample
+	)
 	defer func() {
 		hdl.SetError(ctx, err)
 	}()
 
-	var req presenter.SampleRequest
 	if err = ctx.ShouldBindJSON(&req); err != nil {
 		return
 	}
+	if err = copier.Copy(&dtoReq, &req); err != nil {
+		return
+	}
 
-	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
+	id, err := strconv.ParseUint(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
 		return
 	}
 
-	if err = suCase.UpdateSample(id, req.Title); err != nil {
+	dtoReq.ID = id
+
+	claims := hdl.JWTClaims(ctx)
+	dtoReq.UserID = claims.UserID
+	if err = suCase.UpdateSample(dtoReq); err != nil {
 		return
 	}
 
@@ -130,12 +153,14 @@ func (hdl *SampleHandler) Delete(ctx *gin.Context) {
 		hdl.SetError(ctx, err)
 	}()
 
-	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
+	id, err := strconv.ParseUint(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
 		return
 	}
 
-	if err = suCase.DeleteSample(id); err != nil {
+	claims := hdl.JWTClaims(ctx)
+
+	if err = suCase.DeleteSample(claims.UserID, id); err != nil {
 		return
 	}
 

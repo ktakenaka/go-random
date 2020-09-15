@@ -24,3 +24,9 @@ func (hdl *BaseHandler) SetMeta(ctx *gin.Context, code presenter.MetaCode) {
 func (hdl *BaseHandler) SetError(ctx *gin.Context, err error) {
 	middleware.SetErrorResponse(ctx, err)
 }
+
+// JWTClaims extracts claims from JWT
+func (hdl *BaseHandler) JWTClaims(ctx *gin.Context) middleware.JWTClaims {
+	claims, _ := middleware.ExtractClaims(ctx)
+	return claims
+}

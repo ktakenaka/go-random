@@ -5,11 +5,11 @@ import (
 )
 
 type SampleRepository interface {
-	FindAll() ([]*entity.Sample, error)
-	FindByID(id int64) (*entity.Sample, error)
-	FindByTitle(title string) (*entity.Sample, error)
-	Create(title string) error
-	Update(id int64, title string) error
-	Delete(id int64) error
+	FindAll(uesrID uint64) ([]*entity.Sample, error)
+	FindByID(uesrID, id uint64) (*entity.Sample, error)
+	FindByTitle(userID uint64, title string) (*entity.Sample, error)
+	Create(sample *entity.Sample) error
+	Update(sample *entity.Sample) error
+	Delete(userID, id uint64) error
 	AssignTx(txm TransactionManager)
 }

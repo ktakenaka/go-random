@@ -7,11 +7,10 @@ import (
 )
 
 type Sample struct {
-	ID        int    `gorm:"primary_key"`
-	Title     string `validate:"max=20, required"`
+	ID        uint64 `gorm:"primary_key"`
+	Title     string `validate:"max=20,required"`
 	Content   string `validate:"max=100"`
-	UserID    uint64 `validate:required`
-	User      User
+	UserID    uint64 `validate:"required"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -21,7 +20,7 @@ func (s *Sample) TableName() string {
 }
 
 func (s *Sample) Validate() error {
-	validate = validator.New()
+	validate := validator.New()
 	err := validate.Struct(s)
 	return err
 }

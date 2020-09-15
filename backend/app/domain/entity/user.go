@@ -3,7 +3,7 @@ package entity
 import (
 	"time"
 
-	"github.com/go-playground/validator/v10"
+	validator "github.com/go-playground/validator/v10"
 )
 
 type User struct {
@@ -19,7 +19,7 @@ func (u *User) TableName() string {
 }
 
 func (u *User) Validate() error {
-	validate = validator.New()
+	validate := validator.New()
 	err := validate.Struct(u)
 	return err
 }

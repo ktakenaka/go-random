@@ -16,8 +16,8 @@ func NewSampleService(repo repository.SampleRepository) *SampleService {
 	}
 }
 
-func (s *SampleService) Duplicated(title string) error {
-	sample, _ := s.repo.FindByTitle(title)
+func (s *SampleService) Duplicated(userID uint64, title string) error {
+	sample, _ := s.repo.FindByTitle(userID, title)
 	if sample != nil {
 		return fmt.Errorf("%s already exists", title)
 	}
