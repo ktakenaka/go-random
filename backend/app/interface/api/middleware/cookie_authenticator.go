@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
-	"github.com/ktakenaka/go-random/helper/jwtutil"
+	"github.com/ktakenaka/go-random/backend/helper/jwtutil"
 )
 
 const (
