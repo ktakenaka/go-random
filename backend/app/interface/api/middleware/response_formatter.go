@@ -12,7 +12,7 @@ import (
 	validator "github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 
-	"github.com/ktakenaka/go-random/app/interface/api/presenter"
+	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
 )
 
 const (

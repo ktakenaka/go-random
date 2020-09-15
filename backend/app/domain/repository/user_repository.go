@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/ktakenaka/go-random/app/domain/entity"
+	"github.com/ktakenaka/go-random/backend/app/domain/entity"
 )
 
 type UserRepository interface {

@@ -3,9 +3,9 @@ package handler
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/ktakenaka/go-random/app/interface/api/middleware"
-	"github.com/ktakenaka/go-random/app/interface/api/presenter"
-	"github.com/ktakenaka/go-random/app/registry"
+	"github.com/ktakenaka/go-random/backend/app/interface/api/middleware"
+	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
+	"github.com/ktakenaka/go-random/backend/app/registry"
 )
 
 type SessionHandler struct{}

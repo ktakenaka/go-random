@@ -3,10 +3,10 @@ package usecase
 import (
 	"github.com/jinzhu/copier"
 
-	"github.com/ktakenaka/go-random/app/domain/entity"
-	"github.com/ktakenaka/go-random/app/domain/repository"
-	"github.com/ktakenaka/go-random/app/domain/service"
-	"github.com/ktakenaka/go-random/app/usecase/dto"
+	"github.com/ktakenaka/go-random/backend/app/domain/entity"
+	"github.com/ktakenaka/go-random/backend/app/domain/repository"
+	"github.com/ktakenaka/go-random/backend/app/domain/service"
+	"github.com/ktakenaka/go-random/backend/app/usecase/dto"
 )
 
 type SampleUsecase struct {

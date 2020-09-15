@@ -5,9 +5,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
-	"github.com/ktakenaka/go-random/app/interface/api/presenter"
-	"github.com/ktakenaka/go-random/app/registry"
-	"github.com/ktakenaka/go-random/app/usecase/dto"
+	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
+	"github.com/ktakenaka/go-random/backend/app/registry"
+	"github.com/ktakenaka/go-random/backend/app/usecase/dto"
 )
 
 // SampleHandler is the sample

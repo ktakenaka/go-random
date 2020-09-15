@@ -6,7 +6,7 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/ktakenaka/go-random/app/config"
+	"github.com/ktakenaka/go-random/backend/app/config"
 )
 
 const (

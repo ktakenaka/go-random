@@ -1,4 +1,4 @@
-module github.com/ktakenaka/go-random
+module github.com/ktakenaka/go-random/backend
 
 go 1.14
 

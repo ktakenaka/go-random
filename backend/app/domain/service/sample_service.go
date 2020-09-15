@@ -3,7 +3,7 @@ package service
 import (
 	"fmt"
 
-	"github.com/ktakenaka/go-random/app/domain/repository"
+	"github.com/ktakenaka/go-random/backend/app/domain/repository"
 )
 
 type SampleService struct {
