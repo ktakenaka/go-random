@@ -9,7 +9,7 @@ type SampleRequest struct {
 }
 
 type SampleResponse struct {
-	ID           int    `json:"id"`
+	ID           uint64 `json:"id"`
 	Title        string `json:"title"`
 	CreatedAtUTC string `json:"created_at"`
 	UpdatedAtUTC string `json:"updated_at"`

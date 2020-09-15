@@ -13,6 +13,11 @@ go-lint:
 go-lint-fmt:
 	docker-compose exec app gofmt -w app
 
+time := $(shell date +%s)
+create-migrate:
+	@docker-compose exec app touch db/migrations/$(time)_$(name).up.sql
+	@docker-compose exec app touch db/migrations/$(time)_$(name).down.sql
+
 migrate-up:
 	docker-compose exec app migrate -database mysql://random:random@tcp\(db:3306\)/go-random?multiStatements=true -path db/migrations up
 
@@ -40,6 +45,7 @@ yarn-install:
 
 yarn-prettier-write:
 	docker-compose exec web yarn prettier --write src
+
 yarn-add:
 	docker-compose exec web yarn add ${PKG}
 

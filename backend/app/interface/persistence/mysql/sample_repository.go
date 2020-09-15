@@ -1,8 +1,6 @@
 package mysql
 
 import (
-	"time"
-
 	"github.com/ktakenaka/go-random/app/domain/entity"
 	"github.com/ktakenaka/go-random/app/domain/repository"
 	"gorm.io/gorm"
@@ -16,75 +14,46 @@ func NewSampleRepository(db *gorm.DB) *SampleRepository {
 	return &SampleRepository{DB: db}
 }
 
-func (r *SampleRepository) FindAll() ([]*entity.Sample, error) {
+func (r *SampleRepository) FindAll(userID uint64) ([]*entity.Sample, error) {
 	samples := make([]*entity.Sample, 0)
-	err := r.DB.Find(&samples).Error
+	err := r.DB.Where(&entity.Sample{UserID: userID}).Find(&samples).Error
 	return samples, err
 }
 
-func (r *SampleRepository) FindByTitle(title string) (*entity.Sample, error) {
+func (r *SampleRepository) FindByTitle(userID uint64, title string) (*entity.Sample, error) {
 	var sample entity.Sample
-	err := r.DB.Where("title = ?", title).First(&sample).Error
-
-	if err != nil {
-		return nil, err
-	}
-
-	return &sample, nil
+	err := r.DB.Where(&entity.Sample{UserID: userID, Title: title}).First(&sample).Error
+	return &sample, err
 }
 
-func (r *SampleRepository) FindByID(id int64) (*entity.Sample, error) {
+func (r *SampleRepository) FindByID(userID, id uint64) (*entity.Sample, error) {
 	var sample entity.Sample
-	err := r.DB.First(&sample, id).Error
+	err := r.DB.Where(&entity.Sample{ID: id, UserID: userID}).First(&sample).Error
 
-	if err != nil {
-		return nil, err
-	}
-
-	return &sample, nil
+	return &sample, err
 }
 
-func (r *SampleRepository) Create(title string) error {
-	sample := entity.Sample{Title: title}
+func (r *SampleRepository) Create(sample *entity.Sample) error {
 	if err := sample.Validate(); err != nil {
 		return err
 	}
 
-	if err := r.DB.Create(&sample).Error; err != nil {
-		return err
-	}
-	return nil
+	err := r.DB.Create(sample).Error
+	return err
 }
 
-func (r *SampleRepository) Delete(id int64) error {
-	var sample entity.Sample
-	if err := r.DB.First(&sample, id).Error; err != nil {
-		return err
-	}
-
-	if err := r.DB.Delete(&sample).Error; err != nil {
-		return err
-	}
-	return nil
+func (r *SampleRepository) Delete(userID, id uint64) error {
+	err := r.DB.Where("user_id = ?", userID).Delete(&entity.Sample{ID: id}).Error
+	return err
 }
 
-func (r *SampleRepository) Update(id int64, title string) error {
-	var sample entity.Sample
-	if err := r.DB.First(&sample, id).Error; err != nil {
-		return err
-	}
-
-	sample.Title = title
-	sample.UpdatedAt = time.Now()
-
+func (r *SampleRepository) Update(sample *entity.Sample) error {
 	if err := sample.Validate(); err != nil {
 		return err
 	}
 
-	if err := r.DB.Save(&sample).Error; err != nil {
-		return err
-	}
-	return nil
+	err := r.DB.Model(sample).Where("user_id = ?", sample.UserID).Updates(&sample).Error
+	return err
 }
 
 func (r *SampleRepository) AssignTx(txm repository.TransactionManager) {

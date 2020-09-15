@@ -122,8 +122,11 @@ func SetErrorResponse(ctx *gin.Context, err error) {
 		errs := presenter.ResponseError{
 			Detail: err.Error(),
 		}
-		SetMetaResponse(ctx, presenter.CodeInternalServerError)
-		ctx.Set(errorKey, []presenter.ResponseError{errs})
+
+		if _, ok := ctx.Get(metaKey); !ok {
+			SetMetaResponse(ctx, presenter.CodeInternalServerError)
+			ctx.Set(errorKey, []presenter.ResponseError{errs})
+		}
 	}
 }
 

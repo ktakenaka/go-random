@@ -5,26 +5,33 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
-	"github.com/ktakenaka/go-random/app/interface/api/middleware"
 	"github.com/ktakenaka/go-random/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/app/registry"
+	"github.com/ktakenaka/go-random/app/usecase/dto"
 )
 
-type SampleHanlder struct{}
-
-func NewSampleHanlder() *SampleHanlder {
-	return &SampleHanlder{}
+// SampleHandler is the sample
+type SampleHandler struct {
+	BaseHandler
 }
 
-func (hdl *SampleHanlder) Index(ctx *gin.Context) {
+// NewSampleHandler is a constructor for Samplehandler
+func NewSampleHandler() *SampleHandler {
+	return &SampleHandler{}
+}
+
+// Index returns the list of samples
+func (hdl *SampleHandler) Index(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var err error
 	defer func() {
-		middleware.SetErrorResponse(ctx, err)
+		hdl.SetError(ctx, err)
 	}()
 
-	samples, err := suCase.ListSample()
+	claims := hdl.JWTClaims(ctx)
+
+	samples, err := suCase.ListSample(claims.UserID)
 
 	if err != nil {
 		return
@@ -35,24 +42,27 @@ func (hdl *SampleHanlder) Index(ctx *gin.Context) {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, sampleRes)
-	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
+	hdl.SetData(ctx, sampleRes)
+	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
-func (hdl *SampleHanlder) Show(ctx *gin.Context) {
+// Show returns a sample
+func (hdl *SampleHandler) Show(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var err error
 	defer func() {
-		middleware.SetErrorResponse(ctx, err)
+		hdl.SetError(ctx, err)
 	}()
 
-	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
+	id, err := strconv.ParseUint(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
 		return
 	}
 
-	sample, err := suCase.FindSample(id)
+	claims := hdl.JWTClaims(ctx)
+
+	sample, err := suCase.FindSample(claims.UserID, id)
 	if err != nil {
 		return
 	}
@@ -62,74 +72,98 @@ func (hdl *SampleHanlder) Show(ctx *gin.Context) {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, sampleRes)
-	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
+	hdl.SetData(ctx, sampleRes)
+	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
-func (hdl *SampleHanlder) Create(ctx *gin.Context) {
+// Create creates a sample
+func (hdl *SampleHandler) Create(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
-	var err error
+	var (
+		err    error
+		req    presenter.SampleRequest
+		dtoReq dto.CreateSample
+	)
 	defer func() {
-		middleware.SetErrorResponse(ctx, err)
+		hdl.SetError(ctx, err)
 	}()
 
-	var req presenter.SampleRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		return
-	}
-
-	if err = suCase.RegisterSample(req.Title); err != nil {
-		return
-	}
-
-	middleware.SetDataResponse(ctx, "OK")
-	middleware.SetMetaResponse(ctx, presenter.CodeCreated)
-}
-
-func (hdl *SampleHanlder) Update(ctx *gin.Context) {
-	suCase := registry.InitializeSampleUsecase()
-
-	var err error
-	defer func() {
-		middleware.SetErrorResponse(ctx, err)
-	}()
-
-	var req presenter.SampleRequest
 	if err = ctx.ShouldBindJSON(&req); err != nil {
 		return
 	}
+	if err = copier.Copy(&dtoReq, &req); err != nil {
+		return
+	}
 
-	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
+	claims := hdl.JWTClaims(ctx)
+	dtoReq.UserID = claims.UserID
+
+	if err = suCase.RegisterSample(dtoReq); err != nil {
+		return
+	}
+
+	hdl.SetData(ctx, "OK")
+	hdl.SetMeta(ctx, presenter.CodeCreated)
+}
+
+// Update updates a sample
+func (hdl *SampleHandler) Update(ctx *gin.Context) {
+	suCase := registry.InitializeSampleUsecase()
+
+	var (
+		err    error
+		req    presenter.SampleRequest
+		dtoReq dto.UpdateSample
+	)
+	defer func() {
+		hdl.SetError(ctx, err)
+	}()
+
+	if err = ctx.ShouldBindJSON(&req); err != nil {
+		return
+	}
+	if err = copier.Copy(&dtoReq, &req); err != nil {
+		return
+	}
+
+	id, err := strconv.ParseUint(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
 		return
 	}
 
-	if err = suCase.UpdateSample(id, req.Title); err != nil {
+	dtoReq.ID = id
+
+	claims := hdl.JWTClaims(ctx)
+	dtoReq.UserID = claims.UserID
+	if err = suCase.UpdateSample(dtoReq); err != nil {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, "ok")
-	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
+	hdl.SetData(ctx, "ok")
+	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
 
-func (hdl *SampleHanlder) Delete(ctx *gin.Context) {
+// Delete deletes a sample
+func (hdl *SampleHandler) Delete(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 
 	var err error
 	defer func() {
-		middleware.SetErrorResponse(ctx, err)
+		hdl.SetError(ctx, err)
 	}()
 
-	id, err := strconv.ParseInt(ctx.Params.ByName("id"), 10, 64)
+	id, err := strconv.ParseUint(ctx.Params.ByName("id"), 10, 64)
 	if err != nil {
 		return
 	}
 
-	if err = suCase.DeleteSample(id); err != nil {
+	claims := hdl.JWTClaims(ctx)
+
+	if err = suCase.DeleteSample(claims.UserID, id); err != nil {
 		return
 	}
 
-	middleware.SetDataResponse(ctx, "ok")
-	middleware.SetMetaResponse(ctx, presenter.CodeSuccess)
+	hdl.SetData(ctx, "ok")
+	hdl.SetMeta(ctx, presenter.CodeSuccess)
 }
