@@ -4,10 +4,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/ktakenaka/go-random/app/config"
-	"github.com/ktakenaka/go-random/app/external/database"
-	"github.com/ktakenaka/go-random/app/external/framework"
-	"github.com/ktakenaka/go-random/app/interface/api/middleware"
+	"github.com/ktakenaka/go-random/backend/app/config"
+	"github.com/ktakenaka/go-random/backend/app/external/database"
+	"github.com/ktakenaka/go-random/backend/app/external/framework"
+	"github.com/ktakenaka/go-random/backend/app/interface/api/middleware"
 	"github.com/ktakenaka/go-random/helper/jwtutil"
 
 	cli "github.com/urfave/cli/v2"

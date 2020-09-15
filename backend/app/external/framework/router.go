@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
-	"github.com/ktakenaka/go-random/app/interface/api/handler"
-	"github.com/ktakenaka/go-random/app/interface/api/middleware"
+	"github.com/ktakenaka/go-random/backend/app/interface/api/handler"
+	"github.com/ktakenaka/go-random/backend/app/interface/api/middleware"
 )
 
 func Handler() *gin.Engine {

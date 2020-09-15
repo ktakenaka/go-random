@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/ktakenaka/go-random/app/domain/repository"
+	"github.com/ktakenaka/go-random/backend/app/domain/repository"
 	"github.com/ktakenaka/go-random/helper/jwtutil"
 )
 

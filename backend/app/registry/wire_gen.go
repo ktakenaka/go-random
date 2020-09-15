@@ -7,13 +7,13 @@ package registry
 
 import (
 	"github.com/google/wire"
-	"github.com/ktakenaka/go-random/app/config"
-	"github.com/ktakenaka/go-random/app/domain/repository"
-	"github.com/ktakenaka/go-random/app/domain/service"
-	"github.com/ktakenaka/go-random/app/external/database"
-	"github.com/ktakenaka/go-random/app/interface/adaptor/restclient"
-	"github.com/ktakenaka/go-random/app/interface/persistence/mysql"
-	"github.com/ktakenaka/go-random/app/usecase"
+	"github.com/ktakenaka/go-random/backend/app/config"
+	"github.com/ktakenaka/go-random/backend/app/domain/repository"
+	"github.com/ktakenaka/go-random/backend/app/domain/service"
+	"github.com/ktakenaka/go-random/backend/app/external/database"
+	"github.com/ktakenaka/go-random/backend/app/interface/adaptor/restclient"
+	"github.com/ktakenaka/go-random/backend/app/interface/persistence/mysql"
+	"github.com/ktakenaka/go-random/backend/app/usecase"
 )
 
 // Injectors from usecase.go:
