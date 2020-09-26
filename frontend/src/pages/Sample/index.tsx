@@ -1,55 +1,56 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
-import { MainTemplate, SampleList, FormWrapper } from "components";
+import { MainTemplate, SampleList, SampleForm } from "components";
 import {
   submitSampleRequest,
+  typeSubmitSampleRequest,
   getSamplesRequest,
+  typeGetSampleRequest,
 } from "store/actionCreators/sample";
+import { TypeSample } from "constants/type";
 
 const SamplePage = ({
-  title,
   samples,
   getSamplesRequest,
   submitSampleRequest,
 }: Props) => {
   useEffect(getSamplesRequest, []);
+  const [sample, setSample] = useState<any>(null);
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    title = e.target.value;
+    setSample({ ...sample, [e.target.name]: e.target.value });
   };
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    submitSampleRequest(title);
+    if (sample) {
+      submitSampleRequest(sample);
+    } else {
+      console.log("sample must be defined");
+    }
   };
 
   return (
     <MainTemplate>
-      <h2>Sample</h2>
+      <h1>Sample</h1>
+      <h2>List</h2>
+      <SampleList samples={samples} />
 
-      <Fragment>
-        <SampleList samples={samples} />
-        <FormWrapper onChange={onChange} onSubmit={onSubmit} />
-      </Fragment>
+      <h2>New Sample</h2>
+      <SampleForm onChange={onChange} onSubmit={onSubmit} />
     </MainTemplate>
   );
 };
 
 interface Props {
-  title: string;
-  samples: Array<Sample>;
-  getSamplesRequest: () => void;
-  submitSampleRequest: (title: string) => void;
+  samples: Array<TypeSample>;
+  getSamplesRequest: typeGetSampleRequest;
+  submitSampleRequest: typeSubmitSampleRequest;
 }
 
-type Sample = {
-  title: string;
-};
-
 const mapStateToProps = (state: Readonly<any>) => ({
-  title: state.get("sample").title,
-  samples: state.get("sample").list,
+  samples: state.getIn(["sample", "list"]),
 });
 
 const mapDispatchToProps = {

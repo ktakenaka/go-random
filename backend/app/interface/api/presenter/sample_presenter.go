@@ -5,12 +5,14 @@ import (
 )
 
 type SampleRequest struct {
-	Title string `json:"title"`
+	Title   string `json:"title"`
+	Content string `json:"content"`
 }
 
 type SampleResponse struct {
 	ID           uint64 `json:"id"`
 	Title        string `json:"title"`
+	Content      string `json:"content"`
 	CreatedAtUTC string `json:"created_at"`
 	UpdatedAtUTC string `json:"updated_at"`
 }

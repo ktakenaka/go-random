@@ -8,10 +8,11 @@ type Props = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const FormWrapper = ({ onSubmit, onChange }: Props) => {
+const SampleForm = ({ onSubmit, onChange }: Props) => {
   return (
     <Form onSubmit={onSubmit}>
-      <FormInput onChange={onChange} />
+      <FormInput name="title" onChange={onChange} />
+      <FormInput name="content" onChange={onChange} />
       <Button
         type="submit"
         size="medium"
@@ -23,4 +24,4 @@ const FormWrapper = ({ onSubmit, onChange }: Props) => {
   );
 };
 
-export default FormWrapper;
+export default SampleForm;
