@@ -11,6 +11,7 @@ const SampleList = ({ samples }: Props) => {
     <Fragment>
       {samples.map((sample, index) => (
         <Fragment key={index}>
+          <h3>{index + 1}</h3>
           <LiWrapper>{sample.title}</LiWrapper>
           <LiWrapper>{sample.content}</LiWrapper>
         </Fragment>

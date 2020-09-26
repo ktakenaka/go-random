@@ -33,8 +33,11 @@ const SamplePage = ({
 
   return (
     <MainTemplate>
-      <h2>Sample</h2>
+      <h1>Sample</h1>
+      <h2>List</h2>
       <SampleList samples={samples} />
+
+      <h2>New Sample</h2>
       <SampleForm onChange={onChange} onSubmit={onSubmit} />
     </MainTemplate>
   );

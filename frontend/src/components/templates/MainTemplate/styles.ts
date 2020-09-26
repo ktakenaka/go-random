@@ -1,28 +1,27 @@
 import styled from "@emotion/styled";
 
 export const Wrapper = styled.div`
-  position: relative;
-  min-width: 1000px;
+  margin-top: 70px;
 `;
 
 export const Header = styled.div`
   position: fixed;
+  height: 70px;
   top: 0px;
   right: 0;
   left: 0;
-  z-index: 99;
 `;
 
 export const Body = styled.div`
-  padding-left: 180px;
-  padding-top: 40px;
-  position: relative;
-  z-index: 1;
-  height: 100vh;
+  margin-left: 10%;
 `;
 
-export const Content = styled.div`
-  padding-left: 16px;
-  padding-top: 15px;
-  width: 900px;
+export const SideBar = styled.div`
+  width: 10%;
+  position: fixed;
+  left: 0;
 `;
+
+export const Message = styled.div``;
+
+export const Content = styled.div``;
