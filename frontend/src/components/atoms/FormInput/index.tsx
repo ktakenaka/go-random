@@ -2,13 +2,14 @@ import React from "react";
 import { FormInputWrapper } from "./style";
 
 type Props = {
+  name: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const FormInput = ({ onChange }: Props) => {
+const FormInput = ({ name, onChange }: Props) => {
   return (
     <FormInputWrapper>
-      <input type="text" onChange={onChange} />
+      <input name={name} type="text" onChange={onChange} />
     </FormInputWrapper>
   );
 };

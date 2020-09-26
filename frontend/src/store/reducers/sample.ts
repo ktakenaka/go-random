@@ -6,6 +6,7 @@ import {
   GET_SAMPLES_SUCCESS,
   GET_SAMPLES_FAILURE,
 } from "store/actionTypes";
+import { TypeSample } from "constants/type";
 
 const initialState = {
   title: null,
@@ -15,14 +16,9 @@ const initialState = {
 };
 
 type State = {
-  title: string | null;
   postLoading: boolean;
-  list: Array<Sample>;
+  list: Array<TypeSample>;
   listLoading: boolean;
-};
-
-type Sample = {
-  title: string | null;
 };
 
 export default (

@@ -1,19 +1,19 @@
 import React, { Fragment } from "react";
 import { LiWrapper } from "./style";
-
-type Sample = {
-  title: string;
-};
+import { TypeSample } from "constants/type";
 
 type Props = {
-  samples: Array<Sample>;
+  samples: Array<TypeSample>;
 };
 
 const SampleList = ({ samples }: Props) => {
   return (
     <Fragment>
       {samples.map((sample, index) => (
-        <LiWrapper key={index}>{sample.title}</LiWrapper>
+        <Fragment key={index}>
+          <LiWrapper>{sample.title}</LiWrapper>
+          <LiWrapper>{sample.content}</LiWrapper>
+        </Fragment>
       ))}
     </Fragment>
   );
