@@ -33,8 +33,8 @@ func Handler() *gin.Engine {
 	session.POST("/google", sessionHdl.CreateWithGoogle)
 
 	v1Auth := router.Group("/api/v1")
-	cookieAuth := middleware.NewCookieAuthenticator()
-	v1Auth.Use(cookieAuth.AuthenticateAccess)
+	jwtAuth := middleware.NewJWTAuthenticator()
+	v1Auth.Use(jwtAuth.AuthenticateAccess)
 
 	sampleHdl := handler.NewSampleHandler()
 	sample := v1Auth.Group("samples")

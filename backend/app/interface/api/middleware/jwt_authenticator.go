@@ -3,6 +3,7 @@ package middleware
 import (
 	stdErrors "errors"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 
@@ -18,6 +19,8 @@ const (
 	cookieMaxAge   = 86400
 	cookiePath     = "/api"
 	cookieHTTPOnly = true
+	authHeaderKey  = "Authorization"
+	bearerKey      = "Bearer"
 )
 
 var (
@@ -37,37 +40,47 @@ func InitJWTCookieOpt(env string) {
 	}
 }
 
-// CookieAuthenticator is for User Authentication and CSRF protection
-type CookieAuthenticator struct{}
+// JWTAuthenticator is for User Authentication and CSRF protection
+type JWTAuthenticator struct{}
 
-// NewCookieAuthenticator returns CookieAuthenticator
-func NewCookieAuthenticator() CookieAuthenticator {
-	return CookieAuthenticator{}
+// NewJWTAuthenticator returns JWTAuthenticator
+func NewJWTAuthenticator() JWTAuthenticator {
+	return JWTAuthenticator{}
 }
 
 // AuthenticateAccess validates JWT and CSRF token, set userID and officeID
-func (m *CookieAuthenticator) AuthenticateAccess(ctx *gin.Context) {
+func (m *JWTAuthenticator) AuthenticateAccess(ctx *gin.Context) {
 	m.authenticate(ctx, accessKey)
 }
 
 // AuthenticateRefresh validates JWT and CSRF token, set userID and officeID to refresh JWT
-func (m *CookieAuthenticator) AuthenticateRefresh(ctx *gin.Context) {
+func (m *JWTAuthenticator) AuthenticateRefresh(ctx *gin.Context) {
 	m.authenticate(ctx, refreshKey)
 }
 
-func (m *CookieAuthenticator) authenticate(ctx *gin.Context, jwtKey string) {
-	var err error
+func (m *JWTAuthenticator) authenticate(ctx *gin.Context, jwtKey string) {
+	var (
+		err      error
+		isCookie bool
+		token    string
+	)
 	defer func() {
 		if err != nil {
 			SetErrorResponse(ctx, err)
 			ctx.Abort()
 		}
 	}()
-
-	token, err := ctx.Cookie(jwtKey)
-	if err != nil {
-		SetMetaResponse(ctx, presenter.CodeUnauthorized)
-		return
+	authHeaderStr := ctx.GetHeader(authHeaderKey)
+	if authHeaderStr != "" {
+		token = strings.TrimSpace(strings.Replace(authHeaderStr, bearerKey, "", -1))
+		isCookie = false
+	} else {
+		token, err = ctx.Cookie(jwtKey)
+		if err != nil {
+			SetMetaResponse(ctx, presenter.CodeUnauthorized)
+			return
+		}
+		isCookie = true
 	}
 
 	claims, err := jwtutil.VerifyJWT(token)
@@ -76,7 +89,7 @@ func (m *CookieAuthenticator) authenticate(ctx *gin.Context, jwtKey string) {
 		return
 	}
 
-	if !inArray(ctx.Request.Method, ignoreMethods) {
+	if isCookie && !inArray(ctx.Request.Method, ignoreMethods) {
 		csrfToken := ctx.Request.Header.Get(csrfHeader)
 		if claims.CSRFToken != csrfToken {
 			err = stdErrors.New("csrf detected")
