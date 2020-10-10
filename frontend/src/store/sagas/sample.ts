@@ -10,6 +10,8 @@ function* createSample(action: any) {
     yield call(postSampleAPI, action.payload);
     yield put(sampleAction.submitSampleSuccess());
     yield put(sampleAction.getSamplesRequest());
+    yield put(appAction.setMessage("Succeed to create a sample", true));
+    yield put(appAction.changeLocation("/samples"));
   } catch (err) {
     yield put(appAction.setMessage("failed to get submit sample", false));
     yield console.log(err);

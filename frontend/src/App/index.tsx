@@ -8,6 +8,7 @@ import HomePage from "pages/Home";
 import SignInPage from "pages/Google/SignIn";
 import CallbackPage from "pages/Google/Callback";
 import SampleListPage from "pages/SampleList";
+import SampleNewPage from "pages/SampleNew";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/home" exact component={HomePage} />
           <Route path="/google/sign-in" component={SignInPage} />
           <Route path="/google/callback" component={CallbackPage} />
+          <Route path="/samples/new" component={SampleNewPage} />
           <Route path="/samples" component={SampleListPage} />
         </Switch>
       </Router>

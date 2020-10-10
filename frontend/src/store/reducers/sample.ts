@@ -5,11 +5,11 @@ import {
   GET_SAMPLES_REQUEST,
   GET_SAMPLES_SUCCESS,
   GET_SAMPLES_FAILURE,
+  CLEANUP_SAMPLE,
 } from "store/actionTypes";
 import { TypeSample } from "constants/type";
 
 const initialState = {
-  title: null,
   postLoading: false,
   list: [],
   listLoading: false,
@@ -57,6 +57,8 @@ export default (
         ...state,
         listLoading: false,
       };
+    case CLEANUP_SAMPLE:
+      return initialState;
     default:
       return state;
   }

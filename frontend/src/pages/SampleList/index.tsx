@@ -3,13 +3,7 @@ import { connect } from "react-redux";
 
 import MainTemplate from "components/templates/MainTemplate";
 import SampleList from "components/organisms/SampleList";
-import SampleForm from "components/organisms/SampleForm";
-import {
-  submitSampleRequest,
-  typeSubmitSampleRequest,
-  getSamplesRequest,
-  typeGetSampleRequest,
-} from "store/actionCreators/sample";
+import { getSamplesRequest, cleanupSample } from "store/actionCreators/sample";
 import { TypeSample } from "constants/type";
 import { Radio } from "antd";
 
@@ -18,22 +12,18 @@ const charsets = [
   { label: "Shift_JIS", value: "sjis" },
 ];
 
-const SamplePage = ({
-  samples,
-  getSamplesRequest,
-  submitSampleRequest,
-}: Props) => {
-  useEffect(getSamplesRequest, []);
-  const [sample, setSample] = useState<any>(null);
+interface Props {
+  samples: Array<TypeSample>;
+  getSamplesRequest: typeof getSamplesRequest;
+  cleanupSample: typeof cleanupSample;
+}
+
+const SamplePage = ({ samples, getSamplesRequest }: Props) => {
   const [charset, setCharset] = useState<"utf8" | "sjis">("utf8");
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    setSample({ ...sample, [e.target.name]: e.target.value });
-  };
-
-  const onSubmit = (): void => {
-    submitSampleRequest(sample);
-  };
+  useEffect(() => {
+    getSamplesRequest();
+  }, [getSamplesRequest]);
 
   const onCharsetSelected = (e: any) => {
     setCharset(e.target.value);
@@ -41,8 +31,7 @@ const SamplePage = ({
 
   return (
     <MainTemplate>
-      <h1>Sample</h1>
-      <h2>List</h2>
+      <h1>Sample List</h1>
       <SampleList samples={samples} />
 
       <Radio.Group onChange={onCharsetSelected} value={charset}>
@@ -56,28 +45,19 @@ const SamplePage = ({
         href={`http://127.0.0.1:8080/api/v1/export/samples?charset=${charset}`}
         download
       >
-        csv
+        CSV Export
       </a>
-
-      <h2>New Sample</h2>
-      <SampleForm onChange={onChange} onSubmit={onSubmit} />
     </MainTemplate>
   );
 };
-
-interface Props {
-  samples: Array<TypeSample>;
-  getSamplesRequest: typeGetSampleRequest;
-  submitSampleRequest: typeSubmitSampleRequest;
-}
 
 const mapStateToProps = (state: Readonly<any>) => ({
   samples: state.getIn(["sample", "list"]),
 });
 
 const mapDispatchToProps = {
-  getSamplesRequest: getSamplesRequest,
-  submitSampleRequest: submitSampleRequest,
+  getSamplesRequest,
+  cleanupSample,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SamplePage);
