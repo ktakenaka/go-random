@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 
-import { MainTemplate, SampleList, SampleForm } from "components";
+import MainTemplate from "components/templates/MainTemplate";
+import SampleList from "components/organisms/SampleList";
+import SampleForm from "components/organisms/SampleForm";
 import {
   submitSampleRequest,
   typeSubmitSampleRequest,
@@ -29,13 +31,8 @@ const SamplePage = ({
     setSample({ ...sample, [e.target.name]: e.target.value });
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    if (sample) {
-      submitSampleRequest(sample);
-    } else {
-      console.log("sample must be defined");
-    }
+  const onSubmit = (): void => {
+    submitSampleRequest(sample);
   };
 
   const onCharsetSelected = (e: any) => {

@@ -1,40 +1,36 @@
 import React from "react";
-import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { List } from "antd";
 
 import { Wrapper, Header, SideBar, Body, Message, Content } from "./styles";
-import { MainHeader, ActionMessage } from "components";
-import { changeLocation } from "store/actionCreators/app";
+import MainHeader from "components/organisms/MainHeader";
+import ActionMessage from "components/organisms/ActionMessage";
 
 type Props = {
   children: React.ReactNode;
-  header?: JSX.Element;
-  actionMessage?: JSX.Element;
-  changeLocation: (location: string) => void;
 };
-
-const MainTemplate = ({
-  children,
-  header = <MainHeader />,
-  actionMessage = <ActionMessage />,
-  changeLocation,
-}: Props) => {
+const MainTemplate = ({ children }: Props) => {
   return (
     <Wrapper>
-      <Header>{header}</Header>
+      <Header>
+        <MainHeader />
+      </Header>
       <Body>
         <SideBar>
-          <li onClick={() => changeLocation("/")}>Home</li>
-          <li onClick={() => changeLocation("/samples")}>sample</li>
+          <List>
+            <Link to="/home">HOME</Link>
+          </List>
+          <List>
+            <Link to="/samples">Sample</Link>
+          </List>
         </SideBar>
-        <Message>{actionMessage}</Message>
+        <Message>
+          <ActionMessage />
+        </Message>
         <Content>{children}</Content>
       </Body>
     </Wrapper>
   );
 };
 
-const mapDispatchToProps = {
-  changeLocation: changeLocation,
-};
-
-export default connect(null, mapDispatchToProps)(MainTemplate);
+export default MainTemplate;

@@ -4,17 +4,20 @@ import history from "../browserHistory";
 
 import "./index.css";
 
-import { HomePage, SignInPage, CallbackPage, SamplePage } from "../pages";
+import HomePage from "pages/Home";
+import SignInPage from "pages/Google/SignIn";
+import CallbackPage from "pages/Google/Callback";
+import SampleListPage from "pages/SampleList";
 
 function App() {
   return (
     <Fragment>
       <Router history={history}>
         <Switch>
-          <Route path="/" exact component={HomePage} />
+          <Route path="/home" exact component={HomePage} />
           <Route path="/google/sign-in" component={SignInPage} />
           <Route path="/google/callback" component={CallbackPage} />
-          <Route path="/samples" component={SamplePage} />
+          <Route path="/samples" component={SampleListPage} />
         </Switch>
       </Router>
     </Fragment>
