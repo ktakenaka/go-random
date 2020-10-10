@@ -44,6 +44,10 @@ func Handler() *gin.Engine {
 	sample.PUT("/:id", sampleHdl.Update)
 	sample.DELETE("/:id", sampleHdl.Delete)
 
+	exportHdl := handler.NewExportHandler()
+	export := v1Auth.Group("export")
+	export.GET("/samples", exportHdl.SamplesExport)
+
 	return router
 }
 

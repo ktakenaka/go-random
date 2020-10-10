@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -21,12 +22,15 @@ const (
 	dataKey  = "data"
 )
 
+// ResponseFormatter format response
 type ResponseFormatter struct{}
 
+// NewResponseFormatter constructor
 func NewResponseFormatter() ResponseFormatter {
 	return ResponseFormatter{}
 }
 
+// PanicRecovery when panic occurs, it format response
 func (m *ResponseFormatter) PanicRecovery(ctx *gin.Context) {
 	defer func() {
 		if p := recover(); p != nil {
@@ -42,8 +46,17 @@ func (m *ResponseFormatter) PanicRecovery(ctx *gin.Context) {
 	ctx.Next()
 }
 
+// Format the logic to format response
 func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	ctx.Next()
+
+	// TODO: refactor. It's not good to depend on Handler
+	if ok, _ := regexp.MatchString(
+		`.*(text/csv|application/octet-stream).*`,
+		ctx.Writer.Header().Get("Content-Type"),
+	); ok {
+		return
+	}
 
 	var res presenter.Response
 	meta := getMetaResponse(ctx)
@@ -67,15 +80,18 @@ func (m *ResponseFormatter) Format(ctx *gin.Context) {
 	ctx.JSON(int(httpStatus), res)
 }
 
+// SetMetaResponse set response
 func SetMetaResponse(ctx *gin.Context, code presenter.MetaCode) {
 	meta := presenter.MetaCodePair[code]
 	ctx.Set(metaKey, meta)
 }
 
+// SetDataResponse data response
 func SetDataResponse(ctx *gin.Context, data interface{}) {
 	ctx.Set(dataKey, data)
 }
 
+// SetErrorResponse err response
 func SetErrorResponse(ctx *gin.Context, err error) {
 	if err == nil {
 		return
