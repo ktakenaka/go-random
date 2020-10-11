@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Divider, Button } from "antd";
 
 import MainTemplate from "components/templates/MainTemplate";
 import Counter from "components/organisms/Counter";
@@ -20,6 +21,11 @@ const HomePage = ({
   return (
     <MainTemplate>
       <h2>HOME</h2>
+      <Button shape="round" onClick={() => changeLocation("/google/sign-in")}>
+        Sign In
+      </Button>
+
+      <Divider plain>[Demo] Counter</Divider>
 
       <Counter
         value={count}
@@ -27,8 +33,6 @@ const HomePage = ({
         onDecrement={() => countDecrement()}
         onIncrementAsync={() => countIncrementAsync()}
       />
-
-      <button onClick={() => changeLocation("/google/sign-in")}>Sign In</button>
     </MainTemplate>
   );
 };
