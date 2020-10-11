@@ -1,22 +1,34 @@
-import React, { Fragment } from "react";
-import { LiWrapper } from "./style";
+import React from "react";
+import { List } from "antd";
+
 import { TypeSample } from "constants/type";
 
 type Props = {
+  header?: string;
   samples: Array<TypeSample>;
+  footer?: React.ReactNode;
 };
 
-const SampleList = ({ samples }: Props) => {
+const SampleList = ({ samples, header, footer }: Props) => {
   return (
-    <Fragment>
-      {samples.map((sample, index) => (
-        <Fragment key={index}>
-          <h3>{index + 1}</h3>
-          <LiWrapper>{sample.title}</LiWrapper>
-          <LiWrapper>{sample.content}</LiWrapper>
-        </Fragment>
-      ))}
-    </Fragment>
+    <List
+      itemLayout="horizontal"
+      header={header}
+      dataSource={samples}
+      renderItem={(item) => (
+        <List.Item
+          actions={[
+            <a key={item.id} href={`/samples/${item.id}/edit`}>
+              edit
+            </a>,
+          ]}
+        >
+          <List.Item.Meta title={item.id} description={item.title} />
+          <div>{item.content}</div>
+        </List.Item>
+      )}
+      footer={footer}
+    />
   );
 };
 

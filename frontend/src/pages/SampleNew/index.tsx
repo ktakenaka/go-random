@@ -15,7 +15,7 @@ const SampleNewPage = ({ submitSampleRequest }: Props) => {
       <h1>New Sample</h1>
       <SampleForm
         onSubmit={submitSampleRequest}
-        item={{ title: undefined, content: undefined }}
+        sample={{ title: null, content: null }}
       />
     </MainTemplate>
   );

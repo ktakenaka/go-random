@@ -1,4 +1,5 @@
 export type TypeSample = {
-  title: string | undefined;
-  content?: string | undefined;
+  id?: number;
+  title: string | null;
+  content?: string | null;
 };

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { Radio, PageHeader, Button } from "antd";
 
 import MainTemplate from "components/templates/MainTemplate";
 import SampleList from "components/organisms/SampleList";
 import { getSamplesRequest, cleanupSample } from "store/actionCreators/sample";
 import { TypeSample } from "constants/type";
-import { Radio } from "antd";
 
 const charsets = [
   { label: "UTF-8", value: "utf8" },
@@ -29,11 +30,23 @@ const SamplePage = ({ samples, getSamplesRequest }: Props) => {
     setCharset(e.target.value);
   };
 
-  return (
-    <MainTemplate>
-      <h1>Sample List</h1>
-      <SampleList samples={samples} />
+  // TODO: define organism
+  const pageHeader = (
+    <PageHeader
+      ghost={false}
+      title="Sample"
+      subTitle="This is a sample to practice coding"
+      extra={[
+        <Button key="1" type="primary">
+          <Link to="/samples/new">New</Link>
+        </Button>,
+      ]}
+    ></PageHeader>
+  );
 
+  // TODO: define organism
+  const csvExport = (
+    <>
       <Radio.Group onChange={onCharsetSelected} value={charset}>
         {charsets.map((item, i) => (
           <Radio key={i} value={item.value}>
@@ -47,6 +60,13 @@ const SamplePage = ({ samples, getSamplesRequest }: Props) => {
       >
         CSV Export
       </a>
+    </>
+  );
+
+  return (
+    <MainTemplate>
+      {pageHeader}
+      <SampleList header="Sample List" samples={samples} footer={csvExport} />
     </MainTemplate>
   );
 };
