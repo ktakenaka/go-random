@@ -4,17 +4,24 @@ import history from "../browserHistory";
 
 import "./index.css";
 
-import { HomePage, SignInPage, CallbackPage, SamplePage } from "../pages";
+import HomePage from "pages/Home";
+import SignInPage from "pages/Google/SignIn";
+import CallbackPage from "pages/Google/Callback";
+import SampleListPage from "pages/SampleList";
+import SampleNewPage from "pages/SampleNew";
+import SampleEditPage from "pages/SampleEdit";
 
 function App() {
   return (
     <Fragment>
       <Router history={history}>
         <Switch>
-          <Route path="/" exact component={HomePage} />
-          <Route path="/google/sign-in" component={SignInPage} />
-          <Route path="/google/callback" component={CallbackPage} />
-          <Route path="/samples" component={SamplePage} />
+          <Route path="/home" exact component={HomePage} />
+          <Route path="/google/sign-in" exact component={SignInPage} />
+          <Route path="/google/callback" exact component={CallbackPage} />
+          <Route path="/samples" exact component={SampleListPage} />
+          <Route path="/samples/new" exact component={SampleNewPage} />
+          <Route path="/samples/:id/edit" exact component={SampleEditPage} />
         </Switch>
       </Router>
     </Fragment>

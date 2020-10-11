@@ -18,7 +18,7 @@ export const postSampleAPI = (
 
 export const putSampleAPI = (
   id: number,
-  sample: TypeSample
+  sample: any
 ): Promise<AxiosResponse<any>> => {
   return API.put(`/samples/${id}`, sample);
 };

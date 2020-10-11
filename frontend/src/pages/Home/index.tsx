@@ -1,7 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { MainTemplate, Counter } from "components";
+import MainTemplate from "components/templates/MainTemplate";
+import Counter from "components/organisms/Counter";
 import {
   countIncrement,
   countDecrement,

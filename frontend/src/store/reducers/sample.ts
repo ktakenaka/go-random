@@ -2,23 +2,31 @@ import {
   SUBMIT_SAMPLE_REQUEST,
   SUBMIT_SAMPLE_SUCCESS,
   SUBMIT_SAMPLE_FAILURE,
+  UPDATE_SAMPLE_REQUEST,
+  UPDATE_SAMPLE_SUCCESS,
+  UPDATE_SAMPLE_FAILURE,
   GET_SAMPLES_REQUEST,
   GET_SAMPLES_SUCCESS,
   GET_SAMPLES_FAILURE,
+  GET_SAMPLE_REQUEST,
+  GET_SAMPLE_SUCCESS,
+  GET_SAMPLE_FAILURE,
+  CLEANUP_SAMPLE,
 } from "store/actionTypes";
 import { TypeSample } from "constants/type";
 
 const initialState = {
-  title: null,
-  postLoading: false,
+  loading: false,
   list: [],
-  listLoading: false,
+  item: null,
+  itemError: null,
 };
 
 type State = {
-  postLoading: boolean;
+  loading: boolean;
   list: Array<TypeSample>;
-  listLoading: boolean;
+  item: TypeSample | null;
+  itemError: any;
 };
 
 export default (
@@ -26,37 +34,44 @@ export default (
   action: { type: string; payload: any }
 ): State => {
   switch (action.type) {
-    case SUBMIT_SAMPLE_REQUEST:
+    case SUBMIT_SAMPLE_REQUEST ||
+      GET_SAMPLES_REQUEST ||
+      UPDATE_SAMPLE_REQUEST ||
+      GET_SAMPLE_REQUEST:
       return {
         ...state,
-        postLoading: true,
+        loading: true,
       };
-    case SUBMIT_SAMPLE_SUCCESS:
+    case SUBMIT_SAMPLE_SUCCESS || UPDATE_SAMPLE_SUCCESS:
       return {
         ...state,
-        postLoading: false,
+        loading: false,
       };
-    case SUBMIT_SAMPLE_FAILURE:
+    case GET_SAMPLES_FAILURE || GET_SAMPLE_FAILURE:
       return {
         ...state,
-        postLoading: false,
-      };
-    case GET_SAMPLES_REQUEST:
-      return {
-        ...state,
-        listLoading: true,
+        loading: false,
       };
     case GET_SAMPLES_SUCCESS:
       return {
         ...state,
-        listLoading: false,
+        loading: false,
         list: action.payload,
       };
-    case GET_SAMPLES_FAILURE:
+    case GET_SAMPLE_SUCCESS:
       return {
         ...state,
-        listLoading: false,
+        loading: false,
+        item: action.payload,
       };
+    case SUBMIT_SAMPLE_FAILURE || UPDATE_SAMPLE_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        itemError: action.payload,
+      };
+    case CLEANUP_SAMPLE:
+      return initialState;
     default:
       return state;
   }
