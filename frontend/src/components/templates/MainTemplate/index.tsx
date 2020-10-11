@@ -30,10 +30,13 @@ const MainTemplate = ({ children }: Props) => {
     <Sider width={200} className="site-layout-background">
       <Menu
         mode="inline"
-        defaultSelectedKeys={["1"]}
-        defaultOpenKeys={["sub1"]}
+        // defaultSelectedKeys={["1"]}
+        // defaultOpenKeys={["sub1"]}
         style={{ height: "100%", borderRight: 0 }}
       >
+        <Menu.Item>
+          <Link to="/home">Home</Link>
+        </Menu.Item>
         <SubMenu key="sub1" title="Menu">
           <Menu.Item key="1">
             <Link to="/samples">Sample</Link>

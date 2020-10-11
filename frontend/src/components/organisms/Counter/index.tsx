@@ -1,4 +1,5 @@
-import React, { Fragment } from "react";
+import React from "react";
+import { Button, Typography } from "antd";
 
 type Props = {
   value: number;
@@ -14,13 +15,15 @@ const Counter = ({
   onIncrementAsync,
 }: Props) => {
   return (
-    <Fragment>
-      <button onClick={onIncrementAsync}>Increment after 1 second</button>{" "}
-      <button onClick={onIncrement}>Increment</button>{" "}
-      <button onClick={onDecrement}>Decrement</button>
-      <hr />
-      <div>Clicked: {value} times</div>
-    </Fragment>
+    <>
+      <Typography.Title level={5}>Clicked: {value} times</Typography.Title>
+      <Button type="primary" onClick={onIncrementAsync}>
+        Increment after 1 second
+      </Button>
+      <br />
+      <Button onClick={onIncrement}>Increment</Button>{" "}
+      <Button onClick={onDecrement}>Decrement</Button>
+    </>
   );
 };
 
