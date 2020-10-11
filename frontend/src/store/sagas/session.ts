@@ -12,11 +12,11 @@ function* createSession(action: any) {
     yield localStorage.setItem(CSRF_TOKEN_KEY, res.data.data.csrf_token);
     yield put(sessionAction.createSessionSuccess());
     yield put(appAction.setMessage("succeeded to sign in"));
-    yield put(appAction.changeLocation("/"));
+    yield put(appAction.changeLocation("/home"));
   } catch (err) {
     yield put(appAction.setMessage(err));
     yield put(sessionAction.createSessionFailure());
-    yield put(appAction.changeLocation("/"));
+    yield put(appAction.changeLocation("/home"));
   }
 }
 

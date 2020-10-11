@@ -21,7 +21,7 @@ const CallbackPage = ({
   useEffect(() => {
     function handleFailure(message: string) {
       setMessage(message, false);
-      changeLocation("/");
+      changeLocation("/home");
     }
     function handleCallbackPhase() {
       const params = new URLSearchParams(window.location.search);
