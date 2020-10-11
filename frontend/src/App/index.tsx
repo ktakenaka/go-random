@@ -9,6 +9,7 @@ import SignInPage from "pages/Google/SignIn";
 import CallbackPage from "pages/Google/Callback";
 import SampleListPage from "pages/SampleList";
 import SampleNewPage from "pages/SampleNew";
+import SampleEditPage from "pages/SampleEdit";
 
 function App() {
   return (
@@ -16,10 +17,11 @@ function App() {
       <Router history={history}>
         <Switch>
           <Route path="/home" exact component={HomePage} />
-          <Route path="/google/sign-in" component={SignInPage} />
-          <Route path="/google/callback" component={CallbackPage} />
-          <Route path="/samples/new" component={SampleNewPage} />
-          <Route path="/samples" component={SampleListPage} />
+          <Route path="/google/sign-in" exact component={SignInPage} />
+          <Route path="/google/callback" exact component={CallbackPage} />
+          <Route path="/samples" exact component={SampleListPage} />
+          <Route path="/samples/new" exact component={SampleNewPage} />
+          <Route path="/samples/:id/edit" exact component={SampleEditPage} />
         </Switch>
       </Router>
     </Fragment>
