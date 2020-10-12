@@ -16,7 +16,7 @@ export const post = (
   return API.post("/samples", sample);
 };
 
-export const putSampleAPI = (
+export const put = (
   id: number,
   sample: any
 ): Promise<AxiosResponse<any>> => {

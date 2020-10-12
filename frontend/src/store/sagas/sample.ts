@@ -38,7 +38,7 @@ function* getSamples() {
 
 function* updateSample({ id, payload }: any) {
   try {
-    yield call(sampleAPI.putSampleAPI, id, payload);
+    yield call(sampleAPI.put, id, payload);
     yield put(sampleAction.updateSampleSuccess());
     yield put(appAction.setMessage("Succeed to update sample", true));
     yield put(appAction.changeLocation("/samples"));
