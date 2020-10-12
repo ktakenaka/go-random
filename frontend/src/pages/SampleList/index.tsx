@@ -55,6 +55,7 @@ const SamplePage = ({ samples, getSamplesRequest }: Props) => {
         ))}
       </Radio.Group>
       <a
+        // TODO: refactor link
         href={`http://127.0.0.1:8080/api/v1/export/samples?charset=${charset}`}
         download
       >
@@ -63,10 +64,19 @@ const SamplePage = ({ samples, getSamplesRequest }: Props) => {
     </>
   );
 
+  const handleDelete = (id: number) => {
+    console.log(id);
+  };
+
   return (
     <MainTemplate>
       {pageHeader}
-      <SampleList header="Sample List" samples={samples} footer={csvExport} />
+      <SampleList
+        header="Sample List"
+        samples={samples}
+        footer={csvExport}
+        onDelete={handleDelete}
+      />
     </MainTemplate>
   );
 };
