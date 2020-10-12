@@ -10,16 +10,11 @@ export const get = (id: number): Promise<AxiosResponse<any>> => {
   return API.get(`/samples/${id}`);
 };
 
-export const post = (
-  sample: TypeSample
-): Promise<AxiosResponse<any>> => {
+export const post = (sample: TypeSample): Promise<AxiosResponse<any>> => {
   return API.post("/samples", sample);
 };
 
-export const put = (
-  id: number,
-  sample: any
-): Promise<AxiosResponse<any>> => {
+export const put = (id: number, sample: any): Promise<AxiosResponse<any>> => {
   return API.put(`/samples/${id}`, sample);
 };
 

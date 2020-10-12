@@ -19,13 +19,13 @@ const SampleList = ({ samples, header, footer, onDelete }: Props) => {
       renderItem={(item) => (
         <List.Item
           actions={[
-            <a key={item.id} href={`/samples/${item.id}/edit`}>
+            <a key={item.id + "edit"} href={`/samples/${item.id}/edit`}>
               edit
             </a>,
             <Popconfirm
-              id={String(item.id)}
+              key={item.id + "delete"}
               title="Are you sure delete this sample?"
-              onConfirm={() => onDelete(item.id!)}
+              onConfirm={() => onDelete(Number(item.id))}
               okText="Yes"
               cancelText="No"
             >
