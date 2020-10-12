@@ -5,7 +5,11 @@ import { Radio, PageHeader, Button } from "antd";
 
 import MainTemplate from "components/templates/MainTemplate";
 import SampleList from "components/organisms/SampleList";
-import { getSamplesRequest, cleanupSample } from "store/actionCreators/sample";
+import {
+  getSamplesRequest,
+  deleteSampleRequest,
+  cleanupSample,
+} from "store/actionCreators/sample";
 import { TypeSample } from "constants/type";
 
 const charsets = [
@@ -16,10 +20,15 @@ const charsets = [
 interface Props {
   samples: Array<TypeSample>;
   getSamplesRequest: typeof getSamplesRequest;
+  deleteSampleRequest: typeof deleteSampleRequest;
   cleanupSample: typeof cleanupSample;
 }
 
-const SamplePage = ({ samples, getSamplesRequest }: Props) => {
+const SamplePage = ({
+  samples,
+  getSamplesRequest,
+  deleteSampleRequest,
+}: Props) => {
   const [charset, setCharset] = useState<"utf8" | "sjis">("utf8");
 
   useEffect(() => {
@@ -28,6 +37,10 @@ const SamplePage = ({ samples, getSamplesRequest }: Props) => {
 
   const onCharsetSelected = (e: any) => {
     setCharset(e.target.value);
+  };
+
+  const handleDelete = (id: number) => {
+    deleteSampleRequest(id);
   };
 
   // TODO: define organism
@@ -55,6 +68,7 @@ const SamplePage = ({ samples, getSamplesRequest }: Props) => {
         ))}
       </Radio.Group>
       <a
+        // TODO: refactor link
         href={`http://127.0.0.1:8080/api/v1/export/samples?charset=${charset}`}
         download
       >
@@ -66,7 +80,12 @@ const SamplePage = ({ samples, getSamplesRequest }: Props) => {
   return (
     <MainTemplate>
       {pageHeader}
-      <SampleList header="Sample List" samples={samples} footer={csvExport} />
+      <SampleList
+        header="Sample List"
+        samples={samples}
+        footer={csvExport}
+        onDelete={handleDelete}
+      />
     </MainTemplate>
   );
 };
@@ -77,6 +96,7 @@ const mapStateToProps = (state: Readonly<any>) => ({
 
 const mapDispatchToProps = {
   getSamplesRequest,
+  deleteSampleRequest,
   cleanupSample,
 };
 

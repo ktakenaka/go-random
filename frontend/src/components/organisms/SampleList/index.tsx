@@ -1,5 +1,5 @@
 import React from "react";
-import { List } from "antd";
+import { List, Popconfirm } from "antd";
 
 import { TypeSample } from "constants/type";
 
@@ -7,9 +7,10 @@ type Props = {
   header?: string;
   samples: Array<TypeSample>;
   footer?: React.ReactNode;
+  onDelete: (id: number) => void;
 };
 
-const SampleList = ({ samples, header, footer }: Props) => {
+const SampleList = ({ samples, header, footer, onDelete }: Props) => {
   return (
     <List
       itemLayout="horizontal"
@@ -18,9 +19,18 @@ const SampleList = ({ samples, header, footer }: Props) => {
       renderItem={(item) => (
         <List.Item
           actions={[
-            <a key={item.id} href={`/samples/${item.id}/edit`}>
+            <a key={item.id + "edit"} href={`/samples/${item.id}/edit`}>
               edit
             </a>,
+            <Popconfirm
+              key={item.id + "delete"}
+              title="Are you sure delete this sample?"
+              onConfirm={() => onDelete(Number(item.id))}
+              okText="Yes"
+              cancelText="No"
+            >
+              <a href="#">delete</a>
+            </Popconfirm>,
           ]}
         >
           <List.Item.Meta title={item.id} description={item.title} />

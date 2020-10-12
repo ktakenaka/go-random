@@ -11,6 +11,9 @@ import {
   GET_SAMPLE_REQUEST,
   GET_SAMPLE_SUCCESS,
   GET_SAMPLE_FAILURE,
+  DELETE_SAMPLE_REQUEST,
+  DELETE_SAMPLE_SUCCESS,
+  DELETE_SAMPLE_FAILURE,
   CLEANUP_SAMPLE,
 } from "store/actionTypes";
 import { TypeSample } from "constants/type";
@@ -61,6 +64,18 @@ export const getSampleSuccess = (sample: TypeSample) => {
 
 export const getSamplesFailure = () => {
   return { type: GET_SAMPLES_FAILURE };
+};
+
+export const deleteSampleRequest = (id: number) => {
+  return { type: DELETE_SAMPLE_REQUEST, id: id };
+};
+
+export const deleteSampleSuccess = () => {
+  return { type: DELETE_SAMPLE_SUCCESS };
+};
+
+export const deleteSampleFailure = (err: any) => {
+  return { type: DELETE_SAMPLE_FAILURE, payload: err };
 };
 
 export const cleanupSample = () => {

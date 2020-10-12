@@ -2,23 +2,22 @@ import API from "./base";
 import { AxiosResponse } from "axios";
 import { TypeSample } from "constants/type";
 
-export const getSamplesAPI = (): Promise<AxiosResponse<any>> => {
+export const list = (): Promise<AxiosResponse<any>> => {
   return API.get("/samples");
 };
 
-export const getSampleAPI = (id: number): Promise<AxiosResponse<any>> => {
+export const get = (id: number): Promise<AxiosResponse<any>> => {
   return API.get(`/samples/${id}`);
 };
 
-export const postSampleAPI = (
-  sample: TypeSample
-): Promise<AxiosResponse<any>> => {
+export const post = (sample: TypeSample): Promise<AxiosResponse<any>> => {
   return API.post("/samples", sample);
 };
 
-export const putSampleAPI = (
-  id: number,
-  sample: any
-): Promise<AxiosResponse<any>> => {
+export const put = (id: number, sample: any): Promise<AxiosResponse<any>> => {
   return API.put(`/samples/${id}`, sample);
+};
+
+export const destroy = (id: number) => {
+  return API.delete(`/samples/${id}`);
 };
