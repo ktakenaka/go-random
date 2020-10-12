@@ -39,7 +39,7 @@ func (r *SampleRepository) FindByID(userID, id uint64) (entity.Sample, error) {
 }
 
 // Create creates sample
-func (r *SampleRepository) Create(sample entity.Sample) (entity.Sample, error) {
+func (r *SampleRepository) Create(sample *entity.Sample) (*entity.Sample, error) {
 	if err := sample.Validate(); err != nil {
 		return sample, err
 	}
@@ -55,7 +55,7 @@ func (r *SampleRepository) Delete(userID, id uint64) error {
 }
 
 // Update update
-func (r *SampleRepository) Update(sample entity.Sample) (entity.Sample, error) {
+func (r *SampleRepository) Update(sample *entity.Sample) (*entity.Sample, error) {
 	if err := sample.Validate(); err != nil {
 		return sample, err
 	}

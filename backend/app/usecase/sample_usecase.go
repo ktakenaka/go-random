@@ -47,8 +47,8 @@ func (s *SampleUsecase) Find(userID, id uint64) (entity.Sample, error) {
 
 // Create create
 func (s *SampleUsecase) Create(req dto.CreateSample) error {
-	var sample entity.Sample
-	if err := copier.Copy(&sample, &req); err != nil {
+	var sample *entity.Sample
+	if err := copier.Copy(sample, &req); err != nil {
 		return err
 	}
 
@@ -62,8 +62,8 @@ func (s *SampleUsecase) Create(req dto.CreateSample) error {
 
 // Update update
 func (s *SampleUsecase) Update(req dto.UpdateSample) (err error) {
-	var sample entity.Sample
-	if err := copier.Copy(&sample, &req); err != nil {
+	var sample *entity.Sample
+	if err := copier.Copy(sample, &req); err != nil {
 		return err
 	}
 
