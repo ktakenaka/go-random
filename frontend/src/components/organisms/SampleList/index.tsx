@@ -1,7 +1,8 @@
 import React from "react";
-import { List, Popconfirm } from "antd";
+import { List, Button, Popconfirm } from "antd";
 
 import { TypeSample } from "constants/type";
+import { moveLocation } from "utils/changeLocation";
 
 type Props = {
   header?: string;
@@ -19,9 +20,14 @@ const SampleList = ({ samples, header, footer, onDelete }: Props) => {
       renderItem={(item) => (
         <List.Item
           actions={[
-            <a key={item.id + "edit"} href={`/samples/${item.id}/edit`}>
+            <Button
+              type="link"
+              size="small"
+              key={item.id + "edit"}
+              onClick={() => moveLocation(`/samples/${item.id}/edit`)}
+            >
               edit
-            </a>,
+            </Button>,
             <Popconfirm
               key={item.id + "delete"}
               title="Are you sure delete this sample?"
@@ -29,7 +35,9 @@ const SampleList = ({ samples, header, footer, onDelete }: Props) => {
               okText="Yes"
               cancelText="No"
             >
-              <a href="#">delete</a>
+              <Button type="link" size="small">
+                delete
+              </Button>
             </Popconfirm>,
           ]}
         >
