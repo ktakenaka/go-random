@@ -31,8 +31,7 @@ func (hdl *SampleHandler) Index(ctx *gin.Context) {
 
 	claims := hdl.JWTClaims(ctx)
 
-	samples, err := suCase.ListSample(claims.UserID)
-
+	samples, err := suCase.List(claims.UserID)
 	if err != nil {
 		return
 	}
@@ -62,7 +61,7 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 
 	claims := hdl.JWTClaims(ctx)
 
-	sample, err := suCase.FindSample(claims.UserID, id)
+	sample, err := suCase.Find(claims.UserID, id)
 	if err != nil {
 		return
 	}
@@ -99,7 +98,7 @@ func (hdl *SampleHandler) Create(ctx *gin.Context) {
 	claims := hdl.JWTClaims(ctx)
 	dtoReq.UserID = claims.UserID
 
-	if err = suCase.RegisterSample(dtoReq); err != nil {
+	if err = suCase.Create(dtoReq); err != nil {
 		return
 	}
 
@@ -136,7 +135,7 @@ func (hdl *SampleHandler) Update(ctx *gin.Context) {
 
 	claims := hdl.JWTClaims(ctx)
 	dtoReq.UserID = claims.UserID
-	if err = suCase.UpdateSample(dtoReq); err != nil {
+	if err = suCase.Update(dtoReq); err != nil {
 		return
 	}
 
@@ -160,7 +159,7 @@ func (hdl *SampleHandler) Delete(ctx *gin.Context) {
 
 	claims := hdl.JWTClaims(ctx)
 
-	if err = suCase.DeleteSample(claims.UserID, id); err != nil {
+	if err = suCase.Delete(claims.UserID, id); err != nil {
 		return
 	}
 
