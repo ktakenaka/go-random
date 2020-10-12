@@ -22,3 +22,7 @@ export const putSampleAPI = (
 ): Promise<AxiosResponse<any>> => {
   return API.put(`/samples/${id}`, sample);
 };
+
+export const destroy = (id: number) => {
+  return API.delete(`/samples/${id}`);
+};

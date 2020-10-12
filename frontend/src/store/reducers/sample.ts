@@ -11,6 +11,9 @@ import {
   GET_SAMPLE_REQUEST,
   GET_SAMPLE_SUCCESS,
   GET_SAMPLE_FAILURE,
+  DELETE_SAMPLE_SUCCESS,
+  DELETE_SAMPLE_REQUEST,
+  DELETE_SAMPLE_FAILURE,
   CLEANUP_SAMPLE,
 } from "store/actionTypes";
 import { TypeSample } from "constants/type";
@@ -37,17 +40,20 @@ export default (
     case SUBMIT_SAMPLE_REQUEST ||
       GET_SAMPLES_REQUEST ||
       UPDATE_SAMPLE_REQUEST ||
-      GET_SAMPLE_REQUEST:
+      GET_SAMPLE_REQUEST ||
+      DELETE_SAMPLE_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case SUBMIT_SAMPLE_SUCCESS || UPDATE_SAMPLE_SUCCESS:
+    case SUBMIT_SAMPLE_SUCCESS ||
+      UPDATE_SAMPLE_SUCCESS ||
+      DELETE_SAMPLE_SUCCESS:
       return {
         ...state,
         loading: false,
       };
-    case GET_SAMPLES_FAILURE || GET_SAMPLE_FAILURE:
+    case GET_SAMPLES_FAILURE || GET_SAMPLE_FAILURE || DELETE_SAMPLE_FAILURE:
       return {
         ...state,
         loading: false,
