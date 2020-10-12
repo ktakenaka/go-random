@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Button } from "antd";
 
 import { Message } from "./styles";
 import ActionMessage from "components/organisms/ActionMessage";
+import { moveLocation } from "utils/changeLocation";
 
 type Props = {
   children: React.ReactNode;
@@ -35,11 +36,23 @@ const MainTemplate = ({ children }: Props) => {
         style={{ height: "100%", borderRight: 0 }}
       >
         <Menu.Item>
-          <Link to="/home">Home</Link>
+          <Button
+            type="text"
+            size="small"
+            onClick={() => moveLocation("/home")}
+          >
+            HOME
+          </Button>
         </Menu.Item>
         <SubMenu key="sub1" title="Menu">
           <Menu.Item key="1">
-            <Link to="/samples">Sample</Link>
+            <Button
+              type="text"
+              size="small"
+              onClick={() => moveLocation("/samples")}
+            >
+              Sample
+            </Button>
           </Menu.Item>
         </SubMenu>
       </Menu>
