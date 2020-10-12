@@ -42,7 +42,7 @@ func (hdl *ExportHandler) SamplesExport(ctx *gin.Context) {
 	}
 
 	suCase := registry.InitializeSampleUsecase()
-	samples, err := suCase.ListSample(claims.UserID)
+	samples, err := suCase.List(claims.UserID)
 	if err != nil {
 		return
 	}

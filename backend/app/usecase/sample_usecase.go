@@ -9,12 +9,14 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/usecase/dto"
 )
 
+// SampleUsecase usecase for sample
 type SampleUsecase struct {
 	repo repository.SampleRepository
 	txm  repository.TransactionManager
 	srv  *service.SampleService
 }
 
+// NewSampleUsecase constructor
 func NewSampleUsecase(
 	repo repository.SampleRepository,
 	txm repository.TransactionManager,
@@ -27,7 +29,8 @@ func NewSampleUsecase(
 	}
 }
 
-func (s *SampleUsecase) ListSample(userID uint64) ([]*entity.Sample, error) {
+// List list sample
+func (s *SampleUsecase) List(userID uint64) ([]entity.Sample, error) {
 	// TODO: refactor to use gorm association
 	samples, err := s.repo.FindAll(userID)
 	if err != nil {
@@ -36,17 +39,16 @@ func (s *SampleUsecase) ListSample(userID uint64) ([]*entity.Sample, error) {
 	return samples, nil
 }
 
-func (s *SampleUsecase) FindSample(userID, id uint64) (*entity.Sample, error) {
+// Find find
+func (s *SampleUsecase) Find(userID, id uint64) (entity.Sample, error) {
 	sample, err := s.repo.FindByID(userID, id)
-	if err != nil {
-		return nil, err
-	}
-	return sample, nil
+	return sample, err
 }
 
-func (s *SampleUsecase) RegisterSample(req dto.CreateSample) error {
-	var sample entity.Sample
-	if err := copier.Copy(&sample, &req); err != nil {
+// Create create
+func (s *SampleUsecase) Create(req dto.CreateSample) error {
+	var sample *entity.Sample
+	if err := copier.Copy(sample, &req); err != nil {
 		return err
 	}
 
@@ -54,31 +56,31 @@ func (s *SampleUsecase) RegisterSample(req dto.CreateSample) error {
 	// if err := s.srv.Duplicated(sample); err != nil {
 	// 	return err
 	// }
-	err := s.repo.Create(&sample)
+	_, err := s.repo.Create(sample)
 	return err
 }
 
-func (s *SampleUsecase) UpdateSample(req dto.UpdateSample) (err error) {
+// Update update
+func (s *SampleUsecase) Update(req dto.UpdateSample) (err error) {
+	var sample *entity.Sample
+	if err := copier.Copy(sample, &req); err != nil {
+		return err
+	}
+
+	// TODO: enable validation
+	// if err := s.srv.Duplicated(sample); err != nil {
+	// 	return err
+	// }
 	s.beginTx()
 	defer func() {
 		err = s.endTx(err)
 	}()
-
-	var sample entity.Sample
-	if err := copier.Copy(&sample, &req); err != nil {
-		return err
-	}
-
-	// TODO: enable validation
-	// if err := s.srv.Duplicated(sample); err != nil {
-	// 	return err
-	// }
-
-	err = s.repo.Update(&sample)
+	_, err = s.repo.Update(sample)
 	return err
 }
 
-func (s *SampleUsecase) DeleteSample(userID, id uint64) error {
+// Delete delete
+func (s *SampleUsecase) Delete(userID, id uint64) error {
 	err := s.repo.Delete(userID, id)
 	return err
 }
