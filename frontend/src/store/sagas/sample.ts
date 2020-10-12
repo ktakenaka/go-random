@@ -27,7 +27,7 @@ function* createSample(action: any) {
 
 function* getSamples() {
   try {
-    const res = yield call(sampleAPI.getSamplesAPI);
+    const res = yield call(sampleAPI.list);
     yield put(sampleAction.getSamplesSuccess(res.data.data));
   } catch (err) {
     yield put(appAction.setMessage("Falied to get samples", false));

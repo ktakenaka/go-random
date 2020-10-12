@@ -2,7 +2,7 @@ import API from "./base";
 import { AxiosResponse } from "axios";
 import { TypeSample } from "constants/type";
 
-export const getSamplesAPI = (): Promise<AxiosResponse<any>> => {
+export const list = (): Promise<AxiosResponse<any>> => {
   return API.get("/samples");
 };
 
