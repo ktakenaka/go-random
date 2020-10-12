@@ -10,7 +10,7 @@ export const get = (id: number): Promise<AxiosResponse<any>> => {
   return API.get(`/samples/${id}`);
 };
 
-export const postSampleAPI = (
+export const post = (
   sample: TypeSample
 ): Promise<AxiosResponse<any>> => {
   return API.post("/samples", sample);

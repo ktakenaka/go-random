@@ -13,7 +13,7 @@ import * as appAction from "store/actionCreators/app";
 
 function* createSample(action: any) {
   try {
-    yield call(sampleAPI.postSampleAPI, action.payload);
+    yield call(sampleAPI.post, action.payload);
     yield put(sampleAction.submitSampleSuccess());
     yield put(sampleAction.getSamplesRequest());
     yield put(appAction.setMessage("Succeed to create a sample", true));
