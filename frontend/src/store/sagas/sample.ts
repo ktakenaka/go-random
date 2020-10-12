@@ -51,7 +51,7 @@ function* updateSample({ id, payload }: any) {
 
 function* getSample({ id }: any) {
   try {
-    const res = yield call(sampleAPI.getSampleAPI, id);
+    const res = yield call(sampleAPI.get, id);
     yield put(sampleAction.getSampleSuccess(res.data.data));
   } catch (err) {
     yield console.log(err);

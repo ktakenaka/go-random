@@ -6,7 +6,7 @@ export const list = (): Promise<AxiosResponse<any>> => {
   return API.get("/samples");
 };
 
-export const getSampleAPI = (id: number): Promise<AxiosResponse<any>> => {
+export const get = (id: number): Promise<AxiosResponse<any>> => {
   return API.get(`/samples/${id}`);
 };
 
