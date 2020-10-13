@@ -1,6 +1,10 @@
 package usecase
 
 import (
+	"fmt"
+	"os"
+
+	"github.com/gocarina/gocsv"
 	"github.com/jinzhu/copier"
 
 	"github.com/ktakenaka/go-random/backend/app/domain/entity"
@@ -36,13 +40,13 @@ func (s *SampleUsecase) List(userID uint64) ([]entity.Sample, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return samples, nil
 }
 
 // Find find
 func (s *SampleUsecase) Find(userID, id uint64) (entity.Sample, error) {
 	sample, err := s.repo.FindByID(userID, id)
-	sample.Tryal()
 	return sample, err
 }
 
@@ -84,6 +88,21 @@ func (s *SampleUsecase) Update(req dto.UpdateSample) (err error) {
 func (s *SampleUsecase) Delete(userID, id uint64) error {
 	err := s.repo.Delete(userID, id)
 	return err
+}
+
+// Import csv
+func (s *SampleUsecase) Import(file *os.File) error {
+	var smp []entity.Sample
+	if err := gocsv.UnmarshalFile(file, &smp); err != nil {
+		return err
+	}
+
+	// TODO: Implement insert on duplicated update
+	for _, item := range smp {
+		fmt.Println(item)
+	}
+
+	return nil
 }
 
 func (s *SampleUsecase) beginTx() {

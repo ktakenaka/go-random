@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Radio, PageHeader, Button } from "antd";
+import { Radio, PageHeader, Button, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
 
 import MainTemplate from "components/templates/MainTemplate";
 import SampleList from "components/organisms/SampleList";
@@ -30,17 +31,16 @@ const SamplePage = ({
   deleteSampleRequest,
 }: Props) => {
   const [charset, setCharset] = useState<"utf8" | "sjis">("utf8");
+  const [file, setFile] = useState<any>();
 
   useEffect(() => {
     getSamplesRequest();
   }, [getSamplesRequest]);
 
-  const onCharsetSelected = (e: any) => {
-    setCharset(e.target.value);
-  };
-
-  const handleDelete = (id: number) => {
-    deleteSampleRequest(id);
+  const beforeUpload = (file: any) => {
+    // TODO: Import CSV
+    setFile(file);
+    return false;
   };
 
   // TODO: define organism
@@ -53,9 +53,27 @@ const SamplePage = ({
         <Button key="1" type="primary">
           <Link to="/samples/new">New</Link>
         </Button>,
+        <Upload
+          key="2"
+          name="file"
+          fileList={file ? [file] : []}
+          beforeUpload={beforeUpload}
+          onRemove={() => setFile(null)}
+        >
+          <Button icon={<UploadOutlined />}>Upload</Button>
+        </Upload>,
+        //<Button onClick={handleUpload} disabled={!Boolean(file)}>Import</Button>
       ]}
     ></PageHeader>
   );
+
+  const onCharsetSelected = (e: any) => {
+    setCharset(e.target.value);
+  };
+
+  const handleDelete = (id: number) => {
+    deleteSampleRequest(id);
+  };
 
   // TODO: define organism
   const csvExport = (
