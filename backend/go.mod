@@ -12,6 +12,7 @@ require (
 	github.com/gin-contrib/sessions v0.0.3
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/validator/v10 v10.3.0
+	github.com/gocarina/gocsv v0.0.0-20200925213129-04be9ee2e1a2
 	github.com/google/wire v0.4.0
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
