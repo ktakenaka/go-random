@@ -42,6 +42,7 @@ func (s *SampleUsecase) List(userID uint64) ([]entity.Sample, error) {
 // Find find
 func (s *SampleUsecase) Find(userID, id uint64) (entity.Sample, error) {
 	sample, err := s.repo.FindByID(userID, id)
+	sample.Tryal()
 	return sample, err
 }
 
