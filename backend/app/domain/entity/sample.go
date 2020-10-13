@@ -6,6 +6,7 @@ import (
 	validator "github.com/go-playground/validator/v10"
 )
 
+// Sample entity
 type Sample struct {
 	ID        uint64 `gorm:"primary_key"`
 	Title     string `validate:"max=20,required"`
@@ -15,10 +16,7 @@ type Sample struct {
 	UpdatedAt time.Time
 }
 
-func (s *Sample) TableName() string {
-	return "samples"
-}
-
+// Validate with validator v10
 func (s *Sample) Validate() error {
 	validate := validator.New()
 	err := validate.Struct(s)
