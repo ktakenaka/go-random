@@ -1,0 +1,5 @@
+development:
+    dialect: mysql
+    datasource: random:random@tcp(db:3306)/go-random?parseTime=true
+    dir: db/migrations
+    table: schema_migrations
