@@ -43,7 +43,7 @@ const SampleForm = ({ onSubmit, sample }: Props) => {
       <FormAnt.Item
         label="Content"
         name="content"
-        rules={[{ required: true, message: "Please input content" }]}
+        rules={[{ message: "Please input content" }]}
       >
         <InputAnt />
       </FormAnt.Item>

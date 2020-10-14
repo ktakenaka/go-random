@@ -43,6 +43,7 @@ func Handler() *gin.Engine {
 	sample.POST("", sampleHdl.Create)
 	sample.PUT("/:id", sampleHdl.Update)
 	sample.DELETE("/:id", sampleHdl.Delete)
+	sample.POST("/import", sampleHdl.Import)
 
 	exportHdl := handler.NewExportHandler()
 	export := v1Auth.Group("export")

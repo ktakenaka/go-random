@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -160,6 +161,35 @@ func (hdl *SampleHandler) Delete(ctx *gin.Context) {
 	claims := hdl.JWTClaims(ctx)
 
 	if err = suCase.Delete(claims.UserID, id); err != nil {
+		return
+	}
+
+	hdl.SetData(ctx, "ok")
+	hdl.SetMeta(ctx, presenter.CodeSuccess)
+}
+
+// Import csv
+func (hdl *SampleHandler) Import(ctx *gin.Context) {
+	var (
+		err error
+	)
+	defer func() {
+		hdl.SetError(ctx, err)
+	}()
+
+	header, err := ctx.FormFile("file")
+	if err != nil {
+		return
+	}
+
+	file, err := os.Open(header.Filename)
+	if err != nil {
+		return
+	}
+	defer file.Close()
+
+	suCase := registry.InitializeSampleUsecase()
+	if err = suCase.Import(file); err != nil {
 		return
 	}
 
