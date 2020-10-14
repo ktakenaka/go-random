@@ -78,8 +78,6 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 
 // Create creates a sample
 func (hdl *SampleHandler) Create(ctx *gin.Context) {
-	suCase := registry.InitializeSampleUsecase()
-
 	var (
 		err    error
 		req    presenter.SampleRequest
@@ -99,6 +97,7 @@ func (hdl *SampleHandler) Create(ctx *gin.Context) {
 	claims := hdl.JWTClaims(ctx)
 	dtoReq.UserID = claims.UserID
 
+	suCase := registry.InitializeSampleUsecase()
 	if err = suCase.Create(dtoReq); err != nil {
 		return
 	}
@@ -109,8 +108,6 @@ func (hdl *SampleHandler) Create(ctx *gin.Context) {
 
 // Update updates a sample
 func (hdl *SampleHandler) Update(ctx *gin.Context) {
-	suCase := registry.InitializeSampleUsecase()
-
 	var (
 		err    error
 		req    presenter.SampleRequest
@@ -136,6 +133,8 @@ func (hdl *SampleHandler) Update(ctx *gin.Context) {
 
 	claims := hdl.JWTClaims(ctx)
 	dtoReq.UserID = claims.UserID
+
+	suCase := registry.InitializeSampleUsecase()
 	if err = suCase.Update(dtoReq); err != nil {
 		return
 	}
