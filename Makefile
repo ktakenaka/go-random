@@ -13,16 +13,14 @@ go-lint:
 go-lint-fmt:
 	docker-compose exec app gofmt -w app
 
-time := $(shell date +%s)
-create-migrate:
-	@docker-compose exec app touch db/migrations/$(time)_$(name).up.sql
-	@docker-compose exec app touch db/migrations/$(time)_$(name).down.sql
+migrate-new:
+	docker-compose exec app sql-migrations new ${name}
 
 migrate-up:
-	docker-compose exec app migrate -database mysql://random:random@tcp\(db:3306\)/go-random?multiStatements=true -path db/migrations up
+	docker-compose exec app sql-migrate up -env=development -config=db/dbconfig.yml
 
 migrate-down:
-	docker-compose exec app migrate -database mysql://random:random@tcp\(db:3306\)/go-random?multiStatements=true -path db/migrations down
+	docker-compose exec app sql-migrate down -env=development -config=db/dbconfig.yml
 
 test:
 	docker-compose exec app go test ./...
