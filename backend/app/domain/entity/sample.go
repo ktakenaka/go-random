@@ -6,14 +6,15 @@ import (
 	"time"
 
 	validator "github.com/go-playground/validator/v10"
+	"gopkg.in/guregu/null.v4"
 )
 
 // Sample entity
 type Sample struct {
-	ID        uint64 `gorm:"primary_key"`
-	Title     string `validate:"max=20,required" csv:"タイトル"`
-	Content   string `validate:"max=100" csv:"コンテント"`
-	UserID    uint64 `validate:"required"`
+	ID        uint64      `gorm:"primary_key"`
+	Title     string      `validate:"max=20,required" csv:"タイトル"`
+	Content   null.String `validate:"max=100" csv:"コンテント"`
+	UserID    uint64      `validate:"required"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }

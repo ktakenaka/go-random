@@ -1,6 +1,7 @@
 package presenter
 
 import (
+	"gopkg.in/guregu/null.v4"
 	"time"
 )
 
@@ -10,11 +11,11 @@ type SampleRequest struct {
 }
 
 type SampleResponse struct {
-	ID           uint64 `json:"id"`
-	Title        string `json:"title"`
-	Content      string `json:"content"`
-	CreatedAtUTC string `json:"created_at"`
-	UpdatedAtUTC string `json:"updated_at"`
+	ID           uint64      `json:"id"`
+	Title        string      `json:"title"`
+	Content      null.String `json:"content"`
+	CreatedAtUTC string      `json:"created_at"`
+	UpdatedAtUTC string      `json:"updated_at"`
 }
 
 func (s *SampleResponse) CreatedAt(createdAt time.Time) {
