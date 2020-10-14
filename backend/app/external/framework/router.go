@@ -9,6 +9,7 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/interface/api/middleware"
 )
 
+// Handler handle
 func Handler() *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Logger())
