@@ -52,7 +52,7 @@ func (hdl *ExportHandler) SamplesExport(ctx *gin.Context) {
 
 	data := make([]string, len(samples))
 	for _, s := range samples {
-		d := []string{s.Title, s.Content}
+		d := []string{s.Title, s.Content.String}
 		data = append(data, d...)
 	}
 	if err = writer.Write(data); err != nil {

@@ -80,17 +80,13 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 func (hdl *SampleHandler) Create(ctx *gin.Context) {
 	var (
 		err    error
-		req    presenter.SampleRequest
 		dtoReq dto.CreateSample
 	)
 	defer func() {
 		hdl.SetError(ctx, err)
 	}()
 
-	if err = ctx.ShouldBindJSON(&req); err != nil {
-		return
-	}
-	if err = copier.Copy(&dtoReq, &req); err != nil {
+	if err = ctx.ShouldBindJSON(&dtoReq); err != nil {
 		return
 	}
 
@@ -110,17 +106,13 @@ func (hdl *SampleHandler) Create(ctx *gin.Context) {
 func (hdl *SampleHandler) Update(ctx *gin.Context) {
 	var (
 		err    error
-		req    presenter.SampleRequest
 		dtoReq dto.UpdateSample
 	)
 	defer func() {
 		hdl.SetError(ctx, err)
 	}()
 
-	if err = ctx.ShouldBindJSON(&req); err != nil {
-		return
-	}
-	if err = copier.Copy(&dtoReq, &req); err != nil {
+	if err = ctx.ShouldBindJSON(&dtoReq); err != nil {
 		return
 	}
 

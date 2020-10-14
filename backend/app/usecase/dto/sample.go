@@ -1,5 +1,7 @@
 package dto
 
+import "gopkg.in/guregu/null.v4"
+
 // CreateSample data transfer object
 type CreateSample struct {
 	Title   string
@@ -11,6 +13,6 @@ type CreateSample struct {
 type UpdateSample struct {
 	ID      uint64
 	Title   string
-	Content string
+	Content null.String
 	UserID  uint64
 }
