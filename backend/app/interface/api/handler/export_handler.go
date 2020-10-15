@@ -1,9 +1,12 @@
 package handler
 
 import (
+	"bytes"
 	"encoding/csv"
 	"io"
+	"net/http"
 
+	"github.com/gocarina/gocsv"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 
@@ -25,6 +28,7 @@ func NewExportHandler() *ExportHandler {
 func (hdl *ExportHandler) SamplesExport(ctx *gin.Context) {
 	var (
 		err error
+		b   *bytes.Buffer
 		w   io.Writer
 	)
 	defer func() {
@@ -34,33 +38,27 @@ func (hdl *ExportHandler) SamplesExport(ctx *gin.Context) {
 	}()
 
 	claims := hdl.JWTClaims(ctx)
-
-	if ctx.Query("charset") == "sjis" {
-		w = transform.NewWriter(ctx.Writer, japanese.ShiftJIS.NewEncoder())
-	} else {
-		w = ctx.Writer
-	}
-
 	suCase := registry.InitializeSampleUsecase()
 	samples, err := suCase.List(claims.UserID)
 	if err != nil {
 		return
 	}
 
+	if ctx.Query("charset") == "sjis" {
+		w = transform.NewWriter(b, japanese.ShiftJIS.NewEncoder())
+	} else {
+		w = b
+	}
+
 	writer := csv.NewWriter(w)
 	defer writer.Flush()
 
-	data := make([]string, len(samples))
-	for _, s := range samples {
-		d := []string{s.Title, s.Content.String}
-		data = append(data, d...)
-	}
-	if err = writer.Write(data); err != nil {
+	if err = gocsv.MarshalCSV(samples, writer); err != nil {
 		return
 	}
 
-	ctx.Writer.Header().Set("Content-Type", "text/csv")
 	ctx.Writer.Header().Set("Content-Disposition", "attachment; filename=samples.csv")
 	ctx.Writer.Header().Set("Content-Transfer-Encoding", "binary")
 	ctx.Writer.Header().Set("Expires", "0")
+	ctx.Data(http.StatusOK, "text/csv", b.Bytes())
 }
