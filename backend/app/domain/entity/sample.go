@@ -11,12 +11,12 @@ import (
 
 // Sample entity
 type Sample struct {
-	ID        uint64      `gorm:"primary_key"`
+	ID        uint64      `gorm:"primary_key" csv:"-"`
 	Title     string      `validate:"max=20,required" csv:"タイトル"`
 	Content   null.String `validate:"max=100" csv:"コンテント"`
-	UserID    uint64      `validate:"required"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	UserID    uint64      `validate:"required" csv:"ユーザーID"`
+	CreatedAt time.Time   `csv:"登録日付"`
+	UpdatedAt time.Time   `csv:"更新日付"`
 }
 
 // Validate with validator v10
