@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/ktakenaka/go-random/backend/app/domain/repository"
-	"github.com/ktakenaka/go-random/backend/helper/jwtutil"
+	"github.com/ktakenaka/go-random/backend/pkg/jwtutil"
 )
 
 type SignInUsecase struct {

@@ -8,7 +8,7 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/external/database"
 	"github.com/ktakenaka/go-random/backend/app/external/framework"
 	"github.com/ktakenaka/go-random/backend/app/interface/api/middleware"
-	"github.com/ktakenaka/go-random/backend/helper/jwtutil"
+	"github.com/ktakenaka/go-random/backend/pkg/jwtutil"
 
 	cli "github.com/urfave/cli/v2"
 )

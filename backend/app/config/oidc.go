@@ -20,7 +20,7 @@ const (
 	issuerURL = "https://accounts.google.com"
 )
 
-// TODO: refactor considering to use helper
+// TODO: refactor considering to use pkg
 
 // InitGoogleOIDCCnf initializes OIDC configuration
 func InitGoogleOIDCCnf(redirectURL, clientID, clientSecret string) {
