@@ -6,6 +6,7 @@ require (
 	github.com/appleboy/gin-jwt/v2 v2.6.4
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
+	github.com/dave/jennifer v1.4.1
 	github.com/dchest/uniuri v0.0.0-20200228104902-7aecb25e1fe5 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/gin-contrib/cors v1.3.1

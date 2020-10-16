@@ -1,8 +1,9 @@
 package presenter
 
 import (
-	"gopkg.in/guregu/null.v4"
 	"time"
+
+	"gopkg.in/guregu/null.v4"
 )
 
 type SampleRequest struct {
