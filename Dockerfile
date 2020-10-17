@@ -7,4 +7,4 @@ RUN curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/i
 RUN go get -v github.com/rubenv/sql-migrate/...
 RUN go get github.com/google/wire/cmd/wire
 RUN go get github.com/golang/mock/gomock
-aRUN GO111MODULE=on go get github.com/golang/mock/mockgen@v1.4.3
+RUN GO111MODULE=on go get github.com/golang/mock/mockgen@v1.4.3
