@@ -38,3 +38,7 @@ func (s *Sample) Tags() {
 		fmt.Printf("[Value] %s\n\n", rv.Field(i).Interface())
 	}
 }
+
+func (this *Sample) Equal(that *Sample) bool {
+	return deriveEqual(this, that)
+}
