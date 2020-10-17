@@ -7,6 +7,7 @@ import (
 	. "github.com/dave/jennifer/jen"
 )
 
+// go run pkg/jennifer/main
 func main() {
 	f := NewFile("main")
 	f.Func().Id("main").Params().Block(
