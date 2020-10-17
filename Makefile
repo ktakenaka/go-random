@@ -29,6 +29,9 @@ mod:
 	docker-compose exec app go mod tidy
 	docker-compose exec app go mod vendor
 
+gen:
+	docker-compose exec app go generate ./...
+
 be-bash:
 	@docker-compose exec app bash
 
