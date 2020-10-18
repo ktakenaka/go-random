@@ -14,6 +14,7 @@ type Sample struct {
 	Title   string      `validate:"max=20,required" csv:"タイトル"`
 	Content null.String `validate:"max=100" csv:"コンテント"`
 	UserID  uint64      `validate:"required" csv:"ユーザーID"`
+	Hoge    *int        `csv:"fuga"`
 }
 
 // Validate with validator v10
@@ -23,9 +24,9 @@ func (s *Sample) Validate() error {
 	return err
 }
 
-// Tags trial implementation of tags
-func (s *Sample) Tags() {
-	rt, rv := reflect.TypeOf(*s), reflect.ValueOf(*s)
+// CSVTags trial implementation of tags
+func (s *Sample) CSVTags() {
+	rt, rv := reflect.TypeOf(s), reflect.ValueOf(s)
 
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
