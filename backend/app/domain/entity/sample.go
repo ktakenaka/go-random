@@ -3,6 +3,7 @@ package entity
 import (
 	"fmt"
 	"reflect"
+	"time"
 
 	validator "github.com/go-playground/validator/v10"
 	"gopkg.in/guregu/null.v4"
@@ -10,11 +11,13 @@ import (
 
 // Sample entity
 type Sample struct {
-	Model
-	Title   string      `validate:"max=20,required" csv:"タイトル"`
-	Content null.String `validate:"max=100" csv:"コンテント"`
-	UserID  uint64      `validate:"required" csv:"ユーザーID"`
-	Hoge    *int        `csv:"fuga"`
+	ID        uint64      `csv:"-"`
+	CreatedAt time.Time   `csv:"登録日付"`
+	UpdatedAt time.Time   `csv:"更新日付"`
+	Title     string      `validate:"max=20,required" csv:"タイトル"`
+	Content   null.String `validate:"max=100" csv:"コンテント"`
+	UserID    uint64      `validate:"required" csv:"ユーザーID"`
+	Hoge      *int        `csv:"fuga"`
 }
 
 // Validate with validator v10
