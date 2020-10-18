@@ -6,10 +6,17 @@ package entity
 func deriveEqual(this, that *Sample) bool {
 	return (this == nil && that == nil) ||
 		this != nil && that != nil &&
-			this.ID == that.ID &&
+			deriveEqual_(&this.Model, &that.Model) &&
 			this.Title == that.Title &&
 			this.Content == that.Content &&
-			this.UserID == that.UserID &&
+			this.UserID == that.UserID
+}
+
+// deriveEqual_ returns whether this and that are equal.
+func deriveEqual_(this, that *Model) bool {
+	return (this == nil && that == nil) ||
+		this != nil && that != nil &&
+			this.ID == that.ID &&
 			this.CreatedAt.Equal(that.CreatedAt) &&
 			this.UpdatedAt.Equal(that.UpdatedAt)
 }

@@ -3,7 +3,6 @@ package entity
 import (
 	"fmt"
 	"reflect"
-	"time"
 
 	validator "github.com/go-playground/validator/v10"
 	"gopkg.in/guregu/null.v4"
@@ -11,12 +10,10 @@ import (
 
 // Sample entity
 type Sample struct {
-	ID        uint64      `gorm:"primary_key" csv:"-"`
-	Title     string      `validate:"max=20,required" csv:"タイトル"`
-	Content   null.String `validate:"max=100" csv:"コンテント"`
-	UserID    uint64      `validate:"required" csv:"ユーザーID"`
-	CreatedAt time.Time   `csv:"登録日付"`
-	UpdatedAt time.Time   `csv:"更新日付"`
+	Model
+	Title   string      `validate:"max=20,required" csv:"タイトル"`
+	Content null.String `validate:"max=100" csv:"コンテント"`
+	UserID  uint64      `validate:"required" csv:"ユーザーID"`
 }
 
 // Validate with validator v10
@@ -39,6 +36,8 @@ func (s *Sample) Tags() {
 	}
 }
 
-func (this *Sample) Equal(that *Sample) bool {
-	return deriveEqual(this, that)
+// Equal trial implementation of goderive
+// make gen
+func (s *Sample) Equal(s2 *Sample) bool {
+	return deriveEqual(s, s2)
 }

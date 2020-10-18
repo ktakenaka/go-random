@@ -32,8 +32,9 @@ func (r *SampleRepository) FindByTitle(userID uint64, title string) (entity.Samp
 
 // FindByID find on sample from id
 func (r *SampleRepository) FindByID(userID, id uint64) (entity.Sample, error) {
-	var sample entity.Sample
-	err := r.DB.Where(&entity.Sample{ID: id, UserID: userID}).First(&sample).Error
+	sample := entity.Sample{UserID: userID}
+	sample.ID = id
+	err := r.DB.Where("user_id=?", sample.UserID).Take(&sample).Error
 
 	return sample, err
 }
@@ -50,7 +51,9 @@ func (r *SampleRepository) Create(sample *entity.Sample) (*entity.Sample, error)
 
 // Delete delete
 func (r *SampleRepository) Delete(userID, id uint64) error {
-	err := r.DB.Where("user_id = ?", userID).Delete(&entity.Sample{ID: id}).Error
+	sample := entity.Sample{UserID: userID}
+	sample.ID = id
+	err := r.DB.Where("user_id=?", sample.UserID).Delete(&sample).Error
 	return err
 }
 
