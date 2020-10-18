@@ -11,12 +11,13 @@ import (
 
 // Sample entity
 type Sample struct {
-	ID        uint64      `gorm:"primary_key" csv:"-"`
+	ID        uint64      `csv:"-"`
+	CreatedAt time.Time   `csv:"登録日付"`
+	UpdatedAt time.Time   `csv:"更新日付"`
 	Title     string      `validate:"max=20,required" csv:"タイトル"`
 	Content   null.String `validate:"max=100" csv:"コンテント"`
 	UserID    uint64      `validate:"required" csv:"ユーザーID"`
-	CreatedAt time.Time   `csv:"登録日付"`
-	UpdatedAt time.Time   `csv:"更新日付"`
+	Hoge      *int        `csv:"fuga"`
 }
 
 // Validate with validator v10
@@ -26,9 +27,9 @@ func (s *Sample) Validate() error {
 	return err
 }
 
-// Tags trial implementation of tags
-func (s *Sample) Tags() {
-	rt, rv := reflect.TypeOf(*s), reflect.ValueOf(*s)
+// CSVTags trial implementation of tags
+func (s *Sample) CSVTags() {
+	rt, rv := reflect.TypeOf(s), reflect.ValueOf(s)
 
 	for i := 0; i < rt.NumField(); i++ {
 		field := rt.Field(i)
@@ -39,6 +40,8 @@ func (s *Sample) Tags() {
 	}
 }
 
-func (this *Sample) Equal(that *Sample) bool {
-	return deriveEqual(this, that)
+// Equal trial implementation of goderive
+// make gen
+func (s *Sample) Equal(s2 *Sample) bool {
+	return deriveEqual(s, s2)
 }
