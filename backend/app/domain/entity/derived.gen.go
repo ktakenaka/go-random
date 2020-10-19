@@ -7,10 +7,9 @@ func deriveEqual(this, that *Sample) bool {
 	return (this == nil && that == nil) ||
 		this != nil && that != nil &&
 			this.ID == that.ID &&
-			this.CreatedAt == that.CreatedAt &&
-			this.UpdatedAt == that.UpdatedAt &&
+			this.CreatedAt.Equal(that.CreatedAt) &&
+			this.UpdatedAt.Equal(that.UpdatedAt) &&
 			this.Title == that.Title &&
-			this.Content == that.Content &&
-			this.UserID == that.UserID &&
-			((this.Hoge == nil && that.Hoge == nil) || (this.Hoge != nil && that.Hoge != nil && *(this.Hoge) == *(that.Hoge)))
+			((this.Content == nil && that.Content == nil) || (this.Content != nil && that.Content != nil && *(this.Content) == *(that.Content))) &&
+			this.UserID == that.UserID
 }

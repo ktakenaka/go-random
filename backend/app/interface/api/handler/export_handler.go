@@ -7,10 +7,12 @@ import (
 	"net/http"
 
 	"github.com/gocarina/gocsv"
+	"github.com/jinzhu/copier"
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/backend/app/registry"
 )
 
@@ -28,7 +30,6 @@ func NewExportHandler() *ExportHandler {
 func (hdl *ExportHandler) SamplesExport(ctx *gin.Context) {
 	var (
 		err error
-		b   *bytes.Buffer
 		w   io.Writer
 	)
 	defer func() {
@@ -39,21 +40,26 @@ func (hdl *ExportHandler) SamplesExport(ctx *gin.Context) {
 
 	claims := hdl.JWTClaims(ctx)
 	suCase := registry.InitializeSampleUsecase()
-	samples, err := suCase.List(claims.UserID)
+	samples, err := suCase.ListForExport(claims.UserID)
 	if err != nil {
 		return
 	}
 
+	var prsSamples []presenter.SampleCSVPresenter
+	if err = copier.Copy(&prsSamples, &samples); err != nil {
+		return
+	}
+
+	var b bytes.Buffer
 	if ctx.Query("charset") == "sjis" {
-		w = transform.NewWriter(b, japanese.ShiftJIS.NewEncoder())
+		w = transform.NewWriter(&b, japanese.ShiftJIS.NewEncoder())
 	} else {
-		w = b
+		w = &b
 	}
 
 	writer := csv.NewWriter(w)
 	defer writer.Flush()
-
-	if err = gocsv.MarshalCSV(samples, writer); err != nil {
+	if err = gocsv.MarshalCSV(prsSamples, writer); err != nil {
 		return
 	}
 

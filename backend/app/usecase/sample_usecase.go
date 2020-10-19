@@ -105,6 +105,22 @@ func (s *SampleUsecase) Import(file *os.File) error {
 	return nil
 }
 
+// ListForExport for csv export
+func (s *SampleUsecase) ListForExport(userID uint64) ([]dto.ExportSample, error) {
+	// TODO: refactor to use gorm association
+	samples, err := s.repo.FindAll(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	var dtoSamples []dto.ExportSample
+	if err := copier.Copy(&dtoSamples, &samples); err != nil {
+		return dtoSamples, err
+	}
+
+	return dtoSamples, nil
+}
+
 func (s *SampleUsecase) beginTx() {
 	s.txm.Begin()
 	s.repo.AssignTx(s.txm)
