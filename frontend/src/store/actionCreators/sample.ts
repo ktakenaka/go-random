@@ -14,6 +14,9 @@ import {
   DELETE_SAMPLE_REQUEST,
   DELETE_SAMPLE_SUCCESS,
   DELETE_SAMPLE_FAILURE,
+  IMPORT_SAMPLES_REQUEST,
+  IMPORT_SAMPLES_SUCCESS,
+  IMPORT_SAMPLES_FAILURE,
   CLEANUP_SAMPLE,
 } from "store/actionTypes";
 import { TypeSample } from "constants/type";
@@ -76,6 +79,18 @@ export const deleteSampleSuccess = () => {
 
 export const deleteSampleFailure = (err: any) => {
   return { type: DELETE_SAMPLE_FAILURE, payload: err };
+};
+
+export const importSamplesRequest = (file: File) => {
+  return { type: IMPORT_SAMPLES_REQUEST, payload: file };
+};
+
+export const importSamplesSuccess = () => {
+  return { type: IMPORT_SAMPLES_SUCCESS };
+};
+
+export const importSamplesFailure = () => {
+  return { type: IMPORT_SAMPLES_FAILURE };
 };
 
 export const cleanupSample = () => {

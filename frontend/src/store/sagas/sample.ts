@@ -7,6 +7,7 @@ import {
   UPDATE_SAMPLE_REQUEST,
   GET_SAMPLE_REQUEST,
   DELETE_SAMPLE_REQUEST,
+  IMPORT_SAMPLES_REQUEST,
 } from "store/actionTypes";
 import * as sampleAction from "store/actionCreators/sample";
 import * as appAction from "store/actionCreators/app";
@@ -71,10 +72,24 @@ function* deleteSample({ id }: any) {
   }
 }
 
+function* importSamples({ payload }: any) {
+  try {
+    yield call(sampleAPI.importFile, payload);
+    yield put(sampleAction.importSamplesSuccess());
+    yield put(appAction.setMessage("Succeeded to import samples", true));
+    yield put(sampleAction.getSamplesRequest());
+  } catch (err) {
+    yield console.log(err);
+    yield put(sampleAction.importSamplesFailure());
+    yield put(appAction.setMessage("Failed to import samples", false));
+  }
+}
+
 export default function* actionWatcher(): Generator {
   yield takeLatest(SUBMIT_SAMPLE_REQUEST, createSample);
   yield takeLatest(GET_SAMPLES_REQUEST, getSamples);
   yield takeLatest(UPDATE_SAMPLE_REQUEST, updateSample);
   yield takeLatest(GET_SAMPLE_REQUEST, getSample);
   yield takeLatest(DELETE_SAMPLE_REQUEST, deleteSample);
+  yield takeLatest(IMPORT_SAMPLES_REQUEST, importSamples);
 }

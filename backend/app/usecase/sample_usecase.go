@@ -2,9 +2,7 @@ package usecase
 
 import (
 	"fmt"
-	"os"
 
-	"github.com/gocarina/gocsv"
 	"github.com/jinzhu/copier"
 
 	"github.com/ktakenaka/go-random/backend/app/domain/entity"
@@ -91,14 +89,9 @@ func (s *SampleUsecase) Delete(userID, id uint64) error {
 }
 
 // Import csv
-func (s *SampleUsecase) Import(file *os.File) error {
-	var smp []entity.Sample
-	if err := gocsv.UnmarshalFile(file, &smp); err != nil {
-		return err
-	}
-
+func (s *SampleUsecase) Import(samples []dto.ImportSample) error {
 	// TODO: Implement insert on duplicated update
-	for _, item := range smp {
+	for _, item := range samples {
 		fmt.Println(item)
 	}
 
