@@ -57,7 +57,7 @@ func (hdl *ExportHandler) SamplesExport(ctx *gin.Context) {
 		w = &b
 	}
 
-	writer := csv.NewWriter(w)
+	writer := gocsv.NewSafeCSVWriter(csv.NewWriter(w))
 	defer writer.Flush()
 	if err = gocsv.MarshalCSV(prsSamples, writer); err != nil {
 		return

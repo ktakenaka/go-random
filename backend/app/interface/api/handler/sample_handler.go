@@ -1,10 +1,11 @@
 package handler
 
 import (
-	"os"
+	"encoding/csv"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gocarina/gocsv"
 	"github.com/jinzhu/copier"
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/backend/app/registry"
@@ -173,14 +174,25 @@ func (hdl *SampleHandler) Import(ctx *gin.Context) {
 		return
 	}
 
-	file, err := os.Open(header.Filename)
+	file, err := header.Open()
 	if err != nil {
 		return
 	}
-	defer file.Close()
+
+	prsSamples := []presenter.SampleCSVPresenter{}
+	reader := csv.NewReader(file)
+
+	if err = gocsv.UnmarshalCSV(reader, &prsSamples); err != nil {
+		return
+	}
+
+	var dtoSamples []dto.ImportSample
+	if err = copier.Copy(&dtoSamples, &prsSamples); err != nil {
+		return
+	}
 
 	suCase := registry.InitializeSampleUsecase()
-	if err = suCase.Import(file); err != nil {
+	if err = suCase.Import(dtoSamples); err != nil {
 		return
 	}
 
