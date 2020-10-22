@@ -5,7 +5,7 @@ import history from "browserHistory";
 
 const csrfIgnoreMethods = ["get", "head", "options"];
 
-export const BE_BASE_URL = process.env.REACT_APP_API_BASE_URL;
+export const BE_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}/api/v1`;
 
 const isAuthError = (response: any): boolean => {
   return response.status === 401 && response.data.meta.code === UNAUTHORIZED;
@@ -13,7 +13,7 @@ const isAuthError = (response: any): boolean => {
 
 const initialize = function (): void {
   axios.defaults.withCredentials = true;
-  axios.defaults.baseURL = `${BE_BASE_URL}/api/v1`;
+  axios.defaults.baseURL = BE_BASE_URL;
 
   axios.interceptors.request.use(
     function (config) {

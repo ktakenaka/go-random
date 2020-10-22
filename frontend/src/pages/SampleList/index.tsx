@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Radio, PageHeader, Button, Upload } from "antd";
+import { UploadFile } from "antd/lib/upload/interface";
 import { UploadOutlined } from "@ant-design/icons";
 
 import MainTemplate from "components/templates/MainTemplate";
@@ -9,8 +10,10 @@ import SampleList from "components/organisms/SampleList";
 import {
   getSamplesRequest,
   deleteSampleRequest,
+  importSamplesRequest,
   cleanupSample,
 } from "store/actionCreators/sample";
+import { exportURL as exportSamplesURL } from "api/app/sample";
 import { TypeSample } from "constants/type";
 
 const charsets = [
@@ -22,6 +25,7 @@ interface Props {
   samples: Array<TypeSample>;
   getSamplesRequest: typeof getSamplesRequest;
   deleteSampleRequest: typeof deleteSampleRequest;
+  importSamplesRequest: typeof importSamplesRequest;
   cleanupSample: typeof cleanupSample;
 }
 
@@ -29,17 +33,19 @@ const SamplePage = ({
   samples,
   getSamplesRequest,
   deleteSampleRequest,
+  importSamplesRequest,
+  cleanupSample,
 }: Props) => {
   const [charset, setCharset] = useState<"utf8" | "sjis">("utf8");
-  const [file, setFile] = useState<any>();
+  const [file, setFile] = useState<UploadFile | null>();
 
   useEffect(() => {
     getSamplesRequest();
   }, [getSamplesRequest]);
 
-  const beforeUpload = (file: any) => {
-    // TODO: Import CSV
-    setFile(file);
+  const beforeUpload = (file: File) => {
+    // TODO: make it after users' confirmation
+    importSamplesRequest(file);
     return false;
   };
 
@@ -85,11 +91,7 @@ const SamplePage = ({
           </Radio>
         ))}
       </Radio.Group>
-      <a
-        // TODO: refactor link
-        href={`http://127.0.0.1:8080/api/v1/export/samples?charset=${charset}`}
-        download
-      >
+      <a href={exportSamplesURL(charset)} target="_blank" download>
         CSV Export
       </a>
     </>
@@ -115,6 +117,7 @@ const mapStateToProps = (state: Readonly<any>) => ({
 const mapDispatchToProps = {
   getSamplesRequest,
   deleteSampleRequest,
+  importSamplesRequest,
   cleanupSample,
 };
 
