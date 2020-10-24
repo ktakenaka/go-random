@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from "react";
+import React, { useMemo, useCallback, useEffect } from "react";
 import { connect } from "react-redux";
 import { Divider, Button } from "antd";
 
@@ -26,6 +26,32 @@ const HomePage = ({
   countIncrementAsync,
   changeLocation,
 }: Props) => {
+  const nonMemorizedObj = {hello: "non-memo"};
+  useEffect(() => {
+    // React uses referential equal to compare options of useEffect,
+    // that's why it's evaluated everytime
+    console.log("this is re-rendered everytime to click count");
+    console.log(nonMemorizedObj);
+  }, [nonMemorizedObj]);
+
+  const memorizedObj = useMemo(() => [1,2,3], []);
+  useEffect(() => {
+    // when using `useMemo`, memorizedObj is referential equal everytime
+    // because it's exactly the same object
+    console.log("this is called once");
+    console.log(memorizedObj);
+  }, [memorizedObj]);
+
+  const defineOnceFunc = useCallback(() => {
+    console.log("hello useCallback");
+  }, []);
+  useEffect(() => {
+    // "defineOnceFunc" is always referencial equal
+    // because I don't pass any args to `useCallback`
+    console.log("this is called once");
+    defineOnceFunc();
+  }, [defineOnceFunc]);
+
   return (
     <MainTemplate>
       <h2>HOME</h2>
