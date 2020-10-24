@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import { Layout, Menu, Button } from "antd";
+import { Layout, Menu } from "antd";
 
 import { Message } from "./styles";
 import ActionMessage from "components/organisms/ActionMessage";
@@ -11,7 +11,6 @@ type Props = {
   children: React.ReactNode;
 };
 const MainTemplate = ({ children }: Props) => {
-  const { SubMenu } = Menu;
   const { Header, Content, Sider, Footer } = Layout;
 
   // TODO: define organism
@@ -35,26 +34,7 @@ const MainTemplate = ({ children }: Props) => {
         // defaultOpenKeys={["sub1"]}
         style={{ height: "100%", borderRight: 0 }}
       >
-        <Menu.Item>
-          <Button
-            type="text"
-            size="small"
-            onClick={() => moveLocation("/home")}
-          >
-            HOME
-          </Button>
-        </Menu.Item>
-        <SubMenu key="sub1" title="Menu">
-          <Menu.Item key="1">
-            <Button
-              type="text"
-              size="small"
-              onClick={() => moveLocation("/samples")}
-            >
-              Sample
-            </Button>
-          </Menu.Item>
-        </SubMenu>
+        <Menu.Item onClick={() => moveLocation("/samples")}>Sample</Menu.Item>
       </Menu>
     </Sider>
   );

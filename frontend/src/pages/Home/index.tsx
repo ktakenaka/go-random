@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo, useCallback } from "react";
 import { connect } from "react-redux";
 import { Divider, Button } from "antd";
 
@@ -10,6 +10,14 @@ import {
   countIncrementAsync,
 } from "store/actionCreators/tutorial";
 import { changeLocation } from "store/actionCreators/app";
+
+interface Props {
+  count: number;
+  countIncrement: typeof countIncrement;
+  countDecrement: typeof countDecrement;
+  countIncrementAsync: typeof countIncrementAsync;
+  changeLocation: typeof changeLocation;
+}
 
 const HomePage = ({
   count,
@@ -37,23 +45,15 @@ const HomePage = ({
   );
 };
 
-interface Props {
-  count: number;
-  countIncrement: () => void;
-  countDecrement: () => void;
-  countIncrementAsync: () => void;
-  changeLocation: (location: string) => void;
-}
-
 const mapStateToProps = (state: Readonly<any>) => ({
   count: state.get("tutorial").count,
 });
 
 const mapDispatchToProps = {
-  countIncrement: countIncrement,
-  countDecrement: countDecrement,
-  countIncrementAsync: countIncrementAsync,
-  changeLocation: changeLocation,
+  countIncrement,
+  countDecrement,
+  countIncrementAsync,
+  changeLocation,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(HomePage);

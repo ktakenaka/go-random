@@ -34,7 +34,6 @@ const SamplePage = ({
   getSamplesRequest,
   deleteSampleRequest,
   importSamplesRequest,
-  cleanupSample,
 }: Props) => {
   const [charset, setCharset] = useState<"utf8" | "sjis">("utf8");
   const [file, setFile] = useState<UploadFile | null>();
@@ -91,7 +90,7 @@ const SamplePage = ({
           </Radio>
         ))}
       </Radio.Group>
-      <a href={exportSamplesURL(charset)} target="_blank" download>
+      <a href={exportSamplesURL(charset)} target="_blank" rel="noopener noreferrer" download>
         CSV Export
       </a>
     </>
