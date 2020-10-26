@@ -27,7 +27,7 @@ type ChatUser struct {
 // ChatHelper should be moved somewhere
 type ChatHelper struct{}
 
-//Connect connect user to user channels on redis
+// Connect connect user to user channels on redis
 // TODO: (refactor) define as ChatUser method
 func (c ChatHelper) Connect(rdb *redis.Client, name string) (*ChatUser, error) {
 	if _, err := rdb.SAdd(usersKey, name).Result(); err != nil {
@@ -161,6 +161,8 @@ func (u *ChatUser) doConnect(rdb *redis.Client, channels ...string) error {
 }
 
 // Chat send message
-func (u *ChatUser) Chat(rdb *redis.Client, channel string, content string) error {
+func (u *ChatUser) Chat(rdb *redis.Client, channel, content string) error {
+	// TODO: something to relate to user
+	fmt.Println(u)
 	return rdb.Publish(channel, content).Err()
 }
