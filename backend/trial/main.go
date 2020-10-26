@@ -84,7 +84,7 @@ func main() {
 	e = lis.Front()
 	for i := 0; i < lis.Len(); i++ {
 		fmt.Printf("iteration %v\n", i)
-		fmt.Println(fmt.Sprintf("%v", e.Value))
+		fmt.Printf("%v\n", e.Value)
 		e = e.Next()
 	}
 

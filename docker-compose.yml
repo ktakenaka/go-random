@@ -30,6 +30,14 @@ services:
       MYSQL_USER: random
       MYSQL_PASSWORD: random
       BIND-ADDRESS: 0.0.0.0
+  redis:
+    image: redis
+    restart: unless-stopped
+    ports:
+      - 16379:6379
+    volumes:
+      - redis-data:/data
+
   web:
     build:
       context: .
@@ -46,3 +54,4 @@ services:
     tty: true
 volumes: 
   db-data:
+  redis-data:
