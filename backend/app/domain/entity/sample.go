@@ -28,3 +28,5 @@ func (s *Sample) Validate() error {
 func (s *Sample) Equal(s2 *Sample) bool {
 	return deriveEqual(s, s2)
 }
+
+//

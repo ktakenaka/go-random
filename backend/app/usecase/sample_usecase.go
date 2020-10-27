@@ -32,8 +32,10 @@ func NewSampleUsecase(
 }
 
 // List list sample
-func (s *SampleUsecase) List(userID uint64) ([]entity.Sample, error) {
+func (s *SampleUsecase) List(userID uint64, search dto.JSONAPIQuery) ([]entity.Sample, error) {
 	// TODO: refactor to use gorm association
+	fmt.Println(search)
+
 	samples, err := s.repo.FindAll(userID)
 	if err != nil {
 		return nil, err
