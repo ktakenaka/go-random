@@ -36,6 +36,7 @@ func (hdl *SampleHandler) Index(ctx *gin.Context) {
 		return
 	}
 	search.Filter = ctx.QueryMap("filter")
+	search.Page = ctx.QueryMap("page")
 
 	claims := hdl.JWTClaims(ctx)
 

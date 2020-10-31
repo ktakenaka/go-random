@@ -8,11 +8,11 @@ import (
 type JSONAPIQuery struct {
 	Sort   []string          `form:"sort"`
 	Filter map[string]string `form:"filter"`
-	Page   uint              `form:"page"`
+	Page   map[string]string `form:"page"`
 }
 
 type queryBase interface {
-	SetPage(page uint)
+	SetPage(page map[string]string)
 	SetSort(sort []string)
 }
 
@@ -23,12 +23,7 @@ func (q JSONAPIQuery) Bind(query queryBase) error {
 		return err
 	}
 
-	if q.Page == 0 {
-		query.SetPage(1)
-	} else {
-		query.SetPage(q.Page)
-	}
-
+	query.SetPage(q.Page)
 	query.SetSort(q.Sort)
 	return nil
 }

@@ -36,7 +36,8 @@ func (r *SampleRepository) FindAll(userID uint64, query *entity.SampleQuery) ([]
 		s := query.Sort[i]
 		db = db.Order(s.ToOrderBy())
 	}
-	err := db.Find(&samples).Error
+
+	err := db.Limit(query.GetLimit()).Offset(query.GetOffset()).Find(&samples).Error
 
 	return samples, err
 }
