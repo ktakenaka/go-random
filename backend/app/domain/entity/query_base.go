@@ -1,9 +1,23 @@
 package entity
 
+import (
+	"fmt"
+	"strings"
+)
+
 // QueryBase for json api filters
 type QueryBase struct {
 	Page uint
-	Sort []string
+	Sort []sortItem
+}
+
+type sortItem string
+
+func (s sortItem) ToOrderBy() string {
+	if strings.HasPrefix(string(s), "-") {
+		return fmt.Sprintf("%s DESC", s[1:])
+	}
+	return string(s)
 }
 
 // SetPage setter for Page
@@ -13,5 +27,9 @@ func (q *QueryBase) SetPage(page uint) {
 
 // SetSort setter for Sort
 func (q *QueryBase) SetSort(sort []string) {
-	q.Sort = sort
+	items := make([]sortItem, len(sort))
+	for i, item := range sort {
+		items[i] = sortItem(item)
+	}
+	q.Sort = items
 }
