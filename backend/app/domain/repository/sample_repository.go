@@ -6,7 +6,7 @@ import (
 
 // SampleRepository interface for sample
 type SampleRepository interface {
-	FindAll(uesrID uint64) ([]entity.Sample, error)
+	FindAll(uesrID uint64, query *entity.SampleQuery) ([]entity.Sample, error)
 	FindByID(uesrID, id uint64) (entity.Sample, error)
 	FindByTitle(userID uint64, title string) (entity.Sample, error)
 	Create(sample *entity.Sample) (*entity.Sample, error)

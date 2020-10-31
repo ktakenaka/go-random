@@ -16,6 +16,14 @@ type Sample struct {
 	UserID    uint64  `validate:"required"`
 }
 
+// SampleQuery sql filter
+type SampleQuery struct {
+	Title   string
+	Content string
+
+	QueryBase
+}
+
 // Validate with validator v10
 func (s *Sample) Validate() error {
 	validate := validator.New()
@@ -28,5 +36,3 @@ func (s *Sample) Validate() error {
 func (s *Sample) Equal(s2 *Sample) bool {
 	return deriveEqual(s, s2)
 }
-
-//
