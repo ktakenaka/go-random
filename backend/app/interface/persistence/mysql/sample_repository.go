@@ -22,7 +22,6 @@ func (r *SampleRepository) FindAll(userID uint64, query *entity.SampleQuery) ([]
 
 	db := r.DB.Where(&entity.Sample{UserID: userID})
 
-	// TODO: goroutine in pararell
 	// TODO: define each type for query
 	if query.Title != "" {
 		db = db.Where("title LIKE ?", "%"+query.Title+"%")
@@ -31,10 +30,8 @@ func (r *SampleRepository) FindAll(userID uint64, query *entity.SampleQuery) ([]
 		db = db.Where("content LIKE ?", "%"+query.Content+"%")
 	}
 
-	// TODO: move this logic to definedtype
-	for i := 0; i < len(query.Sort); i++ {
-		s := query.Sort[i]
-		db = db.Order(s.ToOrderBy())
+	if query.IsOrderByNeeded() {
+		db = db.Order(query.ToOrderBy())
 	}
 
 	err := db.Limit(query.GetLimit()).Offset(query.GetOffset()).Find(&samples).Error
