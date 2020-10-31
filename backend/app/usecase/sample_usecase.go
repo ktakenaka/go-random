@@ -32,14 +32,14 @@ func NewSampleUsecase(
 }
 
 // List list sample
-func (s *SampleUsecase) List(userID uint64, search dto.JSONAPIQuery) ([]entity.Sample, error) {
-	var query entity.SampleQuery
-	err := search.Bind(&query)
+func (s *SampleUsecase) List(userID uint64, query *dto.JSONAPIQuery) ([]entity.Sample, error) {
+	var enQuery entity.SampleQuery
+	err := query.Bind(&enQuery)
 	if err != nil {
 		return nil, err
 	}
 
-	samples, err := s.repo.FindAll(userID, &query)
+	samples, err := s.repo.FindAll(userID, &enQuery)
 	if err != nil {
 		return nil, err
 	}

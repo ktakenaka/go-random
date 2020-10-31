@@ -39,12 +39,12 @@ func (q *QueryBase) SetPage(param map[string]string) {
 }
 
 // GetLimit pagenation limit
-func (q *QueryBase) GetLimit() int {
+func (q QueryBase) GetLimit() int {
 	return q.Page.Limit
 }
 
 // GetOffset pagenation offset
-func (q *QueryBase) GetOffset() int {
+func (q QueryBase) GetOffset() int {
 	return q.Page.Offset
 }
 
@@ -59,10 +59,23 @@ func (q *QueryBase) SetSort(sort []string) {
 	q.Sort = items
 }
 
-// ToOrderBy constructs ORDER BY clause
-func (s sortItem) ToOrderBy() string {
+// IsOrderByNeeded necessary
+func (q QueryBase) IsOrderByNeeded() bool {
+	return len(q.Sort) > 0
+}
+
+func (s sortItem) toOrderBy() string {
 	if strings.HasPrefix(string(s), "-") {
 		return fmt.Sprintf("%s DESC", s[1:])
 	}
 	return string(s)
+}
+
+// ToOrderBy constructs ORDER BY clause
+func (q QueryBase) ToOrderBy() string {
+	clauses := make([]string, len(q.Sort))
+	for i := 0; i < len(q.Sort); i++ {
+		clauses[i] = q.Sort[i].toOrderBy()
+	}
+	return strings.Join(clauses, ",")
 }

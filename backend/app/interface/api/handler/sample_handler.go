@@ -30,18 +30,15 @@ func (hdl *SampleHandler) Index(ctx *gin.Context) {
 		hdl.SetError(ctx, err)
 	}()
 
-	// TODO: refactor, put the login inside presenter
-	var search dto.JSONAPIQuery
-	if err = ctx.BindQuery(&search); err != nil {
+	q, err := dto.NewJSONAPIQueryFromContext(ctx)
+	if err != nil {
 		return
 	}
-	search.Filter = ctx.QueryMap("filter")
-	search.Page = ctx.QueryMap("page")
 
 	claims := hdl.JWTClaims(ctx)
 
 	suCase := registry.InitializeSampleUsecase()
-	samples, err := suCase.List(claims.UserID, search)
+	samples, err := suCase.List(claims.UserID, q)
 	if err != nil {
 		return
 	}
