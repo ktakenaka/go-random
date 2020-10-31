@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gocarina/gocsv"
 	"github.com/jinzhu/copier"
+
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/backend/app/registry"
 	"github.com/ktakenaka/go-random/backend/app/usecase/dto"
@@ -24,16 +25,23 @@ func NewSampleHandler() *SampleHandler {
 
 // Index returns the list of samples
 func (hdl *SampleHandler) Index(ctx *gin.Context) {
-	suCase := registry.InitializeSampleUsecase()
-
 	var err error
 	defer func() {
 		hdl.SetError(ctx, err)
 	}()
 
+	// TODO: refactor, put the login inside presenter
+	var search dto.JSONAPIQuery
+	if err = ctx.BindQuery(&search); err != nil {
+		return
+	}
+	search.Filter = ctx.QueryMap("filter")
+	search.Page = ctx.QueryMap("page")
+
 	claims := hdl.JWTClaims(ctx)
 
-	samples, err := suCase.List(claims.UserID)
+	suCase := registry.InitializeSampleUsecase()
+	samples, err := suCase.List(claims.UserID, search)
 	if err != nil {
 		return
 	}

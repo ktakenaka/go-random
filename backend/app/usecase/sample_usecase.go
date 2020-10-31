@@ -32,9 +32,14 @@ func NewSampleUsecase(
 }
 
 // List list sample
-func (s *SampleUsecase) List(userID uint64) ([]entity.Sample, error) {
-	// TODO: refactor to use gorm association
-	samples, err := s.repo.FindAll(userID)
+func (s *SampleUsecase) List(userID uint64, search dto.JSONAPIQuery) ([]entity.Sample, error) {
+	var query entity.SampleQuery
+	err := search.Bind(&query)
+	if err != nil {
+		return nil, err
+	}
+
+	samples, err := s.repo.FindAll(userID, &query)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +106,7 @@ func (s *SampleUsecase) Import(samples []dto.ImportSample) error {
 // ListForExport for csv export
 func (s *SampleUsecase) ListForExport(userID uint64) ([]dto.ExportSample, error) {
 	// TODO: refactor to use gorm association
-	samples, err := s.repo.FindAll(userID)
+	samples, err := s.repo.FindAll(userID, &entity.SampleQuery{})
 	if err != nil {
 		return nil, err
 	}

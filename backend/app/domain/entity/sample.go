@@ -16,6 +16,16 @@ type Sample struct {
 	UserID    uint64  `validate:"required"`
 }
 
+// SampleQuery sql filter
+type SampleQuery struct {
+	Title   string
+	Content string
+
+	QueryBase
+}
+
+// TODO: define the method to construct query to SampleQuery
+
 // Validate with validator v10
 func (s *Sample) Validate() error {
 	validate := validator.New()

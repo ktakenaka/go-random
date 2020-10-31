@@ -17,9 +17,28 @@ func NewSampleRepository(db *gorm.DB) *SampleRepository {
 }
 
 // FindAll find all samples
-func (r *SampleRepository) FindAll(userID uint64) ([]entity.Sample, error) {
+func (r *SampleRepository) FindAll(userID uint64, query *entity.SampleQuery) ([]entity.Sample, error) {
 	samples := make([]entity.Sample, 0)
-	err := r.DB.Where(&entity.Sample{UserID: userID}).Find(&samples).Error
+
+	db := r.DB.Where(&entity.Sample{UserID: userID})
+
+	// TODO: goroutine in pararell
+	// TODO: define each type for query
+	if query.Title != "" {
+		db = db.Where("title LIKE ?", "%"+query.Title+"%")
+	}
+	if query.Content != "" {
+		db = db.Where("content LIKE ?", "%"+query.Content+"%")
+	}
+
+	// TODO: move this logic to definedtype
+	for i := 0; i < len(query.Sort); i++ {
+		s := query.Sort[i]
+		db = db.Order(s.ToOrderBy())
+	}
+
+	err := db.Limit(query.GetLimit()).Offset(query.GetOffset()).Find(&samples).Error
+
 	return samples, err
 }
 
