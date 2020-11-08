@@ -2,8 +2,6 @@ package dto
 
 import (
 	"strings"
-
-	"github.com/mitchellh/mapstructure"
 )
 
 // JSONAPIQuery for search results
@@ -40,11 +38,6 @@ type queryBase interface {
 
 // Bind convert to the format of query
 func (q JSONAPIQuery) Bind(query queryBase) error {
-	err := mapstructure.Decode(q.Filter, query)
-	if err != nil {
-		return err
-	}
-
 	query.SetFilters(q.Filter)
 	query.SetPage(q.Page)
 	query.SetSort(q.Sort)

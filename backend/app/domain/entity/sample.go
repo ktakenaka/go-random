@@ -18,9 +18,6 @@ type Sample struct {
 
 // SampleQuery sql filter
 type SampleQuery struct {
-	Title   string `column:"title"`
-	Content string `column:"content"`
-
 	QueryBase
 }
 

@@ -21,10 +21,12 @@ func (r *SampleRepository) FindAll(userID uint64, query *entity.SampleQuery) ([]
 	samples := make([]entity.Sample, 0)
 
 	tx := r.DB.Where(&entity.Sample{UserID: userID})
-	query.AddWhereClause([]string{"title", "content", "created_at", "updated_at"}, tx)
 
-	if query.IsOrderByNeeded() {
-		tx.Order(query.ToOrderBy())
+	columns := []string{"title", "content", "created_at", "updated_at"}
+	query.AddWhereClause(columns, tx)
+
+	if order := query.ToOrderBy(columns); order != "" {
+		tx.Order(order)
 	}
 
 	err := tx.Limit(query.GetLimit()).Offset(query.GetOffset()).Find(&samples).Error
