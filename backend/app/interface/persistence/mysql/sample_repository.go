@@ -22,16 +22,11 @@ func (r *SampleRepository) FindAll(userID uint64, query *entity.SampleQuery) ([]
 
 	db := r.DB.Where(&entity.Sample{UserID: userID})
 
-	// TODO: define each type for query
-	if query.Title != "" {
-		db = db.Where("title LIKE ?", "%"+query.Title+"%")
-	}
-	if query.Content != "" {
-		db = db.Where("content LIKE ?", "%"+query.Content+"%")
-	}
+	query.AddClause("title", db)
+	query.AddClause("content", db)
 
 	if query.IsOrderByNeeded() {
-		db = db.Order(query.ToOrderBy())
+		db.Order(query.ToOrderBy())
 	}
 
 	err := db.Limit(query.GetLimit()).Offset(query.GetOffset()).Find(&samples).Error
