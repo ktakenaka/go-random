@@ -5,7 +5,7 @@ import { TypeSample } from "constants/type";
 export const list = (): Promise<AxiosResponse<any>> => {
   return API.get("/samples");
 };
-// samples?sort=title,-content&filter[title]=title&filter[content]=content&page[limit]=20&page[offset]=1
+// samples?sort=title,-content&filter[title]=eq:title&filter[content]=in:a,b&page[limit]=20&page[offset]=1
 
 export const get = (id: number): Promise<AxiosResponse<any>> => {
   return API.get(`/samples/${id}`);

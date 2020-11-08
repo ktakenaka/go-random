@@ -33,6 +33,7 @@ func NewJSONAPIQueryFromContext(ctx ginContext) (*JSONAPIQuery, error) {
 }
 
 type queryBase interface {
+	SetFilters(filter map[string]string)
 	SetPage(page map[string]string)
 	SetSort(sort []string)
 }
@@ -44,6 +45,7 @@ func (q JSONAPIQuery) Bind(query queryBase) error {
 		return err
 	}
 
+	query.SetFilters(q.Filter)
 	query.SetPage(q.Page)
 	query.SetSort(q.Sort)
 	return nil
