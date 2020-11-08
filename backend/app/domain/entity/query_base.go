@@ -16,7 +16,7 @@ const (
 type QueryBase struct {
 	Filters map[string]filter
 	Page    page
-	Sort    []sortItem
+	Sort    map[string]string /*column: ASC or DESC*/
 }
 
 // ========== Filters ==========
@@ -113,29 +113,25 @@ func (q *QueryBase) SetFilters(params map[string]string) {
 	q.Filters = result
 }
 
+// AddWhereClause add conditions
 // FIXME: shouldn't use gorm in entity for the point of clean architecture
-// It may be one option to move these logics to repository or pkg
-type gormDB interface {
-	Where(query interface{}, args ...interface{}) (tx *gorm.DB)
-}
+func (q *QueryBase) AddWhereClause(columns []string, tx *gorm.DB) {
+	for _, c := range columns {
+		f, ok := q.Filters[c]
+		if !ok {
+			continue
+		}
 
-// AddClause add conditions
-// TODO: enable to convert other types, int, time...
-func (q *QueryBase) AddClause(column string, db gormDB) {
-	f, ok := q.Filters[column]
-	if !ok {
-		return
+		if f.Condition == btwClause {
+			tx.Where(
+				c+" "+string(f.Condition),
+				f.Value.([]string)[0],
+				f.Value.([]string)[1],
+			)
+			continue
+		}
+		tx.Where(c+" "+string(f.Condition), f.Value)
 	}
-
-	if f.Condition == btwClause {
-		db.Where(
-			column+" "+string(f.Condition),
-			f.Value.([]string)[0],
-			f.Value.([]string)[1],
-		)
-		return
-	}
-	db.Where(column+" "+string(f.Condition), f.Value)
 }
 
 // ========== Page ==========
@@ -172,35 +168,37 @@ func (q QueryBase) GetOffset() int {
 }
 
 // ========== Sort ==========
-type sortItem string
+const (
+	orderTypeASC  = "ASC"
+	orderTypeDESC = "DESC"
+)
 
 // SetSort setter for Sort
 func (q *QueryBase) SetSort(sort []string) {
-	items := make([]sortItem, len(sort))
-	for i, item := range sort {
-		items[i] = sortItem(item)
+	items := make(map[string]string)
+
+	for _, item := range sort {
+		if item == "" || item == "-" {
+			continue
+		}
+
+		if strings.HasPrefix(item, "-") {
+			items[item[1:]] = orderTypeDESC
+			continue
+		}
+
+		items[item] = orderTypeASC
 	}
 	q.Sort = items
 }
 
-// IsOrderByNeeded necessary
-func (q QueryBase) IsOrderByNeeded() bool {
-	return len(q.Sort) > 0
-}
-
-// TODO: prevent from SQL Injection
-func (s sortItem) toOrderBy() string {
-	if strings.HasPrefix(string(s), "-") {
-		return fmt.Sprintf("%s DESC", s[1:])
-	}
-	return string(s)
-}
-
 // ToOrderBy constructs ORDER BY clause
-func (q QueryBase) ToOrderBy() string {
-	clauses := make([]string, len(q.Sort))
-	for i := 0; i < len(q.Sort); i++ {
-		clauses[i] = q.Sort[i].toOrderBy()
+func (q QueryBase) ToOrderBy(columns []string) string {
+	var clauses []string
+	for _, c := range columns {
+		if typ, ok := q.Sort[c]; ok {
+			clauses = append(clauses, fmt.Sprintf("%s %s", c, typ))
+		}
 	}
 	return strings.Join(clauses, ",")
 }
