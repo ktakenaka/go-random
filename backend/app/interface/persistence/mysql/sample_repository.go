@@ -20,16 +20,14 @@ func NewSampleRepository(db *gorm.DB) *SampleRepository {
 func (r *SampleRepository) FindAll(userID uint64, query *entity.SampleQuery) ([]entity.Sample, error) {
 	samples := make([]entity.Sample, 0)
 
-	db := r.DB.Where(&entity.Sample{UserID: userID})
-
-	query.AddClause("title", db)
-	query.AddClause("content", db)
+	tx := r.DB.Where(&entity.Sample{UserID: userID})
+	query.AddWhereClause([]string{"title", "content", "created_at", "updated_at"}, tx)
 
 	if query.IsOrderByNeeded() {
-		db.Order(query.ToOrderBy())
+		tx.Order(query.ToOrderBy())
 	}
 
-	err := db.Limit(query.GetLimit()).Offset(query.GetOffset()).Find(&samples).Error
+	err := tx.Limit(query.GetLimit()).Offset(query.GetOffset()).Find(&samples).Error
 
 	return samples, err
 }

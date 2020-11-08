@@ -113,29 +113,25 @@ func (q *QueryBase) SetFilters(params map[string]string) {
 	q.Filters = result
 }
 
+// AddWhereClause add conditions
 // FIXME: shouldn't use gorm in entity for the point of clean architecture
-// It may be one option to move these logics to repository or pkg
-type gormDB interface {
-	Where(query interface{}, args ...interface{}) (tx *gorm.DB)
-}
+func (q *QueryBase) AddWhereClause(columns []string, tx *gorm.DB) {
+	for _, c := range columns {
+		f, ok := q.Filters[c]
+		if !ok {
+			continue
+		}
 
-// AddClause add conditions
-// TODO: enable to convert other types, int, time...
-func (q *QueryBase) AddClause(column string, db gormDB) {
-	f, ok := q.Filters[column]
-	if !ok {
-		return
+		if f.Condition == btwClause {
+			tx.Where(
+				c+" "+string(f.Condition),
+				f.Value.([]string)[0],
+				f.Value.([]string)[1],
+			)
+			continue
+		}
+		tx.Where(c+" "+string(f.Condition), f.Value)
 	}
-
-	if f.Condition == btwClause {
-		db.Where(
-			column+" "+string(f.Condition),
-			f.Value.([]string)[0],
-			f.Value.([]string)[1],
-		)
-		return
-	}
-	db.Where(column+" "+string(f.Condition), f.Value)
 }
 
 // ========== Page ==========
