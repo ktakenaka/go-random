@@ -20,10 +20,10 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
 	github.com/json-iterator/go v1.1.10 // indirect
-	github.com/mitchellh/mapstructure v1.3.3
 	github.com/onsi/ginkgo v1.14.2 // indirect
 	github.com/onsi/gomega v1.10.3 // indirect
 	github.com/pquerna/cachecontrol v0.0.0-20200819021114-67c6ae64274f // indirect
+	github.com/sirupsen/logrus v1.7.0
 	github.com/stretchr/testify v1.6.1
 	github.com/urfave/cli/v2 v2.2.0
 	github.com/utrack/gin-csrf v0.0.0-20190424104817-40fb8d2c8fca
