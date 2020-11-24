@@ -11,7 +11,7 @@ go-lint:
 	docker-compose exec app golangci-lint run
 
 go-lint-fmt:
-	docker-compose exec app gofmt -w app
+	docker-compose exec app gofmt -w app pkg
 
 migrate-new:
 	docker-compose exec app sql-migrations new ${name}
