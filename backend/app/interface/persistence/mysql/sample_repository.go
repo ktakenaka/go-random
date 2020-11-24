@@ -3,6 +3,7 @@ package mysql
 import (
 	"github.com/ktakenaka/go-random/backend/app/domain/entity"
 	"github.com/ktakenaka/go-random/backend/app/domain/repository"
+	"github.com/ktakenaka/go-random/backend/app/errors"
 	"gorm.io/gorm"
 )
 
@@ -46,8 +47,11 @@ func (r *SampleRepository) FindByID(userID, id uint64) (entity.Sample, error) {
 	sample := entity.Sample{UserID: userID}
 	sample.ID = id
 	err := r.DB.Where("user_id=?", sample.UserID).Take(&sample).Error
+	if err != nil {
+		return sample, errors.Wrap("mysql", err)
+	}
 
-	return sample, err
+	return sample, nil
 }
 
 // Create creates sample

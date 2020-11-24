@@ -8,6 +8,7 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/domain/entity"
 	"github.com/ktakenaka/go-random/backend/app/domain/repository"
 	"github.com/ktakenaka/go-random/backend/app/domain/service"
+	"github.com/ktakenaka/go-random/backend/app/errors"
 	"github.com/ktakenaka/go-random/backend/app/usecase/dto"
 )
 
@@ -36,12 +37,12 @@ func (s *SampleUsecase) List(userID uint64, query *dto.JSONAPIQuery) ([]entity.S
 	var enQuery entity.SampleQuery
 	err := query.Bind(&enQuery)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(fmt.Sprintf("query: %v", query), err)
 	}
 
 	samples, err := s.repo.FindAll(userID, &enQuery)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(fmt.Sprintf("query: %v", enQuery), err)
 	}
 
 	return samples, nil
@@ -50,7 +51,10 @@ func (s *SampleUsecase) List(userID uint64, query *dto.JSONAPIQuery) ([]entity.S
 // Find find
 func (s *SampleUsecase) Find(userID, id uint64) (entity.Sample, error) {
 	sample, err := s.repo.FindByID(userID, id)
-	return sample, err
+	if err != nil {
+		return sample, errors.Wrap(fmt.Sprintf("userID: %d, ID: %d", userID, id), err)
+	}
+	return sample, nil
 }
 
 // Create create

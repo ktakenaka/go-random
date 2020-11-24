@@ -11,6 +11,7 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/backend/app/registry"
 	"github.com/ktakenaka/go-random/backend/app/usecase/dto"
+	"github.com/ktakenaka/go-random/backend/pkg/logger"
 )
 
 // SampleHandler is the sample
@@ -58,6 +59,9 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 
 	var err error
 	defer func() {
+		if err != nil {
+			logger.Error(err)
+		}
 		hdl.SetError(ctx, err)
 	}()
 
