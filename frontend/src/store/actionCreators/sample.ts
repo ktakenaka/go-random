@@ -33,7 +33,7 @@ export const submitSampleFailure = (err: any) => {
   return { type: SUBMIT_SAMPLE_FAILURE, payload: err };
 };
 
-export const updateSampleRequest = (id: number, sample: any) => {
+export const updateSampleRequest = (id: string, sample: any) => {
   return { type: UPDATE_SAMPLE_REQUEST, id: id, payload: sample };
 };
 
@@ -57,7 +57,7 @@ export const getSampleFailure = () => {
   return { type: GET_SAMPLE_FAILURE };
 };
 
-export const getSampleRequest = (id: number) => {
+export const getSampleRequest = (id: string) => {
   return { type: GET_SAMPLE_REQUEST, id: id };
 };
 
@@ -69,7 +69,7 @@ export const getSamplesFailure = () => {
   return { type: GET_SAMPLES_FAILURE };
 };
 
-export const deleteSampleRequest = (id: number) => {
+export const deleteSampleRequest = (id: string) => {
   return { type: DELETE_SAMPLE_REQUEST, id: id };
 };
 

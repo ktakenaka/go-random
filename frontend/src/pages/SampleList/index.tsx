@@ -76,7 +76,7 @@ const SamplePage = ({
     setCharset(e.target.value);
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = (id: string) => {
     deleteSampleRequest(id);
   };
 
@@ -90,7 +90,12 @@ const SamplePage = ({
           </Radio>
         ))}
       </Radio.Group>
-      <a href={exportSamplesURL(charset)} target="_blank" rel="noopener noreferrer" download>
+      <a
+        href={exportSamplesURL(charset)}
+        target="_blank"
+        rel="noopener noreferrer"
+        download
+      >
         CSV Export
       </a>
     </>

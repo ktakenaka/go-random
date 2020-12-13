@@ -8,7 +8,7 @@ type Props = {
   header?: string;
   samples: Array<TypeSample>;
   footer?: React.ReactNode;
-  onDelete: (id: number) => void;
+  onDelete: (id: string) => void;
 };
 
 const SampleList = ({ samples, header, footer, onDelete }: Props) => {
@@ -31,7 +31,7 @@ const SampleList = ({ samples, header, footer, onDelete }: Props) => {
             <Popconfirm
               key={item.id + "delete"}
               title="Are you sure delete this sample?"
-              onConfirm={() => onDelete(Number(item.id))}
+              onConfirm={() => onDelete(String(item.id))}
               okText="Yes"
               cancelText="No"
             >

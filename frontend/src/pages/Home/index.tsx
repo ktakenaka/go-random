@@ -26,7 +26,7 @@ const HomePage = ({
   countIncrementAsync,
   changeLocation,
 }: Props) => {
-  const nonMemorizedObj = {hello: "non-memo"};
+  const nonMemorizedObj = { hello: "non-memo" };
   useEffect(() => {
     // React uses referential equal to compare options of useEffect,
     // that's why it's evaluated everytime
@@ -34,7 +34,7 @@ const HomePage = ({
     console.log(nonMemorizedObj);
   }, [nonMemorizedObj]);
 
-  const memorizedObj = useMemo(() => [1,2,3], []);
+  const memorizedObj = useMemo(() => [1, 2, 3], []);
   useEffect(() => {
     // when using `useMemo`, memorizedObj is referential equal everytime
     // because it's exactly the same object
