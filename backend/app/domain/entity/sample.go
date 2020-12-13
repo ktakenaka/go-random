@@ -8,12 +8,12 @@ import (
 
 // Sample entity
 type Sample struct {
-	ID        uint64
+	Base
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	Title     string  `validate:"required,max=20"`
 	Content   *string `validate:"max=100"`
-	UserID    uint64  `validate:"required"`
+	UserID    string  `validate:"required"`
 }
 
 // SampleQuery sql filter

@@ -18,7 +18,7 @@ func NewSampleRepository(db *gorm.DB) *SampleRepository {
 }
 
 // FindAll find all samples
-func (r *SampleRepository) FindAll(userID uint64, query *entity.SampleQuery) ([]entity.Sample, error) {
+func (r *SampleRepository) FindAll(userID string, query *entity.SampleQuery) ([]entity.Sample, error) {
 	samples := make([]entity.Sample, 0)
 
 	tx := r.DB.Where(&entity.Sample{UserID: userID})
@@ -36,17 +36,16 @@ func (r *SampleRepository) FindAll(userID uint64, query *entity.SampleQuery) ([]
 }
 
 // FindByTitle find one sample from title
-func (r *SampleRepository) FindByTitle(userID uint64, title string) (entity.Sample, error) {
+func (r *SampleRepository) FindByTitle(userID string, title string) (entity.Sample, error) {
 	var sample entity.Sample
 	err := r.DB.Where(&entity.Sample{UserID: userID, Title: title}).First(&sample).Error
 	return sample, err
 }
 
 // FindByID find on sample from id
-func (r *SampleRepository) FindByID(userID, id uint64) (entity.Sample, error) {
+func (r *SampleRepository) FindByID(userID, id string) (entity.Sample, error) {
 	sample := entity.Sample{UserID: userID}
-	sample.ID = id
-	err := r.DB.Where("user_id=?", sample.UserID).Take(&sample).Error
+	err := r.DB.Where("user_id=?", sample.UserID).Take(&sample, id).Error
 	if err != nil {
 		return sample, errors.Wrap("mysql", err)
 	}
@@ -65,10 +64,9 @@ func (r *SampleRepository) Create(sample *entity.Sample) (*entity.Sample, error)
 }
 
 // Delete delete
-func (r *SampleRepository) Delete(userID, id uint64) error {
+func (r *SampleRepository) Delete(userID, id string) error {
 	sample := entity.Sample{UserID: userID}
-	sample.ID = id
-	err := r.DB.Where("user_id=?", sample.UserID).Delete(&sample).Error
+	err := r.DB.Where("user_id=?", sample.UserID).Delete(sample, id).Error
 	return err
 }
 

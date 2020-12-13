@@ -47,7 +47,7 @@ func (uc *SignInUsecase) Execute(code, nonce string) (aTkn, rTkn, csrfTkn string
 	}
 
 	claims := jwtutil.AuthClaims{
-		UserID:    user.ID, //TODO: make user_id hash
+		UserID:    user.ID.String(), //TODO: make user_id hash
 		IssueTime: time.Now(),
 		CSRFToken: csrfTkn,
 	}

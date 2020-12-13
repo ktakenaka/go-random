@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/csv"
-	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gocarina/gocsv"
@@ -65,11 +64,7 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 		hdl.SetError(ctx, err)
 	}()
 
-	id, err := strconv.ParseUint(ctx.Params.ByName("id"), 10, 64)
-	if err != nil {
-		return
-	}
-
+	id := ctx.Params.ByName("id")
 	claims := hdl.JWTClaims(ctx)
 
 	sample, err := suCase.Find(claims.UserID, id)
@@ -126,11 +121,7 @@ func (hdl *SampleHandler) Update(ctx *gin.Context) {
 		return
 	}
 
-	id, err := strconv.ParseUint(ctx.Params.ByName("id"), 10, 64)
-	if err != nil {
-		return
-	}
-
+	id := ctx.Params.ByName("id")
 	dtoReq.ID = id
 
 	claims := hdl.JWTClaims(ctx)
@@ -154,11 +145,7 @@ func (hdl *SampleHandler) Delete(ctx *gin.Context) {
 		hdl.SetError(ctx, err)
 	}()
 
-	id, err := strconv.ParseUint(ctx.Params.ByName("id"), 10, 64)
-	if err != nil {
-		return
-	}
-
+	id := ctx.Params.ByName("id")
 	claims := hdl.JWTClaims(ctx)
 
 	if err = suCase.Delete(claims.UserID, id); err != nil {
