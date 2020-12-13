@@ -28,13 +28,14 @@ type Base struct {
 }
 
 // BeforeCreate define hook used by GORM
-func (b *Base) BeforeCreate(tx *gorm.DB) {
+func (b *Base) BeforeCreate(_ *gorm.DB) error {
 	if !b.ID.IsZero() {
-		return
+		return nil
 	}
 
 	t := time.Now()
 	entropy := ulid.Monotonic(rand.Reader, 0)
 	id := ulid.MustNew(ulid.Timestamp(t), entropy)
 	b.ID = ID(id.String())
+	return nil
 }

@@ -6,30 +6,30 @@ import "time"
 type CreateSample struct {
 	Title   string
 	Content *string
-	UserID  uint64
+	UserID  string
 }
 
 // UpdateSample data transfer object
 type UpdateSample struct {
-	ID      uint64
+	ID      string
 	Title   string
 	Content *string
-	UserID  uint64
+	UserID  string
 }
 
 // ExportSample for csv export
 type ExportSample struct {
-	ID        uint64
+	ID        string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	Title     string
 	Content   *string
-	UserID    uint64
+	UserID    string
 }
 
 // ImportSample for csv import
 type ImportSample struct {
 	Title   string
 	Content *string
-	UserID  uint64
+	UserID  string
 }

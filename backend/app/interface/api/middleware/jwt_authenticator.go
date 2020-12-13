@@ -156,5 +156,5 @@ func ExtractClaims(ctx *gin.Context) (JWTClaims, error) {
 
 // JWTClaims is a data transfer object
 type JWTClaims struct {
-	UserID uint64
+	UserID string
 }

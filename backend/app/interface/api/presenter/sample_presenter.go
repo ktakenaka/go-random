@@ -10,7 +10,7 @@ type SampleRequest struct {
 
 // SampleResponse for response
 type SampleResponse struct {
-	ID           uint64  `json:"id"`
+	ID           string  `json:"id"`
 	Title        string  `json:"title"`
 	Content      *string `json:"content"`
 	CreatedAtUTC string  `json:"created_at"`
@@ -29,12 +29,12 @@ func (s *SampleResponse) UpdatedAt(updatedAt time.Time) {
 
 // SampleCSVPresenter for CSV import/export
 type SampleCSVPresenter struct {
-	ID           uint64  `csv:"ID"`
+	ID           string  `csv:"ID"`
 	CreatedAtStr string  `csv:"登録日付"`
 	UpdatedAtStr string  `csv:"更新日付"`
 	Title        string  `csv:"タイトル"`
 	Content      *string `csv:"コンテント"`
-	UserID       uint64  `csv:"ユーザーID"` // TODO: make this to UserName
+	UserID       string  `csv:"ユーザーID"` // TODO: make this to UserName
 }
 
 // CreatedAt convert

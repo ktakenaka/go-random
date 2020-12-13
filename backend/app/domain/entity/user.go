@@ -6,18 +6,16 @@ import (
 	validator "github.com/go-playground/validator/v10"
 )
 
+// User entity
 type User struct {
-	ID        uint64 `gorm:"primary_key"`
+	Base
 	GoogleSub string `validate:"required"`
 	Email     string `validate:"required"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
-func (u *User) TableName() string {
-	return "users"
-}
-
+// Validate validation
 func (u *User) Validate() error {
 	validate := validator.New()
 	err := validate.Struct(u)

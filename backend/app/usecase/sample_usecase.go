@@ -33,7 +33,7 @@ func NewSampleUsecase(
 }
 
 // List list sample
-func (s *SampleUsecase) List(userID uint64, query *dto.JSONAPIQuery) ([]entity.Sample, error) {
+func (s *SampleUsecase) List(userID string, query *dto.JSONAPIQuery) ([]entity.Sample, error) {
 	var enQuery entity.SampleQuery
 	err := query.Bind(&enQuery)
 	if err != nil {
@@ -49,7 +49,7 @@ func (s *SampleUsecase) List(userID uint64, query *dto.JSONAPIQuery) ([]entity.S
 }
 
 // Find find
-func (s *SampleUsecase) Find(userID, id uint64) (entity.Sample, error) {
+func (s *SampleUsecase) Find(userID, id string) (entity.Sample, error) {
 	sample, err := s.repo.FindByID(userID, id)
 	if err != nil {
 		return sample, errors.Wrap(fmt.Sprintf("userID: %d, ID: %d", userID, id), err)
@@ -92,7 +92,7 @@ func (s *SampleUsecase) Update(req dto.UpdateSample) (err error) {
 }
 
 // Delete delete
-func (s *SampleUsecase) Delete(userID, id uint64) error {
+func (s *SampleUsecase) Delete(userID, id string) error {
 	err := s.repo.Delete(userID, id)
 	return err
 }
@@ -108,7 +108,7 @@ func (s *SampleUsecase) Import(samples []dto.ImportSample) error {
 }
 
 // ListForExport for csv export
-func (s *SampleUsecase) ListForExport(userID uint64) ([]dto.ExportSample, error) {
+func (s *SampleUsecase) ListForExport(userID string) ([]dto.ExportSample, error) {
 	// TODO: refactor to use gorm association
 	samples, err := s.repo.FindAll(userID, &entity.SampleQuery{})
 	if err != nil {
