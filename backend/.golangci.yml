@@ -131,9 +131,8 @@ run:
   skip-dirs:
     - test-results
     - db/migrations
-
-  # skip-files:
-    # - routers/commentsRouter_controllers.go
+    - vendor
+    - sandbox
 
 # golangci.com configuration
 # https://github.com/golangci/golangci/wiki/Configuration

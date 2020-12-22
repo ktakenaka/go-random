@@ -52,7 +52,7 @@ func (s *SampleUsecase) List(userID string, query *dto.JSONAPIQuery) ([]entity.S
 func (s *SampleUsecase) Find(userID, id string) (entity.Sample, error) {
 	sample, err := s.repo.FindByID(userID, id)
 	if err != nil {
-		return sample, errors.Wrap(fmt.Sprintf("userID: %d, ID: %d", userID, id), err)
+		return sample, errors.Wrap(fmt.Sprintf("userID: %v, ID: %v", userID, id), err)
 	}
 	return sample, nil
 }

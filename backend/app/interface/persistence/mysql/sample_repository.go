@@ -36,7 +36,7 @@ func (r *SampleRepository) FindAll(userID string, query *entity.SampleQuery) ([]
 }
 
 // FindByTitle find one sample from title
-func (r *SampleRepository) FindByTitle(userID string, title string) (entity.Sample, error) {
+func (r *SampleRepository) FindByTitle(userID, title string) (entity.Sample, error) {
 	var sample entity.Sample
 	err := r.DB.Where(&entity.Sample{UserID: userID, Title: title}).First(&sample).Error
 	return sample, err
