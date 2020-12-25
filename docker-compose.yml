@@ -48,7 +48,7 @@ services:
       REACT_APP_API_BASE_URL: http://127.0.0.1:8080
       REACT_APP_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       REACT_APP_GOOGLE_REDIRECT_URI: http://127.0.0.1:3000/google/callback
-    command: sh -c "yarn start"
+    command: sh -c "yarn install && yarn start"
     ports:
       - "3000:3000"
     tty: true
