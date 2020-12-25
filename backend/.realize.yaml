@@ -1,0 +1,23 @@
+settings:
+  legacy:
+    force: false
+    interval: 1s
+schema:
+- name: go-random
+  path: .
+  commands:
+    install:
+      status: true
+      method: go install -race ./cmd/srv/...
+    run:
+      status: true
+      method: /go/bin/srv
+  watcher:
+    extensions:
+      - go
+    paths:
+      - /
+    ignored_paths:
+      - .git
+      - sandbox
+      - vendor
