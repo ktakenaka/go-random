@@ -3,7 +3,6 @@ package middleware
 import (
 	"errors"
 	"fmt"
-	"log"
 	"net/http"
 	"regexp"
 	"strconv"
@@ -34,7 +33,6 @@ func NewResponseFormatter() ResponseFormatter {
 func (m *ResponseFormatter) PanicRecovery(ctx *gin.Context) {
 	defer func() {
 		if p := recover(); p != nil {
-			log.Print(p)
 			meta := presenter.MetaCodePair[presenter.CodePanic]
 			res := presenter.Response{
 				Meta: meta,
@@ -96,9 +94,6 @@ func SetErrorResponse(ctx *gin.Context, err error) {
 	if err == nil {
 		return
 	}
-
-	// TODO: Wrap errors at the place to happen => logging => easy to find the place
-	log.Println(err)
 
 	// It's difficult to set meta in handler because it's not clear until we accept errors.
 	// Especially the errors from packages.

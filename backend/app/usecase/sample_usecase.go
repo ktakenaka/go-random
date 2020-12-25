@@ -8,8 +8,8 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/domain/entity"
 	"github.com/ktakenaka/go-random/backend/app/domain/repository"
 	"github.com/ktakenaka/go-random/backend/app/domain/service"
-	"github.com/ktakenaka/go-random/backend/app/errors"
 	"github.com/ktakenaka/go-random/backend/app/usecase/dto"
+	"golang.org/x/xerrors"
 )
 
 // SampleUsecase usecase for sample
@@ -37,12 +37,14 @@ func (s *SampleUsecase) List(userID string, query *dto.JSONAPIQuery) ([]entity.S
 	var enQuery entity.SampleQuery
 	err := query.Bind(&enQuery)
 	if err != nil {
-		return nil, errors.Wrap(fmt.Sprintf("query: %v", query), err)
+		err = xerrors.Errorf("query: %v, %w", query, err)
+		return nil, err
 	}
 
 	samples, err := s.repo.FindAll(userID, &enQuery)
 	if err != nil {
-		return nil, errors.Wrap(fmt.Sprintf("query: %v", enQuery), err)
+		err = xerrors.Errorf("query: %v, %w", query, err)
+		return nil, err
 	}
 
 	return samples, nil
@@ -52,7 +54,8 @@ func (s *SampleUsecase) List(userID string, query *dto.JSONAPIQuery) ([]entity.S
 func (s *SampleUsecase) Find(userID, id string) (entity.Sample, error) {
 	sample, err := s.repo.FindByID(userID, id)
 	if err != nil {
-		return sample, errors.Wrap(fmt.Sprintf("userID: %v, ID: %v", userID, id), err)
+		err = xerrors.Errorf("user_id: %v, id: %v, %w", userID, id, err)
+		return sample, err
 	}
 	return sample, nil
 }
@@ -61,6 +64,7 @@ func (s *SampleUsecase) Find(userID, id string) (entity.Sample, error) {
 func (s *SampleUsecase) Create(req dto.CreateSample) error {
 	sample := &entity.Sample{}
 	if err := copier.Copy(sample, &req); err != nil {
+		err = xerrors.Errorf("request: %v, %w", req, err)
 		return err
 	}
 
@@ -69,6 +73,9 @@ func (s *SampleUsecase) Create(req dto.CreateSample) error {
 	// 	return err
 	// }
 	_, err := s.repo.Create(sample)
+	if err != nil {
+		err = xerrors.Errorf("req: %v, %w", req, err)
+	}
 	return err
 }
 
@@ -76,6 +83,7 @@ func (s *SampleUsecase) Create(req dto.CreateSample) error {
 func (s *SampleUsecase) Update(req dto.UpdateSample) (err error) {
 	sample := &entity.Sample{}
 	if err := copier.Copy(sample, &req); err != nil {
+		err = xerrors.Errorf("request: %v, %w", req, err)
 		return err
 	}
 
@@ -94,6 +102,9 @@ func (s *SampleUsecase) Update(req dto.UpdateSample) (err error) {
 // Delete delete
 func (s *SampleUsecase) Delete(userID, id string) error {
 	err := s.repo.Delete(userID, id)
+	if err != nil {
+		err = xerrors.Errorf("user_id: %v, %w", userID, err)
+	}
 	return err
 }
 
@@ -117,6 +128,7 @@ func (s *SampleUsecase) ListForExport(userID string) ([]dto.ExportSample, error)
 
 	var dtoSamples []dto.ExportSample
 	if err := copier.Copy(&dtoSamples, &samples); err != nil {
+		err = xerrors.Errorf("user_id: %v, %w", userID, err)
 		return dtoSamples, err
 	}
 

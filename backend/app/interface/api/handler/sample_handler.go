@@ -6,11 +6,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gocarina/gocsv"
 	"github.com/jinzhu/copier"
+	"golang.org/x/xerrors"
 
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/backend/app/registry"
 	"github.com/ktakenaka/go-random/backend/app/usecase/dto"
-	"github.com/ktakenaka/go-random/backend/pkg/logger"
 )
 
 // SampleHandler is the sample
@@ -40,6 +40,7 @@ func (hdl *SampleHandler) Index(ctx *gin.Context) {
 	suCase := registry.InitializeSampleUsecase()
 	samples, err := suCase.List(claims.UserID, q)
 	if err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
@@ -58,9 +59,6 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 
 	var err error
 	defer func() {
-		if err != nil {
-			logger.Error(err)
-		}
 		hdl.SetError(ctx, err)
 	}()
 
@@ -69,11 +67,13 @@ func (hdl *SampleHandler) Show(ctx *gin.Context) {
 
 	sample, err := suCase.Find(claims.UserID, id)
 	if err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
 	var sampleRes presenter.SampleResponse
 	if err = copier.Copy(&sampleRes, &sample); err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
@@ -92,6 +92,7 @@ func (hdl *SampleHandler) Create(ctx *gin.Context) {
 	}()
 
 	if err = ctx.ShouldBindJSON(&dtoReq); err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
@@ -100,6 +101,7 @@ func (hdl *SampleHandler) Create(ctx *gin.Context) {
 
 	suCase := registry.InitializeSampleUsecase()
 	if err = suCase.Create(dtoReq); err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
@@ -118,6 +120,7 @@ func (hdl *SampleHandler) Update(ctx *gin.Context) {
 	}()
 
 	if err = ctx.ShouldBindJSON(&dtoReq); err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
@@ -129,6 +132,7 @@ func (hdl *SampleHandler) Update(ctx *gin.Context) {
 
 	suCase := registry.InitializeSampleUsecase()
 	if err = suCase.Update(dtoReq); err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
@@ -149,6 +153,7 @@ func (hdl *SampleHandler) Delete(ctx *gin.Context) {
 	claims := hdl.JWTClaims(ctx)
 
 	if err = suCase.Delete(claims.UserID, id); err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
@@ -172,6 +177,7 @@ func (hdl *SampleHandler) Import(ctx *gin.Context) {
 
 	file, err := header.Open()
 	if err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
@@ -179,16 +185,19 @@ func (hdl *SampleHandler) Import(ctx *gin.Context) {
 	reader := csv.NewReader(file)
 
 	if err = gocsv.UnmarshalCSV(reader, &prsSamples); err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
 	var dtoSamples []dto.ImportSample
 	if err = copier.Copy(&dtoSamples, &prsSamples); err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
 	suCase := registry.InitializeSampleUsecase()
 	if err = suCase.Import(dtoSamples); err != nil {
+		err = xerrors.Errorf("%w", err)
 		return
 	}
 
