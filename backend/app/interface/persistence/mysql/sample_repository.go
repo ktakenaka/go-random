@@ -3,7 +3,7 @@ package mysql
 import (
 	"github.com/ktakenaka/go-random/backend/app/domain/entity"
 	"github.com/ktakenaka/go-random/backend/app/domain/repository"
-	"github.com/ktakenaka/go-random/backend/app/errors"
+	"golang.org/x/xerrors"
 	"gorm.io/gorm"
 )
 
@@ -31,14 +31,20 @@ func (r *SampleRepository) FindAll(userID string, query *entity.SampleQuery) ([]
 	}
 
 	err := tx.Limit(query.GetLimit()).Offset(query.GetOffset()).Find(&samples).Error
+	if err != nil {
+		return samples, xerrors.Errorf("query: %v, %w", query, err)
+	}
 
-	return samples, err
+	return samples, nil
 }
 
 // FindByTitle find one sample from title
 func (r *SampleRepository) FindByTitle(userID, title string) (entity.Sample, error) {
 	var sample entity.Sample
 	err := r.DB.Where(&entity.Sample{UserID: userID, Title: title}).First(&sample).Error
+	if err != nil {
+		err = xerrors.Errorf("%w", err)
+	}
 	return sample, err
 }
 
@@ -47,7 +53,7 @@ func (r *SampleRepository) FindByID(userID, id string) (entity.Sample, error) {
 	sample := entity.Sample{UserID: userID}
 	err := r.DB.Where("user_id=?", sample.UserID).Take(&sample, id).Error
 	if err != nil {
-		return sample, errors.Wrap("mysql", err)
+		return sample, xerrors.Errorf("%w", err)
 	}
 
 	return sample, nil
@@ -56,10 +62,13 @@ func (r *SampleRepository) FindByID(userID, id string) (entity.Sample, error) {
 // Create creates sample
 func (r *SampleRepository) Create(sample *entity.Sample) (*entity.Sample, error) {
 	if err := sample.Validate(); err != nil {
-		return sample, err
+		return sample, xerrors.Errorf("%w", err)
 	}
 
 	err := r.DB.Create(sample).Error
+	if err != nil {
+		err = xerrors.Errorf("%w", err)
+	}
 	return sample, err
 }
 
@@ -67,16 +76,22 @@ func (r *SampleRepository) Create(sample *entity.Sample) (*entity.Sample, error)
 func (r *SampleRepository) Delete(userID, id string) error {
 	sample := entity.Sample{UserID: userID}
 	err := r.DB.Where("user_id=?", sample.UserID).Delete(sample, id).Error
+	if err != nil {
+		err = xerrors.Errorf("%w", err)
+	}
 	return err
 }
 
 // Update update
 func (r *SampleRepository) Update(sample *entity.Sample) (*entity.Sample, error) {
 	if err := sample.Validate(); err != nil {
-		return sample, err
+		return sample, xerrors.Errorf("%w", err)
 	}
 
 	err := r.DB.Model(sample).Where("user_id = ?", sample.UserID).Updates(&sample).Error
+	if err != nil {
+		err = xerrors.Errorf("%w", err)
+	}
 	return sample, err
 }
 
