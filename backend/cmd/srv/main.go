@@ -55,12 +55,12 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			conn := config.GenDBAceessStr(
+			err := database.InitMySQLConnection(
 				c.String("mysqluser"),
 				c.String("mysqlpassword"),
 				c.String("dbhost"),
 			)
-			if err := database.InitMySQLConnection(conn); err != nil {
+			if err != nil {
 				return err
 			}
 

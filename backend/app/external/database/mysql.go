@@ -1,35 +1,35 @@
 package database
 
 import (
-	"sync"
+	"time"
 
-	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+
+	"github.com/ktakenaka/go-random/backend/pkg/infra/database"
 )
 
 var (
-	once sync.Once
-	db   *gorm.DB
+	db database.DB
 )
 
 // InitMySQLConnection init db connection
-func InitMySQLConnection(confStr string) (err error) {
-	once.Do(func() {
-		db, err = gorm.Open(
-			mysql.Open(confStr),
-			&gorm.Config{
-				Logger: logger.Default.LogMode(logger.Info),
-			},
-		)
-	})
-	if err != nil {
-		return err
+func InitMySQLConnection(user, passord, dbhost string) (err error) {
+	cfg := database.Config{
+		User:            user,
+		Password:        passord,
+		Host:            dbhost,
+		Name:            "go-random",
+		MaxIdleConns:    40,
+		MaxOpenConns:    200,
+		ConnMaxLifetime: 30 * time.Second,
 	}
+
+	db = database.New(&cfg)
 	return nil
 }
 
 // MySQLConnection returns db
 func MySQLConnection() *gorm.DB {
-	return db
+	// TODO: repositoryでもdatabase.DB使うようにする
+	return db.Session()
 }
