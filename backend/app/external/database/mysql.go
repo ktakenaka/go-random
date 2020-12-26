@@ -3,17 +3,17 @@ package database
 import (
 	"time"
 
-	"gorm.io/gorm"
-
 	"github.com/ktakenaka/go-random/backend/pkg/infra/database"
 )
 
 var (
-	db database.DB
+	// TODO: pointerじゃないとだめか検討
+	// 中の値がpointerなので構造体自体は値で良いかも
+	db *database.DB
 )
 
 // InitMySQLConnection init db connection
-func InitMySQLConnection(user, passord, dbhost string) (err error) {
+func InitMySQLConnection(user, passord, dbhost string) {
 	cfg := database.Config{
 		User:            user,
 		Password:        passord,
@@ -24,12 +24,11 @@ func InitMySQLConnection(user, passord, dbhost string) (err error) {
 		ConnMaxLifetime: 30 * time.Second,
 	}
 
-	db = database.New(&cfg)
-	return nil
+	infradb := database.New(&cfg)
+	db = &infradb
 }
 
 // MySQLConnection returns db
-func MySQLConnection() *gorm.DB {
-	// TODO: repositoryでもdatabase.DB使うようにする
-	return db.Session()
+func MySQLConnection() *database.DB {
+	return db
 }

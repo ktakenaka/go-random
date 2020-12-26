@@ -1,10 +1,11 @@
 package mysql
 
 import (
-	"github.com/ktakenaka/go-random/backend/app/domain/entity"
-	"github.com/ktakenaka/go-random/backend/app/domain/repository"
 	"golang.org/x/xerrors"
 	"gorm.io/gorm"
+
+	"github.com/ktakenaka/go-random/backend/app/domain/entity"
+	"github.com/ktakenaka/go-random/backend/pkg/infra/database"
 )
 
 // SampleRepository access sample
@@ -13,8 +14,8 @@ type SampleRepository struct {
 }
 
 // NewSampleRepository constructor
-func NewSampleRepository(db *gorm.DB) *SampleRepository {
-	return &SampleRepository{DB: db}
+func NewSampleRepository(db *database.DB) *SampleRepository {
+	return &SampleRepository{DB: db.Session()}
 }
 
 // FindAll find all samples
@@ -93,9 +94,4 @@ func (r *SampleRepository) Update(sample *entity.Sample) (*entity.Sample, error)
 		err = xerrors.Errorf("%w", err)
 	}
 	return sample, err
-}
-
-// AssignTx assign transaction
-func (r *SampleRepository) AssignTx(txm repository.TransactionManager) {
-	r.DB = txm.GetTx()
 }

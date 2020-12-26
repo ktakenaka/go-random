@@ -2,11 +2,17 @@ package repository
 
 import (
 	"gorm.io/gorm"
+
+	"github.com/ktakenaka/go-random/backend/pkg/infra/database"
 )
 
-type TransactionManager interface {
-	Begin()
+type DBConnection interface {
+	Session() *gorm.DB
+	Begin() *database.TX // TODO: TXConnection使えるようにリファクタ
+}
+
+type TXConnection interface {
+	Session() *gorm.DB
 	Commit() error
-	Rollback()
-	GetTx() *gorm.DB
+	Rollback() error
 }

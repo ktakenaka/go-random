@@ -15,19 +15,16 @@ import (
 // SampleUsecase usecase for sample
 type SampleUsecase struct {
 	repo repository.SampleRepository
-	txm  repository.TransactionManager
 	srv  *service.SampleService
 }
 
 // NewSampleUsecase constructor
 func NewSampleUsecase(
 	repo repository.SampleRepository,
-	txm repository.TransactionManager,
 	srv *service.SampleService,
 ) *SampleUsecase {
 	return &SampleUsecase{
 		repo: repo,
-		txm:  txm,
 		srv:  srv,
 	}
 }
@@ -86,15 +83,6 @@ func (s *SampleUsecase) Update(req dto.UpdateSample) (err error) {
 		err = xerrors.Errorf("request: %v, %w", req, err)
 		return err
 	}
-
-	// TODO: enable validation
-	// if err := s.srv.Duplicated(sample); err != nil {
-	// 	return err
-	// }
-	s.beginTx()
-	defer func() {
-		err = s.endTx(err)
-	}()
 	_, err = s.repo.Update(sample)
 	return err
 }
@@ -133,21 +121,4 @@ func (s *SampleUsecase) ListForExport(userID string) ([]dto.ExportSample, error)
 	}
 
 	return dtoSamples, nil
-}
-
-func (s *SampleUsecase) beginTx() {
-	s.txm.Begin()
-	s.repo.AssignTx(s.txm)
-}
-
-func (s *SampleUsecase) endTx(err error) error {
-	if p := recover(); p != nil {
-		s.txm.Rollback()
-		panic(p)
-	} else if err != nil {
-		s.txm.Rollback()
-	} else {
-		err = s.txm.Commit()
-	}
-	return err
 }

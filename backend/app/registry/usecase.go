@@ -13,6 +13,7 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/interface/adaptor/restclient"
 	"github.com/ktakenaka/go-random/backend/app/interface/persistence/mysql"
 	"github.com/ktakenaka/go-random/backend/app/usecase"
+	infradb "github.com/ktakenaka/go-random/backend/pkg/infra/database"
 )
 
 func InitializeSampleUsecase() *usecase.SampleUsecase {
@@ -27,7 +28,6 @@ func InitializeSignInUsecase() *usecase.SignInUsecase {
 
 var (
 	SampleUsecaseSet = wire.NewSet(
-		database.MySQLConnection,
 		sampleRepositorySet,
 		service.NewSampleService,
 		usecase.NewSampleUsecase,
@@ -35,13 +35,12 @@ var (
 
 	sampleRepositorySet = wire.NewSet(
 		mysql.NewSampleRepository,
-		mysql.NewTransactionManager,
+		database.MySQLConnection,
 		wire.Bind(new(repository.SampleRepository), new(*mysql.SampleRepository)),
-		wire.Bind(new(repository.TransactionManager), new(*mysql.TransactionManager)),
+		wire.Bind(new(repository.DBConnection), new(*infradb.DB)),
 	)
 
 	SignInUsecaseSet = wire.NewSet(
-		database.MySQLConnection,
 		googleRepositorySet,
 		userRepositorySet,
 		usecase.NewSignInUsecase,
@@ -55,6 +54,7 @@ var (
 
 	userRepositorySet = wire.NewSet(
 		mysql.NewUserRepository,
+		database.MySQLConnection,
 		wire.Bind(new(repository.UserRepository), new(*mysql.UserRepository)),
 	)
 )
