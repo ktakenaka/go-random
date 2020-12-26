@@ -59,7 +59,10 @@ func (r *GoogleRepository) GetToken(ctx context.Context, code, nonce string) (*o
 
 // GetUserInfo gets user information from Google
 func (r *GoogleRepository) GetUserInfo(ctx context.Context, token *oauth2.Token) (map[string]interface{}, error) {
-	provider := config.GetGoogleProvider()
+	provider, err := config.GetGoogleProvider()
+	if err != nil {
+		return nil, err
+	}
 	userInfo, err := provider.UserInfo(ctx, oauth2.StaticTokenSource(token))
 	if err != nil {
 		return nil, err
