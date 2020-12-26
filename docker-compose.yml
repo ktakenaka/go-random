@@ -16,9 +16,12 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GOOGLE_REDIRECT_URL: http://127.0.0.1:3000/google/callback
+    depends_on:
+      - redis
+      - db
+
   db:
-    image: mysql:8.0
-    restart: unless-stopped
+    image: mysql:8
     volumes:
       - ./db-data:/var/lib/mysql
       - ./logs:/var/log/mysql
@@ -30,6 +33,7 @@ services:
       MYSQL_USER: random
       MYSQL_PASSWORD: random
       BIND-ADDRESS: 0.0.0.0
+
   redis:
     image: redis
     restart: unless-stopped
