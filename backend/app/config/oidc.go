@@ -13,6 +13,7 @@ var (
 	once            sync.Once
 	googleOauth2Cnf *oauth2.Config
 	googleOIDCCnf   *oidc.Config
+	googleProvider  *oidc.Provider
 )
 
 const (
@@ -35,6 +36,11 @@ func InitGoogleOIDCCnf(redirectURL, clientID, clientSecret string) {
 		googleOIDCCnf = &oidc.Config{
 			ClientID: clientID,
 		}
+		provider, err := oidc.NewProvider(context.TODO(), issuerURL)
+		if err != nil {
+			panic(err)
+		}
+		googleProvider = provider
 	})
 }
 
@@ -51,6 +57,6 @@ func GetGoogleVerifier(ctx context.Context) *oidc.IDTokenVerifier {
 }
 
 // GetGoogleProvider returns oidc.Provider for Google
-func GetGoogleProvider(ctx context.Context) (*oidc.Provider, error) {
-	return oidc.NewProvider(ctx, issuerURL)
+func GetGoogleProvider() *oidc.Provider {
+	return googleProvider
 }

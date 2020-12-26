@@ -33,4 +33,3 @@ type PathError struct {
 func (e *PathError) Error() string {
 	return e.Op + " " + e.Path + ": " + e.Err.Error()
 }
-
