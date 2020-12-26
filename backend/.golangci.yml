@@ -1,13 +1,5 @@
  
 linters-settings:
-  #  depguard:
-  #  list-type: blacklist
-  #  packages:
-      # logging is allowed only by logutils.Log, logrus
-      # is allowed to use only in logutils package
-      #    - github.com/sirupsen/logrus
-      #packages-with-error-message:
-      #- github.com/sirupsen/logrus: "logging is allowed only by logutils.Log"
   exhaustive:
     default-signifies-exhaustive: false
   funlen:
@@ -88,21 +80,6 @@ linters:
     - unused
     - varcheck
     - whitespace
-
-  # don't enable:
-  # - asciicheck
-  # - exhaustive (TODO: enable after next release; current release at time of writing is v1.27)
-  # - gochecknoglobals
-  # - gocognit
-  # - godot
-  # - godox
-  # - goerr113
-  # - maligned
-  # - nestif
-  # - noctx (TODO: enable after next release; current release at time of writing is v1.27)
-  # - prealloc
-  # - testpackage
-  # - wsl
 
 issues:
   # Excluding configuration per-path, per-linter, per-text and per-source
