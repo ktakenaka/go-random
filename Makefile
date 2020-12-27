@@ -4,6 +4,9 @@ up:
 be-run:
 	docker-compose exec app go run cmd/srv/main.go
 
+be-log:
+	docker-compose logs --tail 100 -f app
+
 restart:
 	docker-compose restart
 

@@ -55,14 +55,11 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			conn := config.GenDBAceessStr(
+			database.InitMySQLConnection(
 				c.String("mysqluser"),
 				c.String("mysqlpassword"),
 				c.String("dbhost"),
 			)
-			if err := database.InitMySQLConnection(conn); err != nil {
-				return err
-			}
 
 			config.InitGoogleOIDCCnf(
 				c.String("google_redirect_url"),

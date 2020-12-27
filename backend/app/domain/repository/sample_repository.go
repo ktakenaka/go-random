@@ -12,5 +12,4 @@ type SampleRepository interface {
 	Create(sample *entity.Sample) (*entity.Sample, error)
 	Update(sample *entity.Sample) (*entity.Sample, error)
 	Delete(userID, id string) error
-	AssignTx(txm TransactionManager)
 }

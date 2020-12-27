@@ -14,6 +14,7 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/interface/adaptor/restclient"
 	"github.com/ktakenaka/go-random/backend/app/interface/persistence/mysql"
 	"github.com/ktakenaka/go-random/backend/app/usecase"
+	database2 "github.com/ktakenaka/go-random/backend/pkg/infra/database"
 )
 
 // Injectors from usecase.go:
@@ -21,9 +22,8 @@ import (
 func InitializeSampleUsecase() *usecase.SampleUsecase {
 	db := database.MySQLConnection()
 	sampleRepository := mysql.NewSampleRepository(db)
-	transactionManager := mysql.NewTransactionManager(db)
 	sampleService := service.NewSampleService(sampleRepository)
-	sampleUsecase := usecase.NewSampleUsecase(sampleRepository, transactionManager, sampleService)
+	sampleUsecase := usecase.NewSampleUsecase(sampleRepository, sampleService)
 	return sampleUsecase
 }
 
@@ -39,15 +39,18 @@ func InitializeSignInUsecase() *usecase.SignInUsecase {
 // usecase.go:
 
 var (
-	SampleUsecaseSet = wire.NewSet(database.MySQLConnection, sampleRepositorySet, service.NewSampleService, usecase.NewSampleUsecase)
+	SampleUsecaseSet = wire.NewSet(
+		sampleRepositorySet, service.NewSampleService, usecase.NewSampleUsecase,
+	)
 
-	sampleRepositorySet = wire.NewSet(mysql.NewSampleRepository, mysql.NewTransactionManager, wire.Bind(new(repository.SampleRepository), new(*mysql.SampleRepository)), wire.Bind(new(repository.TransactionManager), new(*mysql.TransactionManager)))
+	sampleRepositorySet = wire.NewSet(mysql.NewSampleRepository, database.MySQLConnection, wire.Bind(new(repository.SampleRepository), new(*mysql.SampleRepository)), wire.Bind(new(repository.DBConnection), new(*database2.DB)))
 
-	SignInUsecaseSet = wire.NewSet(database.MySQLConnection, googleRepositorySet,
+	SignInUsecaseSet = wire.NewSet(
+		googleRepositorySet,
 		userRepositorySet, usecase.NewSignInUsecase,
 	)
 
 	googleRepositorySet = wire.NewSet(config.GetGoogleOauthConfig, restclient.NewGoogleRepository, wire.Bind(new(repository.GoogleRepository), new(*restclient.GoogleRepository)))
 
-	userRepositorySet = wire.NewSet(mysql.NewUserRepository, wire.Bind(new(repository.UserRepository), new(*mysql.UserRepository)))
+	userRepositorySet = wire.NewSet(mysql.NewUserRepository, database.MySQLConnection, wire.Bind(new(repository.UserRepository), new(*mysql.UserRepository)))
 )

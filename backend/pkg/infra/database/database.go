@@ -1,4 +1,4 @@
-package db
+package database
 
 import (
 	"fmt"
@@ -78,15 +78,15 @@ func (d *DB) Session() *gorm.DB {
 	return d.session
 }
 
+// Begin transaction
+func (d *DB) Begin() *TX {
+	tx := d.session.Begin()
+	return &TX{session: tx}
+}
+
 // Session returns connection
 func (t *TX) Session() *gorm.DB {
 	return t.session
-}
-
-// Begin transaction
-func (d *DB) Begin() *gorm.DB {
-	tx := d.session.Begin()
-	return tx
 }
 
 // Commit change
