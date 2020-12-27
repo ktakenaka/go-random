@@ -8,6 +8,7 @@ RUN go get -v github.com/rubenv/sql-migrate/...
 RUN go get github.com/google/wire/cmd/wire
 RUN go get github.com/golang/mock/gomock
 RUN GO111MODULE=on go get github.com/golang/mock/mockgen@v1.4.3
-RUN go get github.com/oxequa/realize
 
-CMD ["realize", "start"]
+# stop using realize temporally, it's not bettery efficient.
+# RUN go get github.com/oxequa/realize
+# CMD ["realize", "start"]
