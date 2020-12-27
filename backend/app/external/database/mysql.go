@@ -7,8 +7,6 @@ import (
 )
 
 var (
-	// TODO: pointerじゃないとだめか検討
-	// 中の値がpointerなので構造体自体は値で良いかも
 	db *database.DB
 )
 

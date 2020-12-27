@@ -79,9 +79,9 @@ func (d *DB) Session() *gorm.DB {
 }
 
 // Begin transaction
-func (d *DB) Begin() *TX {
+func (d *DB) Begin() (*TX, error) {
 	tx := d.session.Begin()
-	return &TX{session: tx}
+	return &TX{session: tx}, tx.Error
 }
 
 // Session returns connection

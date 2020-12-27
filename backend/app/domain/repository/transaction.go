@@ -8,11 +8,5 @@ import (
 
 type DBConnection interface {
 	Session() *gorm.DB
-	Begin() *database.TX // TODO: TXConnection使えるようにリファクタ
-}
-
-type TXConnection interface {
-	Session() *gorm.DB
-	Commit() error
-	Rollback() error
+	Begin() (*database.TX, error)
 }
