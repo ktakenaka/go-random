@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"strings"
 
 	"golang.org/x/text/encoding/japanese"
 	"golang.org/x/text/transform"
@@ -34,6 +35,21 @@ import (
 
 //
 
+var conversionPair = [][]string{
+	{"〜", "～"},
+	{"−", "－"},
+	{"¢", "￠"},
+	{"£", "￡"},
+	{"¬", "￢"},
+	{"–", "－"},
+	{"—", "―"},
+	{"‖", "∥"},
+	{"‾", "￣"},
+	{"ø", "Φ"},
+	{" ", " "},
+	{"›", "〉"},
+}
+
 func main() {
 	out := os.Stdout
 	defer out.Close()
@@ -49,6 +65,16 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
+
+	eachPairUnit := 2
+	replacerSlice := make([]string, len(conversionPair)*eachPairUnit)
+	for i, ss := range conversionPair {
+		replacerSlice[i*2] = ss[0]
+		replacerSlice[i*2+1] = ss[1]
+	}
+
+	r := strings.NewReplacer(replacerSlice...)
+	fmt.Println(r.Replace(testString))
 }
 
 func replaceToAvailableLetters(targetBytes []byte) []byte {
