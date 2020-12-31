@@ -23,8 +23,7 @@ services:
   db:
     image: mysql:8
     volumes:
-      - ./db-data:/var/lib/mysql
-      - ./logs:/var/log/mysql
+      - db-data:/var/lib/mysql
     ports:
       - 33006:3306
     environment:
