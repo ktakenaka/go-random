@@ -8,7 +8,7 @@ services:
     ports:
       - 8080:8080
     volumes:
-      - ./backend:/go/src
+      - ./backend:/go/src:cached
     environment: 
       MYSQL_USER: random
       MYSQL_PASSWORD: random
@@ -23,7 +23,7 @@ services:
   db:
     image: mysql:8
     volumes:
-      - db-data:/var/lib/mysql
+      - db-data:/var/lib/mysql:delegated
     environment:
       MYSQL_DATABASE: go-random
       MYSQL_ROOT_PASSWORD: root
@@ -35,7 +35,7 @@ services:
     image: redis
     restart: unless-stopped
     volumes:
-      - redis-data:/data
+      - redis-data:/data:delegated
 
   web:
     build:
