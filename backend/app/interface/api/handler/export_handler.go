@@ -12,9 +12,9 @@ import (
 	"golang.org/x/text/transform"
 
 	"github.com/gin-gonic/gin"
+	"github.com/ktakenaka/charsetsupport/sjiswriter"
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/backend/app/registry"
-	"github.com/ktakenaka/charsetsupport/sjiswriter"
 )
 
 // ExportHandler is the sample
