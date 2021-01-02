@@ -20,6 +20,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/copier v0.0.0-20190924061706-b57f9002281a
 	github.com/json-iterator/go v1.1.10 // indirect
+	github.com/ktakenaka/charsetsupport v0.0.0-20210102132132-4a08a35bb3e8
 	github.com/oklog/ulid/v2 v2.0.2
 	github.com/onsi/ginkgo v1.14.2 // indirect
 	github.com/onsi/gomega v1.10.3 // indirect
@@ -31,7 +32,7 @@ require (
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
 	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43
 	golang.org/x/sync v0.0.0-20200625203802-6e8e738ad208
-	golang.org/x/text v0.3.3
+	golang.org/x/text v0.3.4
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1
 	gopkg.in/guregu/null.v4 v4.0.0
 	gopkg.in/square/go-jose.v2 v2.5.1 // indirect

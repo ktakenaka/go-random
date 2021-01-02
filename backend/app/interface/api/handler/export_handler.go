@@ -14,7 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
 	"github.com/ktakenaka/go-random/backend/app/registry"
-	"github.com/ktakenaka/go-random/backend/pkg/charsetsupport"
+	"github.com/ktakenaka/charsetsupport/sjiswriter"
 )
 
 // ExportHandler is the sample
@@ -53,7 +53,7 @@ func (hdl *ExportHandler) SamplesExport(ctx *gin.Context) {
 
 	var b bytes.Buffer
 	if ctx.Query("charset") == "sjis" {
-		w = charsetsupport.NewSJISWriter(
+		w = sjiswriter.NewSJISWriter(
 			transform.NewWriter(&b, japanese.ShiftJIS.NewEncoder()),
 		)
 	} else {
