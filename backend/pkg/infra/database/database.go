@@ -19,7 +19,8 @@ type Config struct {
 	MaxOpenConns    int
 	ConnMaxLifetime time.Duration
 
-	LogLevel string
+	IsIgnoreForeignKey bool
+	LogLevel           string
 }
 
 // DB db connection
@@ -32,10 +33,27 @@ type TX struct {
 	session *gorm.DB
 }
 
+const (
+	conn          = "%s:%s@tcp(%s)/%s?collation=utf8mb4_bin&parseTime=true&charset=utf8mb4"
+	connWithoutFK = conn + "&foreign_key_checks=0"
+)
+
+const (
+	defaultMaxIdleConns    = 5
+	defaultMaxOpenConns    = 10
+	defaultConnMaxLifetime = 20 * time.Second
+)
+
 // New connect to db
-func New(cfg *Config) DB {
-	dst := fmt.Sprintf("%s:%s@tcp(%s)/%s?collation=utf8mb4_bin&parseTime=true&charset=utf8mb4", cfg.User, cfg.Password, cfg.Host, cfg.Name)
-	return DB{
+func New(cfg *Config) *DB {
+	var dst string
+	if cfg.IsIgnoreForeignKey {
+		dst = fmt.Sprintf(connWithoutFK, cfg.User, cfg.Password, cfg.Host, cfg.Name)
+	} else {
+		dst = fmt.Sprintf(conn, cfg.User, cfg.Password, cfg.Host, cfg.Name)
+	}
+
+	return &DB{
 		session: connect(dst, cfg),
 	}
 }
@@ -67,13 +85,28 @@ func connect(dst string, cfg *Config) *gorm.DB {
 	if err != nil {
 		panic(err)
 	}
-	sqldb.SetMaxIdleConns(cfg.MaxIdleConns)
-	sqldb.SetMaxOpenConns(cfg.MaxOpenConns)
-	sqldb.SetConnMaxLifetime(cfg.ConnMaxLifetime)
+
+	if cfg.MaxIdleConns == 0 {
+		sqldb.SetMaxIdleConns(defaultMaxIdleConns)
+	} else {
+		sqldb.SetMaxIdleConns(cfg.MaxIdleConns)
+	}
+
+	if cfg.MaxOpenConns == 0 {
+		sqldb.SetMaxIdleConns(defaultMaxOpenConns)
+	} else {
+		sqldb.SetMaxOpenConns(cfg.MaxOpenConns)
+	}
+
+	if cfg.ConnMaxLifetime == 0 {
+		sqldb.SetConnMaxLifetime(defaultConnMaxLifetime)
+	} else {
+		sqldb.SetConnMaxLifetime(cfg.ConnMaxLifetime)
+	}
 	return db
 }
 
-// Session returns connection
+// Session returns tion
 func (d *DB) Session() *gorm.DB {
 	return d.session
 }
@@ -82,6 +115,15 @@ func (d *DB) Session() *gorm.DB {
 func (d *DB) Begin() (*TX, error) {
 	tx := d.session.Begin()
 	return &TX{session: tx}, tx.Error
+}
+
+// Close connections
+func (d *DB) Close() error {
+	sqlDB, err := d.session.DB()
+	if err != nil {
+		return err
+	}
+	return sqlDB.Close()
 }
 
 // Session returns connection

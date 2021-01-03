@@ -23,7 +23,7 @@ func InitMySQLConnection(user, passord, dbhost string) {
 	}
 
 	infradb := database.New(&cfg)
-	db = &infradb
+	db = infradb
 }
 
 // MySQLConnection returns db
