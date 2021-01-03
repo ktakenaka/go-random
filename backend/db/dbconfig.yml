@@ -1,5 +1,10 @@
 development:
-    dialect: mysql
-    datasource: random:random@tcp(db:3306)/go-random?parseTime=true
-    dir: db/migrations
-    table: schema_migrations
+  dialect: mysql
+  datasource: ${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(${DBHOST}:${MYSQL_PORT})/go-random?parseTime=true
+  dir: /db/migrations
+  table: schema_migrations
+test:
+  dialect: mysql
+  datasource: ${MYSQL_USER}:${MYSQL_PASSWORD}@tcp(${DBHOST}:${MYSQL_PORT})/${DBNAME}?parseTime=true
+  dir: /db/migrations
+  table: schema_migrations

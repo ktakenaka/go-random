@@ -17,13 +17,12 @@ go-lint-fmt:
 	docker-compose exec app gofmt -w app pkg sandbox 
 
 migrate-new:
-	docker-compose exec app sql-migrations new ${name}
+	docker-compose exec migrate sql-migrations new ${name}
 
-migrate-up:
-	docker-compose exec app sql-migrate up -env=development -config=db/dbconfig.yml
-
-migrate-down:
-	docker-compose exec app sql-migrate down -env=development -config=db/dbconfig.yml
+migrate-%:
+	$(eval CMD:= $*)
+	docker-compose run migrate sql-migrate $(CMD) -env=development -config=dbconfig.yml; \
+	seq 3 | xargs -P8 -I{} docker-compose run -e DBNAME="go-random_test{}" migrate sql-migrate $(CMD) -config=dbconfig.yml -env=test;
 
 test:
 	docker-compose exec app go test ./...

@@ -29,6 +29,21 @@ services:
       MYSQL_ROOT_PASSWORD: root
       BIND-ADDRESS: 0.0.0.0
 
+  migrate:
+    build: 
+      context: .
+      dockerfile: Dockerfile-migrate
+    volumes:
+      - ./backend/db:/db
+    environment:
+      # TODO: .envで共通の値を一箇所で参照するようにリファクタ
+      MYSQL_USER: random
+      MYSQL_PASSWORD: random
+      DBHOST: db
+      MYSQL_PORT: 3306
+    depends_on: 
+      - db
+
   redis:
     image: redis
     restart: unless-stopped
@@ -39,6 +54,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-fe
+    tty: true
     volumes:
      - ./frontend:/usr/src/app
     environment:
@@ -48,7 +64,6 @@ services:
     command: sh -c "yarn install && yarn start"
     ports:
       - "3000:3000"
-    tty: true
 volumes: 
   db-data:
   redis-data:
