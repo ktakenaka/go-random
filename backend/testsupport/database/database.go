@@ -29,10 +29,22 @@ func GetDB() (testDB *db.DB, release func()) {
 }
 
 func cleanDB(d *db.DB) error {
-	// TODO: DBからSQLでテーブルを取得するように変更
-	tables := []string{"users", "samples"}
-	for _, t := range tables {
-		if err := d.Session().Exec("DELETE FROM " + t).Error; err != nil {
+	// When you add a new table and it's master data, you need to escape it
+	rows, err := d.Session().Raw(
+		"SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES " +
+			"WHERE TABLE_SCHEMA='go-random' AND TABLE_NAME != 'schema_migrations'",
+	).Rows()
+	if err != nil {
+		return err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var t string
+		if err := rows.Scan(&t); err != nil {
+			return err
+		}
+		if err := d.Session().Raw("DELETE FROM ?", t).Error; err != nil {
 			return err
 		}
 	}
