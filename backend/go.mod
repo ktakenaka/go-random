@@ -16,9 +16,11 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/gocarina/gocsv v0.0.0-20201208093247-67c824bc04d4
+	github.com/google/go-cmp v0.5.4
 	github.com/google/wire v0.4.0
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/gorilla/websocket v1.4.2
+	github.com/icza/gox v0.0.0-20201215141822-6edfac6c05b5
 	github.com/jinzhu/copier v0.1.0
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/kr/text v0.2.0 // indirect
