@@ -30,9 +30,9 @@ func GetDB() (testDB *db.DB, release func()) {
 
 func cleanDB(d *db.DB) error {
 	// TODO: DBからSQLでテーブルを取得するように変更
-	tables := []string{"usrs", "samples"}
+	tables := []string{"users", "samples"}
 	for _, t := range tables {
-		if err := d.Session().Exec("DELETE FROM ?", t).Error; err != nil {
+		if err := d.Session().Exec("DELETE FROM " + t).Error; err != nil {
 			return err
 		}
 	}
