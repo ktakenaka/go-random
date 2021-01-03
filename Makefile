@@ -42,7 +42,7 @@ fe-sh:
 	@docker-compose exec web sh
 
 mysql:
-	docker-compose exec db mysql -urandom -prandom go-random
+	docker-compose exec db mysql -urandom -prandom
 
 yarn-install:
 	docker-compose exec web yarn install
