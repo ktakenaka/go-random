@@ -33,7 +33,7 @@ require (
 	github.com/pquerna/cachecontrol v0.0.0-20201205024021-ac21108117ac // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sirupsen/logrus v1.7.0
-	github.com/stretchr/testify v1.6.1
+	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/gjson v1.6.7 // indirect
 	github.com/ugorji/go v1.2.2 // indirect
 	github.com/urfave/cli/v2 v2.3.0
