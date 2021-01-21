@@ -20,6 +20,9 @@ func InitMySQLConnection(user, passord, dbhost string) {
 		MaxIdleConns:    40,
 		MaxOpenConns:    200,
 		ConnMaxLifetime: 30 * time.Second,
+		Options:         map[string]string{"interpolateParams": "true"},
+
+		LogLevel: "silent",
 	}
 
 	infradb := database.New(&cfg)

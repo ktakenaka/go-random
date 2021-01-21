@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"gorm.io/driver/mysql"
@@ -19,6 +20,7 @@ type Config struct {
 	MaxOpenConns    int
 	ConnMaxLifetime time.Duration
 
+	Options            map[string]string
 	IsIgnoreForeignKey bool
 	LogLevel           string
 }
@@ -46,12 +48,21 @@ const (
 
 // New connect to db
 func New(cfg *Config) *DB {
-	var dst string
+	var connStr string
 	if cfg.IsIgnoreForeignKey {
-		dst = fmt.Sprintf(connWithoutFK, cfg.User, cfg.Password, cfg.Host, cfg.Name)
+		connStr = connWithoutFK
 	} else {
-		dst = fmt.Sprintf(conn, cfg.User, cfg.Password, cfg.Host, cfg.Name)
+		connStr = conn
 	}
+
+	if cfg.Options != nil {
+		var options []string
+		for k, v := range cfg.Options {
+			options = append(options, k+"="+v)
+		}
+		connStr = connStr + "&" + strings.Join(options, "&")
+	}
+	dst := fmt.Sprintf(connStr, cfg.User, cfg.Password, cfg.Host, cfg.Name)
 
 	return &DB{
 		session: connect(dst, cfg),
