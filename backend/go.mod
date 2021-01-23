@@ -38,6 +38,7 @@ require (
 	github.com/ugorji/go v1.2.2 // indirect
 	github.com/urfave/cli/v2 v2.3.0
 	github.com/utrack/gin-csrf v0.0.0-20190424104817-40fb8d2c8fca
+	go.uber.org/goleak v1.1.10
 	golang.org/x/crypto v0.0.0-20201221181555-eec23a3978ad // indirect
 	golang.org/x/net v0.0.0-20201224014010-6772e930b67b // indirect
 	golang.org/x/oauth2 v0.0.0-20201208152858-08078c50e5b5
