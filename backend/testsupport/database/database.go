@@ -45,7 +45,7 @@ func cleanDB(d *db.DB) error {
 			return err
 		}
 		// nolint:gosec
-		if err := d.Session().Raw("DELETE FROM " + t).Error; err != nil {
+		if err := d.Session().Exec("DELETE FROM " + t).Error; err != nil {
 			return err
 		}
 	}

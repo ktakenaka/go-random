@@ -50,3 +50,11 @@ func TestSampleRepository_Create(t *testing.T) {
 		runFunc(t, _fields, args{sample: &en}, wants{sample: &en, isErr: false})
 	})
 }
+
+func BenchmarkCreate(t *testing.B) {
+	d, release := db.GetDB()
+	defer release()
+
+	r := &SampleRepository{DB: d.Session()}
+	_, _ = r.Create(&entity.Sample{})
+}
