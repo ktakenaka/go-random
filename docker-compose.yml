@@ -16,6 +16,11 @@ services:
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
       GOOGLE_REDIRECT_URL: http://127.0.0.1:3000/google/callback
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "3"
+        max-size: "5m"
     depends_on:
       - redis
       - db
