@@ -44,7 +44,8 @@ func cleanDB(d *db.DB) error {
 		if err := rows.Scan(&t); err != nil {
 			return err
 		}
-		if err := d.Session().Raw("DELETE FROM ?", t).Error; err != nil {
+		// nolint:gosec
+		if err := d.Session().Exec("DELETE FROM " + t).Error; err != nil {
 			return err
 		}
 	}
