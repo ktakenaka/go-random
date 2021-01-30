@@ -53,6 +53,11 @@ func main() {
 				EnvVars: []string{"JWT_SECRET"},
 				Value:   "N74Yq7tIfzO9muKLUhJuWXBZNhd9HXD7",
 			},
+			&cli.BoolFlag{
+				Name: "pprof_enabled",
+				EnvVars: []string{"PPROF_ENABLED"},
+				Value: false,
+			},
 		},
 		Action: func(c *cli.Context) error {
 			database.InitMySQLConnection(
@@ -71,7 +76,7 @@ func main() {
 			)
 			middleware.InitJWTCookieOpt(c.String("env"))
 
-			router := framework.Handler()
+			router := framework.Handler(c.Bool("pprof_enabled"))
 			if err := router.Run(":8080"); err != nil {
 				return err
 			}

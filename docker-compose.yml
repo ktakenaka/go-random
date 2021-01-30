@@ -10,6 +10,8 @@ services:
     volumes:
       - ./backend:/go/src:cached
     environment: 
+      ENV: ${ENV}
+      PPROF_ENABLED: ${PPROF_ENABLED}
       MYSQL_USER: random
       MYSQL_PASSWORD: random
       DBHOST: db

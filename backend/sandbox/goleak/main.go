@@ -15,12 +15,12 @@ func leak() {
 
 func main() {
 	doneCh := make(chan struct{})
+	defer close(doneCh)
 	for i := 1; i <= 3; i++ {
 		i := i
 		go forSelectPattern(i, doneCh)
 	}
 	time.Sleep(10 * time.Second)
-	close(doneCh)
 }
 
 // 終了のシグナルが来るまで、繰り返し作業を行うパターンで便利
