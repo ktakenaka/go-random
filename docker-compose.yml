@@ -1,4 +1,12 @@
 version: "3"
+
+x-var: &MYSQL_USER
+  "random"
+x-var: &MYSQL_PASSWORD
+  "random"
+x-var: &GOOGLE_REDIRECT_URL
+  "http://127.0.0.1:3000/google/callback"
+
 services:
   app:
     build:
@@ -12,12 +20,12 @@ services:
     environment: 
       ENV: ${ENV}
       PPROF_ENABLED: ${PPROF_ENABLED}
-      MYSQL_USER: random
-      MYSQL_PASSWORD: random
+      MYSQL_USER: *MYSQL_USER
+      MYSQL_PASSWORD: *MYSQL_PASSWORD
       DBHOST: db
       GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
       GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
-      GOOGLE_REDIRECT_URL: http://127.0.0.1:3000/google/callback
+      GOOGLE_REDIRECT_URL: *GOOGLE_REDIRECT_URL
     logging:
       driver: "json-file"
       options:
@@ -44,16 +52,15 @@ services:
     volumes:
       - ./backend/db:/db
     environment:
-      # TODO: .envで共通の値を一箇所で参照するようにリファクタ
-      MYSQL_USER: random
-      MYSQL_PASSWORD: random
+      MYSQL_USER: *MYSQL_USER
+      MYSQL_PASSWORD: *MYSQL_PASSWORD
       DBHOST: db
       MYSQL_PORT: 3306
     depends_on: 
       - db
 
   redis:
-    image: redis
+    image: redis:alpine
     restart: unless-stopped
     volumes:
       - redis-data:/data:delegated
@@ -68,7 +75,7 @@ services:
     environment:
       REACT_APP_API_BASE_URL: http://127.0.0.1:8080
       REACT_APP_GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
-      REACT_APP_GOOGLE_REDIRECT_URI: http://127.0.0.1:3000/google/callback
+      REACT_APP_GOOGLE_REDIRECT_URI: *GOOGLE_REDIRECT_URL
     command: sh -c "yarn install && yarn start"
     ports:
       - "3000:3000"
