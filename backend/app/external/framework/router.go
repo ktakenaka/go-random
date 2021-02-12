@@ -18,7 +18,7 @@ func Handler(pprofEnabled bool) *gin.Engine {
 
 	// TODO: refactor the condition.
 	// It's not ideal to use `os.Getenv("ENV")` in several places
-	if os.Getenv("ENV") == "" {
+	if os.Getenv("ENV") == "development" {
 		router.Use(middleware.CorsMiddleware())
 	}
 
