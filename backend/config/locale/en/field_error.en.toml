@@ -1,0 +1,3 @@
+min = "{{.Value}}: {{.Field}} length must be {{.Param}} at least"
+max = "{{.Value}}: {{.Field}} length must be {{.Param}} at most"
+required = "{{.Field}} is required"
