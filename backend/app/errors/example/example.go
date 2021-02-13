@@ -11,6 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/xerrors"
 
+	"github.com/ktakenaka/go-random/backend/app/domain/entity"
 	appErr "github.com/ktakenaka/go-random/backend/app/errors"
 )
 

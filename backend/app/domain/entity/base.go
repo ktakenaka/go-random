@@ -6,8 +6,12 @@ import (
 
 	"gorm.io/gorm"
 
+	validator "github.com/go-playground/validator/v10"
 	ulid "github.com/oklog/ulid/v2"
 )
+
+// TODO: consider to move pkg or entity/validate
+var validate = validator.New()
 
 // ID primary key of tables
 type ID string

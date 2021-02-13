@@ -21,6 +21,11 @@ type JSONAPIError struct {
 	detail string      // defaultでは err と i18n の組を使う（発生箇所で上書きできるようにしよかと思ったけど、i18n考えると工夫が必要）
 }
 
+// WithSource - source
+func (e *JSONAPIError) WithSource(source string) {
+	e.source = source
+}
+
 // Status - status
 func (e *JSONAPIError) Status() int {
 	return e.status
