@@ -54,9 +54,9 @@ func main() {
 				Value:   "N74Yq7tIfzO9muKLUhJuWXBZNhd9HXD7",
 			},
 			&cli.BoolFlag{
-				Name: "pprof_enabled",
+				Name:    "pprof_enabled",
 				EnvVars: []string{"PPROF_ENABLED"},
-				Value: false,
+				Value:   false,
 			},
 		},
 		Action: func(c *cli.Context) error {

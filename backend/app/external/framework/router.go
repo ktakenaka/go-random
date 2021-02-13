@@ -3,7 +3,6 @@ package framework
 import (
 	"net/http"
 	"net/http/pprof"
-	_ "net/http/pprof"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -76,8 +75,7 @@ func root(ctx *gin.Context) {
 }
 
 func pprofHandler(h http.HandlerFunc) gin.HandlerFunc {
-	handler := http.HandlerFunc(h)
 	return func(c *gin.Context) {
-		handler.ServeHTTP(c.Writer, c.Request)
+		h.ServeHTTP(c.Writer, c.Request)
 	}
 }
