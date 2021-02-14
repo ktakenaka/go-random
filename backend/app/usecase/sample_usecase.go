@@ -67,8 +67,7 @@ func (s *SampleUsecase) Create(req dto.CreateSample) error {
 	}
 
 	if err := sample.Validate(); err != nil {
-		err = appErr.NewAppError(err)
-		return xerrors.Errorf("%w", err)
+		return err
 	}
 
 	// TODO: enable validation
@@ -92,7 +91,6 @@ func (s *SampleUsecase) Update(req dto.UpdateSample) error {
 	}
 
 	if err := sample.Validate(); err != nil {
-		err = appErr.NewAppError(err)
 		return xerrors.Errorf("%w", err)
 	}
 
