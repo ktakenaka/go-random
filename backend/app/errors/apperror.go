@@ -8,8 +8,8 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/errors/translator"
 )
 
-// LogicError wraps error
-type LogicError struct {
+// AppError wraps error
+type AppError struct {
 	JSONAPIError
 
 	err    error
@@ -18,31 +18,31 @@ type LogicError struct {
 	msgLog string
 }
 
-// NewLogicError constructor
-func NewLogicError(err error) *LogicError {
-	return &LogicError{err: err}
+// NewAppError constructor
+func NewAppError(err error) *AppError {
+	return &AppError{err: err}
 }
 
 // WithParams - params
-func (e *LogicError) WithParams(params map[string]interface{}) *LogicError {
+func (e *AppError) WithParams(params map[string]interface{}) *AppError {
 	e.params = params
 	return e
 }
 
 // WithFields - fields
-func (e *LogicError) WithFields(fields map[string]interface{}) *LogicError {
+func (e *AppError) WithFields(fields map[string]interface{}) *AppError {
 	e.fields = fields
 	return e
 }
 
 // WithMsgLog - msgLog
-func (e *LogicError) WithMsgLog(msg string) *LogicError {
+func (e *AppError) WithMsgLog(msg string) *AppError {
 	e.msgLog = msg
 	return e
 }
 
 // Build - builder (status, code, title, detail)
-func (e *LogicError) Build(lang string) {
+func (e *AppError) Build(lang string) {
 	if status, ok := errorStatusMap[e.err]; !ok {
 		e.status = http.StatusInternalServerError
 	} else {
@@ -55,7 +55,7 @@ func (e *LogicError) Build(lang string) {
 }
 
 // Error - errors.Error() for logging, not for user messages
-func (e *LogicError) Error() string {
+func (e *AppError) Error() string {
 	// This condition is after Build()
 	if e.detail != "" {
 		return fmt.Sprintf(
@@ -69,17 +69,17 @@ func (e *LogicError) Error() string {
 }
 
 // Is - errors.Is
-func (e *LogicError) Is(err error) bool {
+func (e *AppError) Is(err error) bool {
 	return errors.Is(e.err, err)
 }
 
 // Unwrap - errors.Unwrap
-func (e *LogicError) Unwrap() error {
+func (e *AppError) Unwrap() error {
 	return e.err
 }
 
 // detail is for a user message. Shouldn't be a raw error
-func (e *LogicError) buildDetail(lang string) string {
+func (e *AppError) buildDetail(lang string) string {
 	data := e.params
 	for k, v := range e.fields {
 		if vstr, ok := v.(string); ok {
