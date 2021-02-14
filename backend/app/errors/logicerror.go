@@ -51,7 +51,13 @@ func (e *LogicError) Build(lang string) {
 func (e *LogicError) Error() string {
 	// This condition is after Build()
 	if e.detail != "" {
-		return fmt.Sprintf("title: %s, detail: %s, log: %s", e.title, e.buildDetail(enLang), e.msgLog)
+		return fmt.Sprintf(
+			"title: %s, detail: %s, params: %s, log: %s",
+			e.title,
+			e.buildDetail(enLang),
+			e.params,
+			e.msgLog,
+		)
 	}
 	return e.err.Error()
 }
@@ -66,6 +72,7 @@ func (e *LogicError) Unwrap() error {
 	return e.err
 }
 
+// detail is for a user message. Shouldn't be a raw error
 func (e *LogicError) buildDetail(lang string) string {
 	arg := translator.Arg{
 		Lang:  lang,
@@ -75,7 +82,9 @@ func (e *LogicError) buildDetail(lang string) string {
 
 	msg, err := translator.Localize(arg)
 	if err != nil {
-		return e.err.Error()
+		// FIXME:
+		// when just forgetting to define i18n messages for the error, it shows "unexpected error".
+		return ErrUnknown.Error()
 	}
 	return msg
 }

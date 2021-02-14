@@ -42,7 +42,7 @@ func buildContext() *gin.Context {
 		Request: &http.Request{
 			Method:     "POST",
 			URL:        &url.URL{Path: "/example"},
-			Body:       ioutil.NopCloser(bytes.NewBufferString("body")),
+			Body:       ioutil.NopCloser(bytes.NewBufferString("body is here")),
 			Header:     http.Header{"Accept-Language": []string{"ja"}},
 			RemoteAddr: "127.0.0.1",
 		},
@@ -83,7 +83,9 @@ func functionWithValidationError() error {
 }
 
 func functionWithUnknownError() error {
-	return nil
+	err := errors.New("unknow error")
+	err = appErr.NewLogicError(err).WithMsgLog("not expected place")
+	return xerrors.Errorf("%w", err)
 }
 
 func middlewareErrFunc(ctx *gin.Context) {
@@ -93,18 +95,18 @@ func middlewareErrFunc(ctx *gin.Context) {
 		return
 	}
 
-	err, ok := errInterface.(error)
-	if !ok {
-		newLogger().WithRequest(ctx.Request).Error("failed to convert interface to error")
-		return
-	}
-
 	lang := ctx.GetHeader("Accept-Language")
 
-	if ve, ok := err.(validator.ValidationErrors); ok {
+	if ve, ok := errInterface.(validator.ValidationErrors); ok {
 		vErrs := appErr.NewValidationErrors(ve)
 		vErrs.Build(lang)
 		newLogger().WithRequest(ctx.Request).Info(vErrs)
+		return
+	}
+
+	err, ok := errInterface.(error)
+	if !ok {
+		newLogger().WithRequest(ctx.Request).Error("failed to convert interface to error")
 		return
 	}
 
@@ -120,6 +122,7 @@ func middlewareErrFunc(ctx *gin.Context) {
 		return
 	}
 
+	// Uncought error
 	newLogger().WithRequest(ctx.Request).Error(err)
 }
 

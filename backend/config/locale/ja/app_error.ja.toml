@@ -1,1 +1,2 @@
 ERR_EXAMPLE = "{{.Name}}は処理できません"
+ERR_UNKNOWN = "予期せぬエラーが発生しました"
