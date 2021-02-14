@@ -11,6 +11,7 @@ import (
 
 	appErr "github.com/ktakenaka/go-random/backend/app/errors"
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
+	log "github.com/ktakenaka/go-random/backend/pkg/logger"
 )
 
 const (
@@ -109,7 +110,7 @@ func SetErrorResponse(ctx *gin.Context, err error) {
 		}
 		SetMetaResponse(ctx, presenter.CodeUnprocessableEntity)
 		ctx.Set(errorKey, errs)
-		// TODO: logging
+		log.WithRequest(ctx.Request).Info(vErrs)
 		return
 	}
 
@@ -127,14 +128,15 @@ func SetErrorResponse(ctx *gin.Context, err error) {
 			}
 			SetMetaResponse(ctx, presenter.CodeBadRequest)
 			ctx.Set(errorKey, []presenter.JSONAPIError{e})
-			// TODO: logging
+			log.WithRequest(ctx.Request).Warn(apperr)
 		default:
-			// TODO: logging
+			log.WithRequest(ctx.Request).Error(apperr)
 		}
 		return
 	}
 
 	// TODO: handle unhandled errors
+	log.WithRequest(ctx.Request).Error(err)
 }
 
 func getMetaResponse(ctx *gin.Context) presenter.ResponseMeta {

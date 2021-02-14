@@ -1,6 +1,8 @@
 package logger
 
 import (
+	"net/http"
+
 	"github.com/sirupsen/logrus"
 )
 
@@ -88,5 +90,16 @@ func WithField(key string, value interface{}) *logrus.Entry {
 
 // WithFields with fields
 func WithFields(fields map[string]interface{}) *logrus.Entry {
+	return logger.WithFields(logrus.Fields(fields))
+}
+
+// WithRequest with request information
+func WithRequest(r *http.Request) *logrus.Entry {
+	fields := map[string]interface{}{
+		"method": r.Method,
+		"URL":    r.URL,
+		"addr":   r.RemoteAddr,
+	}
+
 	return logger.WithFields(logrus.Fields(fields))
 }
