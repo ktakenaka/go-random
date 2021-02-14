@@ -5,7 +5,6 @@ import (
 
 	"github.com/ktakenaka/go-random/backend/app/interface/api/middleware"
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
-	"github.com/ktakenaka/go-random/backend/pkg/logger"
 )
 
 // BaseHandler is expected to be embedded
@@ -23,9 +22,6 @@ func (hdl *BaseHandler) SetMeta(ctx *gin.Context, code presenter.MetaCode) {
 
 // SetError is expected to be used in concrete handlers
 func (hdl *BaseHandler) SetError(ctx *gin.Context, err error) {
-	if err != nil {
-		logger.Error(err)
-	}
 	middleware.SetErrorResponse(ctx, err)
 }
 

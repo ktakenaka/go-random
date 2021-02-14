@@ -14,6 +14,15 @@ type ResponseError struct {
 	Detail string              `json:"detail"`
 }
 
+// JSONAPIError follows json api
+type JSONAPIError struct {
+	Status int    `json:"status"`
+	Code   string `json:"code"`
+	Source string `json:"source"`
+	Title  string `json:"title"`
+	Detail string `json:"detail"`
+}
+
 // ResponseErrorSource is an object containing references to the source of the error,
 // optionally including any of the following members:
 type ResponseErrorSource struct {
@@ -23,9 +32,9 @@ type ResponseErrorSource struct {
 
 // Response is the Response format of JSON API
 type Response struct {
-	Meta   ResponseMeta    `json:"meta"`
-	Data   interface{}     `json:"data,omitempty"`
-	Errors []ResponseError `json:"errors,omitempty"`
+	Meta   ResponseMeta   `json:"meta"`
+	Data   interface{}    `json:"data,omitempty"`
+	Errors []JSONAPIError `json:"errors,omitempty"`
 }
 
 // MetaCode is the type of MetaCode

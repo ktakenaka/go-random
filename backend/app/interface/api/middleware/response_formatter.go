@@ -2,17 +2,16 @@ package middleware
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"regexp"
 	"strconv"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	validator "github.com/go-playground/validator/v10"
-	"gorm.io/gorm"
 
+	appErr "github.com/ktakenaka/go-random/backend/app/errors"
 	"github.com/ktakenaka/go-random/backend/app/interface/api/presenter"
+	log "github.com/ktakenaka/go-random/backend/pkg/logger"
 )
 
 const (
@@ -95,50 +94,49 @@ func SetErrorResponse(ctx *gin.Context, err error) {
 		return
 	}
 
-	// It's difficult to set meta in handler because it's not clear until we accept errors.
-	// Especially the errors from packages.
-	// That's the reason to judge error type and set meta here
+	lang := ctx.GetHeader("Accept-Language")
 	if ve, ok := err.(validator.ValidationErrors); ok {
-		errs := make([]presenter.ResponseError, len(ve))
-
-		for i, v := range ve {
-			source := presenter.ResponseErrorSource{
-				Pointer: v.Field(),
-			}
-			errs[i] = presenter.ResponseError{
-				Source: source,
-				Detail: v.Tag(),
+		vErrs := appErr.NewValidationErrors(ve)
+		vErrs.Build(lang)
+		errs := make([]presenter.JSONAPIError, len(vErrs))
+		for i := range vErrs {
+			errs[i] = presenter.JSONAPIError{
+				Status: vErrs[i].Status(),
+				Code:   vErrs[i].Code(),
+				Source: vErrs[i].Source(),
+				Title:  vErrs[i].Title(),
+				Detail: vErrs[i].Detail(),
 			}
 		}
 		SetMetaResponse(ctx, presenter.CodeUnprocessableEntity)
 		ctx.Set(errorKey, errs)
-	} else if errors.Is(err, gorm.ErrRecordNotFound) {
-		params := make([]string, len(ctx.Params))
-		for i, p := range ctx.Params {
-			params[i] = fmt.Sprintf("%v: %v", p.Key, p.Value)
-		}
-
-		source := presenter.ResponseErrorSource{
-			Param: strings.Join(params, ", "),
-		}
-		SetMetaResponse(ctx, presenter.CodeNotFound)
-		errs := []presenter.ResponseError{
-			{
-				Source: source,
-				Detail: err.Error(),
-			},
-		}
-		ctx.Set(errorKey, errs)
-	} else {
-		errs := presenter.ResponseError{
-			Detail: err.Error(),
-		}
-
-		if _, ok := ctx.Get(metaKey); !ok {
-			SetMetaResponse(ctx, presenter.CodeInternalServerError)
-			ctx.Set(errorKey, []presenter.ResponseError{errs})
-		}
+		log.WithRequest(ctx.Request).Info(vErrs)
+		return
 	}
+
+	var apperr *appErr.AppError
+	if ok := errors.As(err, &apperr); ok {
+		apperr.Build(lang)
+		switch {
+		case errors.Is(apperr, appErr.ErrExample):
+			e := presenter.JSONAPIError{
+				Status: apperr.Status(),
+				Code:   apperr.Code(),
+				Source: apperr.Source(),
+				Title:  apperr.Title(),
+				Detail: apperr.Detail(),
+			}
+			SetMetaResponse(ctx, presenter.CodeBadRequest)
+			ctx.Set(errorKey, []presenter.JSONAPIError{e})
+			log.WithRequest(ctx.Request).Warn(apperr)
+		default:
+			log.WithRequest(ctx.Request).Error(apperr)
+		}
+		return
+	}
+
+	// TODO: handle unhandled errors
+	log.WithRequest(ctx.Request).Error(err)
 }
 
 func getMetaResponse(ctx *gin.Context) presenter.ResponseMeta {
@@ -159,15 +157,15 @@ func getDataResponse(ctx *gin.Context) interface{} {
 	return data
 }
 
-func getErrorResponse(ctx *gin.Context) []presenter.ResponseError {
+func getErrorResponse(ctx *gin.Context) []presenter.JSONAPIError {
 	errCtx, ok := ctx.Get(errorKey)
 	if !ok {
-		return []presenter.ResponseError{}
+		return []presenter.JSONAPIError{}
 	}
 
-	errs, ok := errCtx.([]presenter.ResponseError)
+	errs, ok := errCtx.([]presenter.JSONAPIError)
 	if !ok {
-		return []presenter.ResponseError{}
+		return []presenter.JSONAPIError{}
 	}
 
 	return errs

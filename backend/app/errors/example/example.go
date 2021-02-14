@@ -21,7 +21,7 @@ var (
 )
 
 func main() {
-	fmt.Println("--- pattern 1 LogicError ---")
+	fmt.Println("--- pattern 1 AppError ---")
 	ctx1 := buildContext()
 	handlerFunc1(ctx1)
 	middlewareErrFunc(ctx1)
@@ -50,7 +50,7 @@ func buildContext() *gin.Context {
 }
 
 func handlerFunc1(ctx *gin.Context) {
-	err := functionWithLogicError("hello")
+	err := functionWithAppError("hello")
 	if err != nil {
 		ctx.Set(errKey, err)
 	}
@@ -70,8 +70,8 @@ func handlerFunc3(ctx *gin.Context) {
 	}
 }
 
-func functionWithLogicError(arg string) error {
-	err := appErr.NewLogicError(appErr.ErrExample).
+func functionWithAppError(arg string) error {
+	err := appErr.NewAppError(appErr.ErrExample).
 		WithMsgLog(fmt.Sprintf("a user passes an invalid arg: %s", arg)).
 		WithParams(map[string]interface{}{"Name": arg}).
 		WithFields(map[string]interface{}{"Field": "Sample"})
@@ -85,7 +85,7 @@ func functionWithValidationError() error {
 
 func functionWithUnknownError() error {
 	err := errors.New("unknow error")
-	err = appErr.NewLogicError(err).WithMsgLog("not expected place")
+	err = appErr.NewAppError(err).WithMsgLog("not expected place")
 	return xerrors.Errorf("%w", err)
 }
 
@@ -111,7 +111,7 @@ func middlewareErrFunc(ctx *gin.Context) {
 		return
 	}
 
-	var apperr *appErr.LogicError
+	var apperr *appErr.AppError
 	if ok := errors.As(err, &apperr); ok {
 		apperr.Build(lang)
 		switch {
