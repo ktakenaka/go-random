@@ -93,18 +93,18 @@ func middlewareErrFunc(ctx *gin.Context) {
 		return
 	}
 
-	err, ok := errInterface.(error)
-	if !ok {
-		newLogger().WithRequest(ctx.Request).Error("failed to convert interface to error")
-		return
-	}
-
 	lang := ctx.GetHeader("Accept-Language")
 
-	if ve, ok := err.(validator.ValidationErrors); ok {
+	if ve, ok := errInterface.(validator.ValidationErrors); ok {
 		vErrs := appErr.NewValidationErrors(ve)
 		vErrs.Build(lang)
 		newLogger().WithRequest(ctx.Request).Info(vErrs)
+		return
+	}
+
+	err, ok := errInterface.(error)
+	if !ok {
+		newLogger().WithRequest(ctx.Request).Error("failed to convert interface to error")
 		return
 	}
 
