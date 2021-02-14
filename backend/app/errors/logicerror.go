@@ -13,7 +13,8 @@ type LogicError struct {
 	JSONAPIError
 
 	err    error
-	params map[string]interface{}
+	params map[string]interface{} // Expected userInput params (Not to be translated)
+	fields map[string]interface{} // Expected app managed values (To be translated)
 	msgLog string
 }
 
@@ -25,6 +26,12 @@ func NewLogicError(err error) *LogicError {
 // WithParams - params
 func (e *LogicError) WithParams(params map[string]interface{}) *LogicError {
 	e.params = params
+	return e
+}
+
+// WithFields - fields
+func (e *LogicError) WithFields(fields map[string]interface{}) *LogicError {
+	e.fields = fields
 	return e
 }
 
@@ -52,10 +59,9 @@ func (e *LogicError) Error() string {
 	// This condition is after Build()
 	if e.detail != "" {
 		return fmt.Sprintf(
-			"title: %s, detail: %s, params: %s, log: %s",
+			"title: %s, detail: %s, log: %s",
 			e.title,
 			e.buildDetail(enLang),
-			e.params,
 			e.msgLog,
 		)
 	}
@@ -74,6 +80,18 @@ func (e *LogicError) Unwrap() error {
 
 // detail is for a user message. Shouldn't be a raw error
 func (e *LogicError) buildDetail(lang string) string {
+	data := e.params
+	for k, v := range e.fields {
+		if vstr, ok := v.(string); ok {
+			translated, err := translator.LocalizeField(lang, vstr)
+			if err != nil {
+				data[k] = vstr
+				continue
+			}
+			data[k] = translated
+		}
+	}
+
 	arg := translator.Arg{
 		Lang:  lang,
 		MsgID: e.err.Error(),

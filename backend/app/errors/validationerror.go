@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	validator "github.com/go-playground/validator/v10"
+	"github.com/iancoleman/strcase"
 
 	"github.com/ktakenaka/go-random/backend/app/errors/translator"
 )
@@ -53,7 +54,7 @@ func newValidationError(err validator.FieldError) *ValidationError {
 func (e *ValidationError) build(lang string) {
 	e.status = http.StatusUnprocessableEntity
 	e.code = ErrValidation.Error()
-	e.source = e.err.StructNamespace()
+	e.source = e.buildPointer()
 	e.title = http.StatusText(e.status)
 	e.detail = e.buildDetail(lang)
 }
@@ -96,4 +97,9 @@ func (e *ValidationError) buildDetail(lang string) string {
 		return e.err.Error()
 	}
 	return msg
+}
+
+func (e *ValidationError) buildPointer() string {
+	str := strings.ReplaceAll(e.err.StructNamespace(), ".", "/")
+	return strcase.ToSnake(str)
 }

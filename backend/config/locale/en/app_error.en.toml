@@ -1,2 +1,2 @@
-ERR_EXAMPLE = "{{.Name}} is unhandlable"
+ERR_EXAMPLE = "{{.Name}} is not suitable for {{.Field}}"
 ERR_UNKNOWN = "an unexpected error occured"

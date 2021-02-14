@@ -73,7 +73,8 @@ func handlerFunc3(ctx *gin.Context) {
 func functionWithLogicError(arg string) error {
 	err := appErr.NewLogicError(appErr.ErrExample).
 		WithMsgLog(fmt.Sprintf("a user passes an invalid arg: %s", arg)).
-		WithParams(map[string]interface{}{"Name": arg})
+		WithParams(map[string]interface{}{"Name": arg}).
+		WithFields(map[string]interface{}{"Field": "Sample"})
 	return xerrors.Errorf("%w", err)
 }
 

@@ -21,6 +21,7 @@ require (
 	github.com/google/wire v0.5.0
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/gorilla/websocket v1.4.2
+	github.com/iancoleman/strcase v0.1.3
 	github.com/icza/gox v0.0.0-20201215141822-6edfac6c05b5
 	github.com/jinzhu/copier v0.2.4
 	github.com/json-iterator/go v1.1.10 // indirect
