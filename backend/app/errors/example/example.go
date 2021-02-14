@@ -11,20 +11,34 @@ import (
 	"github.com/gin-gonic/gin"
 	"golang.org/x/xerrors"
 
+	validator "github.com/go-playground/validator/v10"
+	"github.com/ktakenaka/go-random/backend/app/domain/entity"
 	appErr "github.com/ktakenaka/go-random/backend/app/errors"
 )
 
-var authValue = struct {
-	UserID, OfficeID uint32
-}{1, 10}
-
 var (
-	authKey = "auth"
-	errKey  = "error"
+	errKey = "error"
 )
 
 func main() {
-	ctx := &gin.Context{
+	fmt.Println("--- pattern 1 LogicError ---")
+	ctx1 := buildContext()
+	handlerFunc1(ctx1)
+	middlewareErrFunc(ctx1)
+
+	fmt.Println("\n--- pattern 2 validation error ---")
+	ctx2 := buildContext()
+	handlerFunc2(ctx2)
+	middlewareErrFunc(ctx2)
+
+	fmt.Println("\n--- pattern 3 unhandled error ---")
+	ctx3 := buildContext()
+	handlerFunc3(ctx3)
+	middlewareErrFunc(ctx3)
+}
+
+func buildContext() *gin.Context {
+	return &gin.Context{
 		Request: &http.Request{
 			Method:     "POST",
 			URL:        &url.URL{Path: "/example"},
@@ -33,17 +47,43 @@ func main() {
 			RemoteAddr: "127.0.0.1",
 		},
 	}
-	ctx.Set(authKey, authValue)
-
-	handlerFunc(ctx)
-	middlewareErrFunc(ctx)
 }
 
-func handlerFunc(ctx *gin.Context) {
-	err := functionWithError("hello")
+func handlerFunc1(ctx *gin.Context) {
+	err := functionWithLogicError("hello")
 	if err != nil {
 		ctx.Set(errKey, err)
 	}
+}
+
+func handlerFunc2(ctx *gin.Context) {
+	err := functionWithValidationError()
+	if err != nil {
+		ctx.Set(errKey, err)
+	}
+}
+
+func handlerFunc3(ctx *gin.Context) {
+	err := functionWithUnknownError()
+	if err != nil {
+		ctx.Set(errKey, err)
+	}
+}
+
+func functionWithLogicError(arg string) error {
+	err := appErr.NewLogicError(appErr.ErrExample).
+		WithMsgLog(fmt.Sprintf("a user passes an invalid arg: %s", arg)).
+		WithParams(map[string]interface{}{"Name": arg})
+	return xerrors.Errorf("%w", err)
+}
+
+func functionWithValidationError() error {
+	en := entity.Sample{Title: "a"}
+	return en.Validate()
+}
+
+func functionWithUnknownError() error {
+	return nil
 }
 
 func middlewareErrFunc(ctx *gin.Context) {
@@ -60,11 +100,16 @@ func middlewareErrFunc(ctx *gin.Context) {
 	}
 
 	lang := ctx.GetHeader("Accept-Language")
-	if errors.Is(err, appErr.ErrExample) {
-		var apperr *appErr.AppError
-		if ok := errors.As(err, &apperr); !ok {
-			newLogger().Error("failed to convert")
-		}
+
+	if ve, ok := err.(validator.ValidationErrors); ok {
+		vErrs := appErr.NewValidationErrors(ve)
+		vErrs.Build(lang)
+		newLogger().WithRequest(ctx.Request).Info(vErrs)
+		return
+	}
+
+	var apperr *appErr.LogicError
+	if ok := errors.As(err, &apperr); ok {
 		apperr.Build(lang)
 		switch {
 		case errors.Is(apperr, appErr.ErrExample):
@@ -76,21 +121,6 @@ func middlewareErrFunc(ctx *gin.Context) {
 	}
 
 	newLogger().WithRequest(ctx.Request).Error(err)
-}
-
-func functionWithError(arg string) error {
-	err := appErr.New(appErr.ErrExample).
-		WithMsgLog(fmt.Sprintf("a user passes an invalid arg: %s", arg)).
-		WithParams(map[string]interface{}{"Name": arg}) //  TODO: ここでField名をi18nで使いたいときどうする？
-	return xerrors.Errorf("%w", err)
-}
-
-func functionWithValidationError() error {
-	return nil
-}
-
-func functionWithUnknownError() error {
-	return nil
 }
 
 // --- logger example ---

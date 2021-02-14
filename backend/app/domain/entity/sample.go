@@ -2,8 +2,6 @@ package entity
 
 import (
 	"time"
-
-	validator "github.com/go-playground/validator/v10"
 )
 
 // Sample entity
@@ -11,7 +9,7 @@ type Sample struct {
 	Base
 	CreatedAt time.Time
 	UpdatedAt time.Time
-	Title     string  `validate:"required,max=20"`
+	Title     string  `validate:"required,max=20,min=5"`
 	Content   *string `validate:"max=100"`
 	UserID    string  `validate:"required"`
 }
@@ -23,7 +21,6 @@ type SampleQuery struct {
 
 // Validate with validator v10
 func (s *Sample) Validate() error {
-	validate := validator.New()
 	err := validate.Struct(s)
 	return err
 }

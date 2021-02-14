@@ -7,19 +7,14 @@ import (
 
 // Application errors
 var (
-	ErrExample = errors.New("ERR_EXAMPLE")
+	ErrExample    = errors.New("ERR_EXAMPLE")
+	ErrValidation = errors.New("ERR_VALIDATION")
 )
 var errorStatusMap = map[error]int{
 	ErrExample: http.StatusBadRequest,
 }
 
-type jsonAPICode string
-
 const (
-	codeExample   jsonAPICode = "4001"
-	codeUnhandled jsonAPICode = "5999"
+	// use English for logging
+	enLang = "en"
 )
-
-var errorJSONAPICodeMap = map[error]jsonAPICode{
-	ErrExample: codeExample,
-}
