@@ -12,10 +12,10 @@ import (
 type AppError struct {
 	JSONAPIError
 
-	err    error
+	err    error                  // expected to set original error
 	params map[string]interface{} // Expected userInput params (Not to be translated)
 	fields map[string]interface{} // Expected app managed values (To be translated)
-	msgLog string
+	msgLog string                 // a logging message (not for a user message)
 }
 
 // NewAppError constructor
@@ -95,7 +95,7 @@ func (e *AppError) buildDetail(lang string) string {
 	arg := translator.Arg{
 		Lang:  lang,
 		MsgID: e.err.Error(),
-		Data:  e.params,
+		Data:  data,
 	}
 
 	msg, err := translator.Localize(arg)
