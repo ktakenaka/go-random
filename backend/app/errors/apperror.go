@@ -44,6 +44,7 @@ func (e *AppError) WithMsgLog(msg string) *AppError {
 // Build - builder (status, code, title, detail)
 func (e *AppError) Build(lang string) {
 	if status, ok := errorStatusMap[e.err]; !ok {
+		// When not finding a status from map, it means an unexpected error
 		e.status = http.StatusInternalServerError
 	} else {
 		e.status = status
