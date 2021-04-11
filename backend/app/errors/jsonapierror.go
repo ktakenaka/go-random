@@ -13,6 +13,21 @@ package errors
   ]
 }
 */
+type JSONAPIErrors []IJSONAPIError
+
+type IJSONAPIError interface {
+	error
+	Status() int
+	Code() string
+	Source() Source
+	Title() string
+	Detail() string
+}
+
+type Source interface {
+	Pointer() string
+}
+
 type JSONAPIError struct {
 	status int    // 基本は err と http.StatusXXX の連想配列を使うようにする。発生箇所での上書きも可能にする
 	code   string // titleとの使い分けに悩むな、なしでも良いかも. それか別で errとcodeの連想配列定義するか

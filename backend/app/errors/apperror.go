@@ -8,6 +8,10 @@ import (
 	"github.com/ktakenaka/go-random/backend/app/errors/translator"
 )
 
+type IAppError interface {
+	fmt.Stringer
+}
+
 // AppError wraps error
 type AppError struct {
 	JSONAPIError
