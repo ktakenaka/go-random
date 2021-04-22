@@ -23,7 +23,7 @@ require (
 	github.com/gorilla/websocket v1.4.2
 	github.com/iancoleman/strcase v0.1.3
 	github.com/icza/gox v0.0.0-20201215141822-6edfac6c05b5
-	github.com/jinzhu/copier v0.2.8
+	github.com/jinzhu/copier v0.3.0
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/ktakenaka/charsetsupport v0.0.0-20210102133313-914d4adb7e63
