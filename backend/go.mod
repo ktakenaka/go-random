@@ -17,7 +17,7 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/gocarina/gocsv v0.0.0-20201208093247-67c824bc04d4
-	github.com/google/go-cmp v0.5.5
+	github.com/google/go-cmp v0.5.6
 	github.com/google/wire v0.5.0
 	github.com/gorilla/sessions v1.2.1 // indirect
 	github.com/gorilla/websocket v1.4.2
