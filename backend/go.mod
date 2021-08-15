@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	cloud.google.com/go v0.74.0 // indirect
-	github.com/BurntSushi/toml v0.3.1
+	github.com/BurntSushi/toml v0.4.1
 	github.com/appleboy/gin-jwt/v2 v2.6.4
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
