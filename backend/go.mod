@@ -4,7 +4,7 @@ go 1.14
 
 require (
 	cloud.google.com/go v0.74.0 // indirect
-	github.com/BurntSushi/toml v0.3.1
+	github.com/BurntSushi/toml v0.4.1
 	github.com/appleboy/gin-jwt/v2 v2.6.4
 	github.com/coreos/go-oidc v2.2.1+incompatible
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
@@ -27,7 +27,6 @@ require (
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/ktakenaka/charsetsupport v0.0.0-20210102133313-914d4adb7e63
-	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.1.2
 	github.com/nxadm/tail v1.4.6 // indirect
 	github.com/oklog/ulid/v2 v2.0.2
